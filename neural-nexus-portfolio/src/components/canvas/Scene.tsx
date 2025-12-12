@@ -10,6 +10,16 @@ import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
 
+interface ConnectionData {
+  id: string;
+  start: [number, number, number];
+  end: [number, number, number];
+  color: string;
+  sourceId: string;
+  targetId: string;
+  isIndirect?: boolean; // 간접 연결 여부
+}
+
 /**
  * 메인 3D 씬 컴포넌트
  * 모든 뉴런 노드와 시냅스 라인을 렌더링하고 관리
@@ -24,16 +34,9 @@ export function Scene() {
   // 포스 시뮬레이션으로 유기적인 노드 위치 계산
   const positions = useForceGraph(nodes);
 
-  // 연결선 데이터 생성
-  const connections = useMemo(() => {
-    const lines: {
-      id: string;
-      start: [number, number, number];
-      end: [number, number, number];
-      color: string;
-      sourceId: string;
-      targetId: string;
-    }[] = [];
+  // 모든 연결선 데이터 생성 (직접 연결)
+  const allConnections = useMemo(() => {
+    const lines: ConnectionData[] = [];
     const processed = new Set<string>();
 
     nodes.forEach((node) => {
@@ -47,7 +50,6 @@ export function Scene() {
 
         if (startPos && endPos) {
           const targetNode = nodes.find((n) => n.id === targetId);
-          // 연결된 노드들의 색상 혼합
           const color = node.color || targetNode?.color || "#00ffff";
 
           lines.push({
@@ -57,6 +59,7 @@ export function Scene() {
             color,
             sourceId: node.id,
             targetId,
+            isIndirect: false,
           });
         }
       });
@@ -65,19 +68,113 @@ export function Scene() {
     return lines;
   }, [nodes, positions]);
 
-  // 필터링된 연결선 (양쪽 노드 모두 visible일 때만 표시)
-  const filteredConnections = useMemo(() => {
-    return connections.filter((conn) => {
-      const sourceNode = nodes.find((n) => n.id === conn.sourceId);
-      const targetNode = nodes.find((n) => n.id === conn.targetId);
+  // visible 노드 ID 집합
+  const visibleNodeIds = useMemo(() => {
+    return new Set(
+      nodes.filter((n) => visibleNodeTypes.includes(n.type)).map((n) => n.id)
+    );
+  }, [nodes, visibleNodeTypes]);
+
+  // 간접 연결 계산: 숨겨진 노드를 통해 연결된 visible 노드들을 찾아 연결
+  const indirectConnections = useMemo(() => {
+    const indirect: ConnectionData[] = [];
+    const processed = new Set<string>();
+
+    // BFS로 visible 노드에서 다른 visible 노드까지의 경로 찾기
+    const findConnectedVisibleNodes = (
+      startId: string,
+      visited: Set<string>
+    ): string[] => {
+      const result: string[] = [];
+      const queue = [startId];
+      visited.add(startId);
+
+      while (queue.length > 0) {
+        const currentId = queue.shift()!;
+        const currentNode = nodes.find((n) => n.id === currentId);
+        if (!currentNode) continue;
+
+        for (const neighborId of currentNode.connections) {
+          if (visited.has(neighborId)) continue;
+          visited.add(neighborId);
+
+          if (visibleNodeIds.has(neighborId)) {
+            // visible 노드에 도달
+            result.push(neighborId);
+          } else {
+            // 숨겨진 노드를 통해 계속 탐색
+            queue.push(neighborId);
+          }
+        }
+      }
+
+      return result;
+    };
+
+    // 각 visible 노드에서 간접 연결 찾기
+    nodes.forEach((node) => {
+      if (!visibleNodeIds.has(node.id)) return;
+
+      const visited = new Set<string>();
+      // 직접 연결된 visible 노드 제외
+      node.connections.forEach((directId) => {
+        if (visibleNodeIds.has(directId)) {
+          visited.add(directId);
+        }
+      });
+      visited.add(node.id);
+
+      // 숨겨진 노드들만 시작점으로
+      node.connections.forEach((neighborId) => {
+        if (!visibleNodeIds.has(neighborId) && !visited.has(neighborId)) {
+          const connectedVisible = findConnectedVisibleNodes(
+            neighborId,
+            new Set(visited)
+          );
+
+          connectedVisible.forEach((targetId) => {
+            const linkId = [node.id, targetId].sort().join("-indirect");
+            if (processed.has(linkId)) return;
+            processed.add(linkId);
+
+            const startPos = positions.get(node.id);
+            const endPos = positions.get(targetId);
+
+            if (startPos && endPos) {
+              const targetNode = nodes.find((n) => n.id === targetId);
+              const color = node.color || targetNode?.color || "#00ffff";
+
+              indirect.push({
+                id: linkId,
+                start: startPos,
+                end: endPos,
+                color,
+                sourceId: node.id,
+                targetId,
+                isIndirect: true,
+              });
+            }
+          });
+        }
+      });
+    });
+
+    return indirect;
+  }, [nodes, positions, visibleNodeIds]);
+
+  // 직접 연결선 필터링 (양쪽 노드 모두 visible일 때만)
+  const directConnections = useMemo(() => {
+    return allConnections.filter((conn) => {
       return (
-        sourceNode &&
-        targetNode &&
-        visibleNodeTypes.includes(sourceNode.type) &&
-        visibleNodeTypes.includes(targetNode.type)
+        visibleNodeIds.has(conn.sourceId) && visibleNodeIds.has(conn.targetId)
       );
     });
-  }, [connections, nodes, visibleNodeTypes]);
+  }, [allConnections, visibleNodeIds]);
+
+  // 최종 연결선: 직접 + 간접
+  const finalConnections = useMemo(() => {
+    return [...directConnections, ...indirectConnections];
+  }, [directConnections, indirectConnections]);
 
   return (
     <div
@@ -118,8 +215,8 @@ export function Scene() {
           return <Node key={node.id} node={node} position={position} />;
         })}
 
-        {/* 시냅스 연결선들 - 필터링된 노드 간 연결만 표시 */}
-        {filteredConnections.map((conn) => (
+        {/* 시냅스 연결선들 - 직접 + 간접 연결 */}
+        {finalConnections.map((conn) => (
           <ConnectionLine
             key={conn.id}
             start={conn.start}
@@ -129,6 +226,7 @@ export function Scene() {
               highlightedNodes.includes(conn.sourceId) &&
               highlightedNodes.includes(conn.targetId)
             }
+            isDashed={conn.isIndirect}
           />
         ))}
 
