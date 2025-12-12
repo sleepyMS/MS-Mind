@@ -15,7 +15,7 @@ import type { NeuralData } from "../../types";
  * 모든 뉴런 노드와 시냅스 라인을 렌더링하고 관리
  */
 export function Scene() {
-  const { highlightedNodes, isModalOpen } = useAppStore();
+  const { highlightedNodes, isModalOpen, visibleNodeTypes } = useAppStore();
 
   // JSON 데이터를 타입화된 데이터로 변환
   const data = nodesData as NeuralData;
@@ -65,6 +65,20 @@ export function Scene() {
     return lines;
   }, [nodes, positions]);
 
+  // 필터링된 연결선 (양쪽 노드 모두 visible일 때만 표시)
+  const filteredConnections = useMemo(() => {
+    return connections.filter((conn) => {
+      const sourceNode = nodes.find((n) => n.id === conn.sourceId);
+      const targetNode = nodes.find((n) => n.id === conn.targetId);
+      return (
+        sourceNode &&
+        targetNode &&
+        visibleNodeTypes.includes(sourceNode.type) &&
+        visibleNodeTypes.includes(targetNode.type)
+      );
+    });
+  }, [connections, nodes, visibleNodeTypes]);
+
   return (
     <div
       className={`w-full h-screen ${
@@ -93,16 +107,19 @@ export function Scene() {
         {/* 배경 요소 (별, 파티클) */}
         <Background />
 
-        {/* 뉴런 노드들 */}
+        {/* 뉴런 노드들 - visibleNodeTypes에 따라 표시/숨김 */}
         {nodes.map((node) => {
           const position = positions.get(node.id);
           if (!position) return null;
 
+          const isVisible = visibleNodeTypes.includes(node.type);
+          if (!isVisible) return null;
+
           return <Node key={node.id} node={node} position={position} />;
         })}
 
-        {/* 시냅스 연결선들 */}
-        {connections.map((conn) => (
+        {/* 시냅스 연결선들 - 필터링된 노드 간 연결만 표시 */}
+        {filteredConnections.map((conn) => (
           <ConnectionLine
             key={conn.id}
             start={conn.start}
