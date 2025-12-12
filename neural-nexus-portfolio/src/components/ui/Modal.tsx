@@ -4,7 +4,12 @@ import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
-type TabType = "description" | "trouble" | "lesson";
+type TabType =
+  | "description"
+  | "features"
+  | "optimizations"
+  | "trouble"
+  | "lesson";
 
 /**
  * 고급 글래스모피즘 모달 컴포넌트
@@ -68,7 +73,13 @@ export function Modal() {
   };
 
   const handleTabChange = (newTab: TabType) => {
-    const tabOrder: TabType[] = ["description", "trouble", "lesson"];
+    const tabOrder: TabType[] = [
+      "description",
+      "features",
+      "optimizations",
+      "trouble",
+      "lesson",
+    ];
     const currentIndex = tabOrder.indexOf(activeTab);
     const newIndex = tabOrder.indexOf(newTab);
     setTabDirection(newIndex > currentIndex ? "right" : "left");
@@ -89,8 +100,22 @@ export function Modal() {
   }[] = [
     { id: "description", label: "개요", icon: "📋", available: true },
     {
+      id: "features",
+      label: "주요 기능",
+      icon: "🚀",
+      available: Boolean(details?.features && details.features.length > 0),
+    },
+    {
+      id: "optimizations",
+      label: "최적화",
+      icon: "⚡",
+      available: Boolean(
+        details?.optimizations && details.optimizations.length > 0
+      ),
+    },
+    {
       id: "trouble",
-      label: "문제 해결",
+      label: "트러블슈팅",
       icon: "🔧",
       available: Boolean(hasTrouble),
     },
@@ -383,6 +408,74 @@ export function Modal() {
                     </a>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === "features" && details?.features && (
+              <div className="space-y-8">
+                {details.features.map((feature, idx) => (
+                  <div
+                    key={idx}
+                    className="relative pl-6 border-l-2 border-cyan-400/30"
+                  >
+                    <div className="absolute -left-[9px] top-0 w-[18px] h-[18px] rounded-full bg-cyan-400/20 border border-cyan-400 flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-cyan-400">
+                        {idx + 1}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold mb-3 text-cyan-400">
+                      {feature.title}
+                    </h3>
+                    <ul className="space-y-2">
+                      {feature.items.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-sm leading-relaxed"
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                          }}
+                        >
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-cyan-400/50 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === "optimizations" && details?.optimizations && (
+              <div className="space-y-8">
+                {details.optimizations.map((opt, idx) => (
+                  <div
+                    key={idx}
+                    className="relative pl-6 border-l-2 border-purple-400/30"
+                  >
+                    <div className="absolute -left-[9px] top-0 w-[18px] h-[18px] rounded-full bg-purple-400/20 border border-purple-400 flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-purple-400">
+                        {idx + 1}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold mb-3 text-purple-400">
+                      {opt.title}
+                    </h3>
+                    <ul className="space-y-2">
+                      {opt.items.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-sm leading-relaxed"
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                          }}
+                        >
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-purple-400/50 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             )}
 

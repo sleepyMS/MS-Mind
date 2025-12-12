@@ -47,7 +47,21 @@ export function SidePanel() {
       node.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
       node.details?.description
         ?.toLowerCase()
-        .includes(searchQuery.toLowerCase())
+        .includes(searchQuery.toLowerCase()) ||
+      node.details?.features?.some(
+        (f) =>
+          f.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          f.items.some((i) =>
+            i.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+      ) ||
+      node.details?.optimizations?.some(
+        (o) =>
+          o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          o.items.some((i) =>
+            i.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+      )
   );
 
   const groupedNodes = filteredNodes.reduce((acc, node) => {

@@ -13,6 +13,8 @@ export interface NodeDetails {
   technologies?: string[]; // 사용 기술
   link?: string; // 외부 링크
   image?: string; // 이미지 경로
+  features?: { title: string; items: string[] }[]; // 주요 기능
+  optimizations?: { title: string; items: string[] }[]; // 최적화 내용
 }
 
 /**

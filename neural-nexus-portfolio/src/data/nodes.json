@@ -18,15 +18,87 @@
     {
       "id": "project-chatbot",
       "type": "project",
-      "label": "MS-Mind Chatbot",
-      "connections": ["me", "skill-react", "skill-typescript", "skill-python"],
+      "label": "GangNaengBot-FE",
+      "connections": ["me", "skill-react", "skill-typescript"],
       "details": {
-        "description": "AI-powered chatbot with real-time conversation capabilities, authentication system, and dark mode support.",
-        "trouble": "Handling token refresh and maintaining session state across page reloads was challenging.",
-        "shooting": "Implemented a robust token refresh mechanism with interceptors and local storage caching for session persistence.",
-        "lesson": "Learned the importance of proper state management and the nuances of JWT authentication flows.",
-        "technologies": ["React", "TypeScript", "FastAPI", "PostgreSQL"],
-        "link": "https://github.com/sleepyMS/MS-Mind"
+        "description": "강남대학교 학생들을 위한 AI 챗봇 서비스 강냉봇의 프론트엔드 프로젝트입니다. 사용자에게 친숙한 대화형 인터페이스를 통해 학교 생활에 필요한 정보를 쉽고 빠르게 제공합니다.",
+        "trouble": "비동기 데이터와 UI 동기화 문제(채팅 UX), 복잡한 계층형 폼 데이터 관리, 다크 모드 깜빡임(FOUC), 인증 토큰 만료 처리 등 다양한 기술적 난관이 있었습니다.",
+        "shooting": "낙관적 UI 및 백그라운드 재시도 로직으로 채팅 경험 개선, 의존성 기반 상태 초기화로 폼 데이터 무결성 확보, Zustand 영속성 및 초기화 로직 최적화로 FOUC 해결, Axios 인터셉터로 토큰 갱신 자동화 등을 구현했습니다.",
+        "lesson": "단순 기능 구현을 넘어 체감 성능과 UX의 중요성을 깨달았습니다. 낙관적 UI, 재사용 가능한 컴포넌트 설계, 비즈니스 로직 분리, 그리고 조기 i18n 도입의 가치를 배웠습니다.",
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Vite",
+          "TailwindCSS",
+          "Zustand",
+          "Axios",
+          "i18next"
+        ],
+        "link": "https://github.com/sleepyMS/GangNaengBot-FE",
+        "features": [
+          {
+            "title": "채팅 시스템 (Chat System)",
+            "items": [
+              "Zustand를 활용한 전역 상태 및 세션 관리",
+              "낙관적 UI(Optimistic UI)로 즉각적인 메시지 전송 경험 제공",
+              "서버 실패 시 자동 롤백 및 재시도(Retry) 로직 구현",
+              "게스트 모드 및 세션 자동 생성 지원"
+            ]
+          },
+          {
+            "title": "인증 및 보안 (Authentication)",
+            "items": [
+              "Axios Interceptor를 통한 토큰 자동 주입 및 에러 핸들링",
+              "401 Unauthorized 발생 시 자동 로그아웃 및 리다이렉트",
+              "안전한 토큰 관리 및 보안 흐름 구현"
+            ]
+          },
+          {
+            "title": "다국어 지원 (Global i18n)",
+            "items": [
+              "react-i18next 도입 (한국어, 영어, 일본어, 중국어 지원)",
+              "실시간 언어 변경 및 설정 영구 저장",
+              "JSON 기반 리소스 관리"
+            ]
+          },
+          {
+            "title": "테마 시스템 (Dark/Light Mode)",
+            "items": [
+              "Tailwind CSS Dark Mode 및 시스템 설정 동기화",
+              "FOUC 방지를 위한 초기화 로직 및 Zustand Persist 활용"
+            ]
+          },
+          {
+            "title": "프로필 관리 (Profile Management)",
+            "items": [
+              "단과대 -> 학부 -> 전공 계층형 데이터 선택 로직 구현",
+              "반응형 모달 디자인 (모바일/데스크톱 최적화)"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "지능형 데이터 프리페칭",
+            "items": [
+              "Hover Prefetching: 세션 목록 마우스 호버 시 데이터 미리 로드",
+              "Request Deduplication: 중복 요청 방지 및 네트워크 리소스 절약"
+            ]
+          },
+          {
+            "title": "클라이언트 사이드 캐싱",
+            "items": [
+              "메모리 캐시(Map)를 활용한 즉각적인 세션 데이터 렌더링",
+              "백그라운드 데이터 동기화로 최신 상태 유지"
+            ]
+          },
+          {
+            "title": "성능 최적화",
+            "items": [
+              "Vite 및 Tailwind JIT 모드 활용으로 번들 사이즈 최소화",
+              "낙관적 UI로 네트워크 지연 체감 시간 단축"
+            ]
+          }
+        ]
       },
       "color": "#ff00ff"
     },
@@ -102,7 +174,7 @@
       "id": "skill-python",
       "type": "skill",
       "label": "Python / FastAPI",
-      "connections": ["project-chatbot"],
+      "connections": [],
       "details": {
         "description": "Backend development with FastAPI, async programming, and AI integrations."
       },
