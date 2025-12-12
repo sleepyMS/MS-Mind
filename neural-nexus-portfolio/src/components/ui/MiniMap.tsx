@@ -73,7 +73,7 @@ export function MiniMap() {
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-30 w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden"
+      className="hidden md:block fixed bottom-6 right-6 z-30 w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden"
       style={{
         background: isDark
           ? "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%)"
