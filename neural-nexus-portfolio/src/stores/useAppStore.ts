@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import type { AppState } from "../types";
+import type { AppState, NodeType } from "../types";
 
 /**
  * 전역 상태 스토어
- * Zustand를 사용하여 노드, 카메라, 모달 상태 관리
+ * Zustand를 사용하여 노드, 카메라, 모달, UI 상태 관리
  */
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>((set, get) => ({
   // 노드 상태
   activeNode: null, // 현재 선택된 노드
   hoveredNode: null, // 현재 호버중인 노드
@@ -18,6 +18,12 @@ export const useAppStore = create<AppState>((set) => ({
   cameraTarget: null, // 카메라 이동 목표 좌표
   isAnimating: false, // 애니메이션 진행 중 여부
 
+  // UI 상태
+  visibleNodeTypes: ["main", "project", "skill"], // 기본: 모든 타입 표시
+  isSidePanelOpen: false, // 사이드 패널 닫힘
+  isLoading: true, // 초기 로딩 상태
+  searchQuery: "", // 검색어
+
   // 계산된 노드 위치 (포스 시뮬레이션 결과)
   nodePositions: new Map(),
 
@@ -29,4 +35,22 @@ export const useAppStore = create<AppState>((set) => ({
   setCameraTarget: (target) => set({ cameraTarget: target }),
   setIsAnimating: (animating) => set({ isAnimating: animating }),
   setNodePositions: (positions) => set({ nodePositions: positions }),
+
+  // UI 액션들
+  toggleNodeType: (type: NodeType) => {
+    const current = get().visibleNodeTypes;
+    const isVisible = current.includes(type);
+
+    // 최소 1개의 타입은 항상 보이도록
+    if (isVisible && current.length === 1) return;
+
+    set({
+      visibleNodeTypes: isVisible
+        ? current.filter((t) => t !== type)
+        : [...current, type],
+    });
+  },
+  setSidePanelOpen: (open) => set({ isSidePanelOpen: open }),
+  setLoading: (loading) => set({ isLoading: loading }),
+  setSearchQuery: (query) => set({ searchQuery: query }),
 }));

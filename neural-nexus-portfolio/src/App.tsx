@@ -1,5 +1,12 @@
+import { useState } from "react";
 import { Scene } from "./components/canvas/Scene";
 import { Modal } from "./components/ui/Modal";
+import { Tooltip } from "./components/ui/Tooltip";
+import { LoadingScreen } from "./components/ui/LoadingScreen";
+import { NodeFilter } from "./components/ui/NodeFilter";
+import { SidePanel } from "./components/ui/SidePanel";
+import { MiniMap } from "./components/ui/MiniMap";
+import { useAppStore } from "./stores/useAppStore";
 import "./index.css";
 
 /**
@@ -7,16 +14,39 @@ import "./index.css";
  * 살아있는 뇌의 신경망 컨셉 3D 포트폴리오
  */
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { setLoading } = useAppStore();
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    setLoading(false);
+  };
+
   return (
     <div className="relative w-full h-screen bg-[#000010]">
+      {/* 로딩 스크린 */}
+      {isLoading && (
+        <LoadingScreen onComplete={handleLoadingComplete} minDuration={2500} />
+      )}
+
       {/* 3D 씬 */}
       <Scene />
 
       {/* UI 오버레이 */}
       <Modal />
+      <Tooltip />
+      <NodeFilter />
+      <SidePanel />
+      <MiniMap />
 
       {/* 네비게이션 힌트 */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none">
+      <div
+        className={`
+          fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none
+          transition-opacity duration-500
+          ${isLoading ? "opacity-0" : "opacity-100"}
+        `}
+      >
         <p className="text-white/40 text-sm">
           드래그로 회전 • 스크롤로 줌 • 노드 클릭으로 탐색
         </p>
@@ -37,7 +67,13 @@ function App() {
       </div>
 
       {/* 타이틀 */}
-      <div className="fixed top-6 left-6 pointer-events-none">
+      <div
+        className={`
+          fixed top-6 left-6 pointer-events-none
+          transition-all duration-500
+          ${isLoading ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}
+        `}
+      >
         <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
           Neural Nexus
         </h1>

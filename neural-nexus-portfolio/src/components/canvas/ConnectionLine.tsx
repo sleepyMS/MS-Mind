@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -21,8 +21,6 @@ export function ConnectionLine({
   color = "#00ffff",
   isHighlighted = false,
 }: ConnectionLineProps) {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-
   // 결정론적(deterministic) 곡선 생성 - 랜덤 제거
   // start와 end 좌표를 시드로 사용하여 일관된 곡선 생성
   const lineObject = useMemo(() => {

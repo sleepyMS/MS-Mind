@@ -58,6 +58,12 @@ export interface AppState {
   cameraTarget: [number, number, number] | null; // 카메라 이동 목표
   isAnimating: boolean; // 애니메이션 진행 중 여부
 
+  // UI 상태
+  visibleNodeTypes: NodeType[]; // 표시할 노드 타입 필터
+  isSidePanelOpen: boolean; // 사이드 패널 열림 상태
+  isLoading: boolean; // 로딩 상태
+  searchQuery: string; // 검색어
+
   // 상태 변경 액션들
   setActiveNode: (id: string | null) => void;
   setHoveredNode: (id: string | null) => void;
@@ -65,6 +71,12 @@ export interface AppState {
   setModalOpen: (open: boolean) => void;
   setCameraTarget: (target: [number, number, number] | null) => void;
   setIsAnimating: (animating: boolean) => void;
+
+  // UI 액션들
+  toggleNodeType: (type: NodeType) => void;
+  setSidePanelOpen: (open: boolean) => void;
+  setLoading: (loading: boolean) => void;
+  setSearchQuery: (query: string) => void;
 
   // 계산된 노드 위치 (포스 시뮬레이션 결과)
   nodePositions: Map<string, [number, number, number]>;
