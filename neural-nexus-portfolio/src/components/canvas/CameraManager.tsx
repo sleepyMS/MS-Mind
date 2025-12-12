@@ -13,8 +13,13 @@ export function CameraManager() {
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const { camera } = useThree();
 
-  const { cameraTarget, isAnimating, setIsAnimating, isModalOpen } =
-    useAppStore();
+  const {
+    cameraTarget,
+    isAnimating,
+    setIsAnimating,
+    isModalOpen,
+    sceneRotation,
+  } = useAppStore();
 
   // 애니메이션 상태를 ref로 관리 (렌더링 최적화)
   const animationRef = useRef({
@@ -31,9 +36,20 @@ export function CameraManager() {
   useEffect(() => {
     if (!cameraTarget || !controlsRef.current) return;
 
-    const targetLookAt = new THREE.Vector3(...cameraTarget);
-    const cameraOffset = new THREE.Vector3(0, 2, 8);
-    const targetCameraPosition = targetLookAt.clone().add(cameraOffset);
+    // 타겟 좌표에 현재 씬의 회전 적용
+    const targetLookAt = new THREE.Vector3(...cameraTarget).applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      sceneRotation
+    );
+
+    // 카메라 위치: 타겟 + 오프셋 (오프셋도 회전 필요할 수 있음, 하지만 현재는 고정 오프셋)
+    // 오프셋을 씬 회전에 맞춰 회전시키면 카메라가 항상 "앞"에서 노드를 보게 됨
+    const baseOffset = new THREE.Vector3(0, 2, 8);
+    const rotatedOffset = baseOffset
+      .clone()
+      .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);
+
+    const targetCameraPosition = targetLookAt.clone().add(rotatedOffset);
 
     // 현재 위치 저장
     animationRef.current.startPosition.copy(camera.position);
@@ -51,7 +67,7 @@ export function CameraManager() {
     );
 
     setIsAnimating(true);
-  }, [cameraTarget, camera, setIsAnimating]);
+  }, [cameraTarget, camera, setIsAnimating, sceneRotation]);
 
   // 매 프레임 부드러운 보간
   useFrame((_, delta) => {

@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useAppStore } from "../../stores/useAppStore";
+import { getThemeColor } from "../../utils/themeUtils";
 
 interface ConnectionLineProps {
   start: [number, number, number];
@@ -22,6 +24,10 @@ export function ConnectionLine({
   isHighlighted = false,
   isDashed = false,
 }: ConnectionLineProps) {
+  const { theme } = useAppStore();
+  const themeColor = useMemo(() => getThemeColor(color, theme), [color, theme]);
+  const isDark = theme === "dark";
+
   // 결정론적(deterministic) 곡선 생성
   const lineObject = useMemo(() => {
     const startVec = new THREE.Vector3(...start);
@@ -71,12 +77,15 @@ export function ConnectionLine({
     }
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 
-    // 쉐이더 머티리얼 - 직접/간접 연결에 따라 다른 효과
+    // 라이트 모드용 기본 오파시티 설정 (더 진하게)
+    const baseOpacity = isDark ? (isDashed ? 0.4 : 0.6) : isDashed ? 0.6 : 0.8;
+
+    // 쉐이더 머티리얼
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color(color) },
-        uOpacity: { value: isDashed ? 0.4 : 0.6 },
+        uColor: { value: new THREE.Color(themeColor) },
+        uOpacity: { value: baseOpacity },
         uPulseSpeed: { value: isDashed ? 1.0 : 2.0 },
         uIsDashed: { value: isDashed ? 1.0 : 0.0 },
       },
@@ -87,7 +96,7 @@ export function ConnectionLine({
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
-      // 프래그먼트 쉐이더 - 점선/실선 효과
+      // 프래그먼트 쉐이더
       fragmentShader: `
         uniform float uTime;
         uniform vec3 uColor;
@@ -98,10 +107,9 @@ export function ConnectionLine({
         varying vec2 vUv;
         
         void main() {
-          // 점선 효과 (간접 연결)
+          // 점선 효과
           float dashPattern = 1.0;
           if (uIsDashed > 0.5) {
-            // 움직이는 점선 패턴
             float dashFreq = 20.0;
             dashPattern = step(0.5, fract((vUv.x - uTime * 0.3) * dashFreq));
           }
@@ -118,10 +126,9 @@ export function ConnectionLine({
           float edgeFade = smoothstep(0.0, 0.1, vUv.x) * smoothstep(1.0, 0.9, vUv.x);
           float finalAlpha = (baseGlow + combinedPulse * 0.7) * edgeFade * uOpacity * dashPattern;
           
-          // 간접 연결은 약간 다른 색조
           vec3 finalColor = uColor;
           if (uIsDashed > 0.5) {
-            finalColor = mix(uColor, vec3(1.0), 0.2); // 약간 밝게
+            finalColor = mix(uColor, vec3(1.0), 0.2); 
           } else {
             finalColor = uColor + vec3(0.2, 0.1, 0.3) * combinedPulse;
           }
@@ -131,19 +138,30 @@ export function ConnectionLine({
       `,
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
+      // 라이트 모드에서는 NormalBlending을 사용하여 배경에 묻히지 않게 함
+      blending: isDark ? THREE.AdditiveBlending : THREE.NormalBlending,
     });
 
     return new THREE.Line(geometry, material);
-  }, [start[0], start[1], start[2], end[0], end[1], end[2], color, isDashed]);
+  }, [start, end, themeColor, isDashed, isDark]);
 
   // 쉐이더 애니메이션 업데이트
   useFrame((state) => {
     const material = lineObject.material as THREE.ShaderMaterial;
     if (material.uniforms) {
       material.uniforms.uTime.value = state.clock.elapsedTime;
+      // 색상 업데이트 (테마 변경 시 반영)
+      material.uniforms.uColor.value.set(themeColor);
 
-      const targetOpacity = isHighlighted ? 1.0 : isDashed ? 0.35 : 0.5;
+      const baseOpacity = isDark
+        ? isDashed
+          ? 0.35
+          : 0.5
+        : isDashed
+        ? 0.55
+        : 0.75; // 라이트 모드에서는 더 진하게
+
+      const targetOpacity = isHighlighted ? 1.0 : baseOpacity;
       material.uniforms.uOpacity.value = THREE.MathUtils.lerp(
         material.uniforms.uOpacity.value,
         targetOpacity,

@@ -3,12 +3,16 @@ import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData, NodeType } from "../../types";
+import { getThemeColor } from "../../utils/themeUtils";
 
-const typeConfig: Record<NodeType, { icon: string; color: string }> = {
-  main: { icon: "👤", color: "#00ffff" },
-  project: { icon: "🚀", color: "#ff00ff" },
-  skill: { icon: "⚡", color: "#88ce02" },
-  lesson: { icon: "💡", color: "#f59e0b" },
+const typeConfig: Record<
+  NodeType,
+  { icon: string; darkColor: string; lightColor: string }
+> = {
+  main: { icon: "👤", darkColor: "#00ffff", lightColor: "#0891b2" },
+  project: { icon: "🚀", darkColor: "#ff00ff", lightColor: "#c026d3" },
+  skill: { icon: "⚡", darkColor: "#88ce02", lightColor: "#65a30d" },
+  lesson: { icon: "💡", darkColor: "#f59e0b", lightColor: "#d97706" },
 };
 
 /**
@@ -26,7 +30,9 @@ export function SidePanel() {
     setCameraTarget,
     nodePositions,
     setHoveredNode,
+    theme,
   } = useAppStore();
+  const isDark = theme === "dark";
 
   const [expandedTypes, setExpandedTypes] = useState<NodeType[]>([
     "main",
@@ -87,11 +93,10 @@ export function SidePanel() {
           }
         `}
         style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+          background: "var(--glass-bg)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(255,255,255,0.15)",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+          border: "1px solid var(--glass-border)",
+          boxShadow: "var(--glass-shadow)",
         }}
         aria-label={isSidePanelOpen ? "Close panel" : "Open panel"}
       >
@@ -122,16 +127,22 @@ export function SidePanel() {
         `}
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,16,0.98) 0%, rgba(0,0,16,0.95) 100%)",
+            "linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)",
           backdropFilter: "blur(20px)",
-          borderRight: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: isSidePanelOpen ? "4px 0 30px rgba(0,0,0,0.5)" : "none",
+          borderRight: "1px solid var(--glass-border)",
+          boxShadow: isSidePanelOpen ? "4px 0 30px rgba(0,0,0,0.2)" : "none",
         }}
       >
         {/* 헤더 */}
-        <div className="p-4 border-b border-white/10">
-          <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-            <span className="text-cyan-400">🧠</span>
+        <div
+          className="p-4"
+          style={{ borderBottom: "1px solid var(--glass-border)" }}
+        >
+          <h2
+            className="text-lg font-bold mb-3 flex items-center gap-2"
+            style={{ color: "var(--text-primary)" }}
+          >
+            <span style={{ color: "var(--color-main)" }}>🧠</span>
             {t("sidebar.title")}
           </h2>
 
@@ -142,14 +153,18 @@ export function SidePanel() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("sidebar.searchPlaceholder")}
-              className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm text-white placeholder-white/40 outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
+              className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.15)",
+                background: isDark
+                  ? "rgba(255,255,255,0.08)"
+                  : "rgba(0,0,0,0.05)",
+                border: "1px solid var(--glass-border)",
+                color: "var(--text-primary)",
               }}
             />
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-cyan-400 transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 group-focus-within:text-cyan-400 transition-colors"
+              style={{ color: "var(--text-muted)" }}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -164,7 +179,13 @@ export function SidePanel() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/20 transition-all"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center transition-all"
+                style={{
+                  background: isDark
+                    ? "rgba(255,255,255,0.1)"
+                    : "rgba(0,0,0,0.1)",
+                  color: "var(--text-muted)",
+                }}
               >
                 <svg
                   className="w-3 h-3"
@@ -191,6 +212,7 @@ export function SidePanel() {
             if (nodes.length === 0) return null;
 
             const config = typeConfig[type];
+            const color = isDark ? config.darkColor : config.lightColor;
             const isExpanded = expandedTypes.includes(type);
 
             return (
@@ -200,24 +222,22 @@ export function SidePanel() {
                   onClick={() => toggleType(type)}
                   className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                   style={{
-                    background: isExpanded
-                      ? `${config.color}10`
-                      : "transparent",
+                    background: isExpanded ? `${color}10` : "transparent",
                     border: isExpanded
-                      ? `1px solid ${config.color}30`
+                      ? `1px solid ${color}30`
                       : "1px solid transparent",
                   }}
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-base">{config.icon}</span>
-                    <span style={{ color: config.color }}>
+                    <span style={{ color: color }}>
                       {t(`nodeTypes.${type}`)}
                     </span>
                     <span
                       className="px-1.5 py-0.5 rounded-md text-xs"
                       style={{
-                        background: `${config.color}20`,
-                        color: config.color,
+                        background: `${color}20`,
+                        color: color,
                       }}
                     >
                       {nodes.length}
@@ -227,7 +247,7 @@ export function SidePanel() {
                     className={`w-4 h-4 transition-transform duration-200 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
-                    style={{ color: config.color }}
+                    style={{ color: color }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -246,7 +266,8 @@ export function SidePanel() {
                   <div className="mt-2 ml-1 space-y-1">
                     {nodes.map((node) => {
                       const isHovered = hoveredNodeId === node.id;
-                      const nodeColor = node.color || config.color;
+                      const rawNodeColor = node.color || color;
+                      const nodeColor = getThemeColor(rawNodeColor, theme);
 
                       return (
                         <button
@@ -292,7 +313,9 @@ export function SidePanel() {
                             style={{
                               color: isHovered
                                 ? nodeColor
-                                : "rgba(255,255,255,0.7)",
+                                : isDark
+                                ? "rgba(255,255,255,0.7)"
+                                : "rgba(0,0,0,0.6)",
                             }}
                           >
                             {node.label}
@@ -328,15 +351,33 @@ export function SidePanel() {
           {filteredNodes.length === 0 && (
             <div className="text-center py-12">
               <div className="text-4xl mb-3">🔍</div>
-              <p className="text-white/40 text-sm">{t("sidebar.noResults")}</p>
+              <p
+                style={{
+                  color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)",
+                }}
+                className="text-sm"
+              >
+                {t("sidebar.noResults")}
+              </p>
             </div>
           )}
         </div>
 
         {/* 푸터 */}
-        <div className="p-4 border-t border-white/10">
+        <div
+          className="p-4"
+          style={{
+            borderTop: isDark
+              ? "1px solid rgba(255,255,255,0.1)"
+              : "1px solid rgba(0,0,0,0.1)",
+          }}
+        >
           <div className="flex items-center justify-between text-xs">
-            <span className="text-white/30">
+            <span
+              style={{
+                color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
+              }}
+            >
               {t("sidebar.totalNodes", { count: data.nodes.length })}
             </span>
             <div className="flex gap-1">
@@ -344,7 +385,11 @@ export function SidePanel() {
                 <div
                   key={type}
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: typeConfig[type].color }}
+                  style={{
+                    backgroundColor: isDark
+                      ? typeConfig[type].darkColor
+                      : typeConfig[type].lightColor,
+                  }}
                   title={t(`nodeTypes.${type}`)}
                 />
               ))}

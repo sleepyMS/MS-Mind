@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { AppState, NodeType } from "../types";
+import type { AppState, NodeType, ThemeType } from "../types";
 
 /**
  * 전역 상태 스토어
@@ -23,6 +23,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   isSidePanelOpen: true, // 사이드 패널 기본 열림
   isLoading: true, // 초기 로딩 상태
   searchQuery: "", // 검색어
+  theme: "dark", // 기본 다크 테마
+  isThemeTransitioning: false, // 테마 전환 애니메이션 상태
+  sceneRotation: 0, // 초기 회전값 0
 
   // 계산된 노드 위치 (포스 시뮬레이션 결과)
   nodePositions: new Map(),
@@ -53,4 +56,18 @@ export const useAppStore = create<AppState>((set, get) => ({
   setSidePanelOpen: (open) => set({ isSidePanelOpen: open }),
   setLoading: (loading) => set({ isLoading: loading }),
   setSearchQuery: (query) => set({ searchQuery: query }),
+  setTheme: (theme: ThemeType) => set({ theme }),
+  toggleTheme: () => {
+    set((state) => ({
+      isThemeTransitioning: true,
+      theme: state.theme === "dark" ? "light" : "dark",
+      sceneRotation: state.sceneRotation + Math.PI, // 180도 회전 추가
+    }));
+
+    setTimeout(() => {
+      set({ isThemeTransitioning: false });
+    }, 2000);
+  },
+  setThemeTransitioning: (transitioning: boolean) =>
+    set({ isThemeTransitioning: transitioning }),
 }));

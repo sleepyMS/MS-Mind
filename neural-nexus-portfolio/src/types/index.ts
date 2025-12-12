@@ -1,5 +1,6 @@
 // 신경망 시각화를 위한 노드 타입 정의
 export type NodeType = "main" | "project" | "skill" | "lesson";
+export type ThemeType = "dark" | "light";
 
 /**
  * 노드 상세 정보 인터페이스
@@ -63,6 +64,9 @@ export interface AppState {
   isSidePanelOpen: boolean; // 사이드 패널 열림 상태
   isLoading: boolean; // 로딩 상태
   searchQuery: string; // 검색어
+  theme: ThemeType; // 테마 (다크/라이트)
+  isThemeTransitioning: boolean; // 테마 전환 애니메이션 중
+  sceneRotation: number; // 씬 회전 각도 (라디안)
 
   // 상태 변경 액션들
   setActiveNode: (id: string | null) => void;
@@ -77,6 +81,9 @@ export interface AppState {
   setSidePanelOpen: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
   setSearchQuery: (query: string) => void;
+  setTheme: (theme: ThemeType) => void;
+  toggleTheme: () => void;
+  setThemeTransitioning: (transitioning: boolean) => void;
 
   // 계산된 노드 위치 (포스 시뮬레이션 결과)
   nodePositions: Map<string, [number, number, number]>;

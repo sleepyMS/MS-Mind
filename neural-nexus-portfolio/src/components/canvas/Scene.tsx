@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { Node } from "./Node";
 import { ConnectionLine } from "./ConnectionLine";
 import { CameraManager } from "./CameraManager";
@@ -9,6 +9,7 @@ import { useForceGraph } from "../../hooks/useForceGraph";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
+import * as THREE from "three";
 
 interface ConnectionData {
   id: string;
@@ -21,11 +22,77 @@ interface ConnectionData {
 }
 
 /**
+ * Three.js 씬의 색상을 동적으로 변경하는 컴포넌트
+ */
+/**
+ * Three.js 씬의 색상을 동적으로 변경하는 컴포넌트
+ * useFrame을 사용하여 부드러운 색상 전환 처리
+ */
+function SceneColor({ isDark }: { isDark: boolean }) {
+  const { scene } = useThree();
+  const targetColor = useMemo(
+    () => (isDark ? new THREE.Color("#000010") : new THREE.Color("#87ceeb")),
+    [isDark]
+  );
+
+  // Fog 타겟 값
+  // Fog 타겟 값
+  // 라이트 모드에서는 안개를 거의 안 보이게 설정 (매우 멀리)
+  const targetFogNear = isDark ? 30 : 500;
+  const targetFogFar = isDark ? 150 : 1000;
+
+  useFrame((_, delta) => {
+    // 부드러운 보간 속도
+    const lerpSpeed = delta * 2;
+
+    // 배경색 보간
+    if (scene.background instanceof THREE.Color) {
+      scene.background.lerp(targetColor, lerpSpeed);
+    } else {
+      scene.background = targetColor.clone();
+    }
+
+    // 안개 업데이트
+    if (scene.fog && scene.fog instanceof THREE.Fog) {
+      scene.fog.color.lerp(targetColor, lerpSpeed);
+      scene.fog.near += (targetFogNear - scene.fog.near) * lerpSpeed;
+      scene.fog.far += (targetFogFar - scene.fog.far) * lerpSpeed;
+    } else {
+      scene.fog = new THREE.Fog(targetColor, targetFogNear, targetFogFar);
+    }
+  });
+
+  return null;
+}
+
+/**
+ * 테마 전환 시 씬 전체를 회전시키는 래퍼 컴포넌트
+ * 180도 회전하며 밤/낮이 바뀌는 효과 구현
+ */
+function SceneTransitionWrapper({ children }: { children: React.ReactNode }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const { sceneRotation } = useAppStore();
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+
+    // 현재 회전값에서 목표 회전값으로 부드럽게 이동 (댐핑)
+    // delta * 2는 부드러운 가속/감속을 제공
+    groupRef.current.rotation.y +=
+      (sceneRotation - groupRef.current.rotation.y) * delta * 2;
+  });
+
+  return <group ref={groupRef}>{children}</group>;
+}
+
+/**
  * 메인 3D 씬 컴포넌트
  * 모든 뉴런 노드와 시냅스 라인을 렌더링하고 관리
  */
 export function Scene() {
-  const { highlightedNodes, isModalOpen, visibleNodeTypes } = useAppStore();
+  const { highlightedNodes, isModalOpen, visibleNodeTypes, theme } =
+    useAppStore();
+  const isDark = theme === "dark";
 
   // JSON 데이터를 타입화된 데이터로 변환
   const data = nodesData as NeuralData;
@@ -189,46 +256,59 @@ export function Scene() {
           alpha: false,
           powerPreference: "high-performance",
         }}
-        style={{ background: "#000010" }}
       >
-        {/* 조명 설정 */}
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} color="#ffffff" />
+        {/* Three.js 배경색 직접 설정 */}
+        <SceneColor isDark={isDark} />
+
+        {/* 조명 설정 - 테마별 밝기/색상 조정 */}
+        <ambientLight intensity={isDark ? 0.3 : 1.0} />
+        <pointLight
+          position={[10, 10, 10]}
+          intensity={isDark ? 0.8 : 1.5}
+          color={isDark ? "#ffffff" : "#fffacd"}
+        />
         <pointLight
           position={[-10, -10, -10]}
-          intensity={0.5}
-          color="#00ffff"
+          intensity={isDark ? 0.5 : 0.4}
+          color={isDark ? "#00ffff" : "#87ceeb"}
         />
-        <pointLight position={[10, -10, 10]} intensity={0.5} color="#ff00ff" />
+        <pointLight
+          position={[10, -10, 10]}
+          intensity={isDark ? 0.5 : 0.4}
+          color={isDark ? "#ff00ff" : "#ffa500"}
+        />
 
-        {/* 배경 요소 (별, 파티클) */}
-        <Background />
+        {/* 테마 전환 시 전체 씬 회전 */}
+        <SceneTransitionWrapper>
+          {/* 배경 요소 (별, 파티클) */}
+          <Background />
 
-        {/* 뉴런 노드들 - visibleNodeTypes에 따라 표시/숨김 */}
-        {nodes.map((node) => {
-          const position = positions.get(node.id);
-          if (!position) return null;
+          {/* 뉴런 노드들 - visibleNodeTypes에 따라 표시/숨김 */}
+          {nodes.map((node) => {
+            const position = positions.get(node.id);
+            if (!position) return null;
 
-          const isVisible = visibleNodeTypes.includes(node.type);
-          if (!isVisible) return null;
+            const isVisible = visibleNodeTypes.includes(node.type);
+            if (!isVisible) return null;
 
-          return <Node key={node.id} node={node} position={position} />;
-        })}
+            return <Node key={node.id} node={node} position={position} />;
+          })}
 
-        {/* 시냅스 연결선들 - 직접 + 간접 연결 */}
-        {finalConnections.map((conn) => (
-          <ConnectionLine
-            key={conn.id}
-            start={conn.start}
-            end={conn.end}
-            color={conn.color}
-            isHighlighted={
-              highlightedNodes.includes(conn.sourceId) &&
-              highlightedNodes.includes(conn.targetId)
-            }
-            isDashed={conn.isIndirect}
-          />
-        ))}
+          {/* 시냅스 연결선들 - 직접 + 간접 연결 */}
+          {finalConnections.map((conn) => (
+            <ConnectionLine
+              key={conn.id}
+              start={conn.start}
+              end={conn.end}
+              color={conn.color}
+              isHighlighted={
+                highlightedNodes.includes(conn.sourceId) &&
+                highlightedNodes.includes(conn.targetId)
+              }
+              isDashed={conn.isIndirect}
+            />
+          ))}
+        </SceneTransitionWrapper>
 
         {/* 카메라 컨트롤 */}
         <CameraManager />

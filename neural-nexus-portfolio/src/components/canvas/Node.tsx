@@ -4,6 +4,7 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { NeuralNode } from "../../types";
 import { useAppStore } from "../../stores/useAppStore";
+import { getThemeColor } from "../../utils/themeUtils";
 
 interface NodeProps {
   node: NeuralNode;
@@ -45,6 +46,7 @@ export function Node({ node, position }: NodeProps) {
     setActiveNode,
     setModalOpen,
     setCameraTarget,
+    theme,
   } = useAppStore();
 
   const isActive = activeNode === node.id;
@@ -52,28 +54,35 @@ export function Node({ node, position }: NodeProps) {
   const isHighlighted = highlightedNodes.includes(node.id);
 
   const size = NODE_SIZES[node.type] || 0.5;
-  const color = node.color || DEFAULT_COLORS[node.type] || "#ffffff";
+
+  // 테마에 따른 색상 변환 (라이트 모드에서는 더 진한 색상 사용)
+  const rawColor = node.color || DEFAULT_COLORS[node.type] || "#ffffff";
+  const color = useMemo(
+    () => getThemeColor(rawColor, theme),
+    [rawColor, theme]
+  );
 
   // 메모이징된 지오메트리 및 머티리얼 (성능 최적화)
   const geometry = useMemo(() => new THREE.SphereGeometry(1, 32, 32), []);
+  const isDark = theme === "dark";
 
   const mainMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       color: color,
       emissive: color, // 발광 색상
-      emissiveIntensity: 0.5, // 발광 강도
+      emissiveIntensity: isDark ? 0.5 : 0.1, // 라이트 모드에서는 발광 최소화
       metalness: 0.3,
       roughness: 0.4,
     });
-  }, [color]);
+  }, [color, isDark]);
 
   const glowMaterial = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       color: color,
       transparent: true,
-      opacity: 0.15,
+      opacity: isDark ? 0.15 : 0.05, // 라이트 모드에서는 글로우 투명도 낮춤
     });
-  }, [color]);
+  }, [color, isDark]);
 
   // 매 프레임 애니메이션 (호버/활성 효과만, 위치 이동 없음)
   useFrame((_, delta) => {
@@ -96,8 +105,18 @@ export function Node({ node, position }: NodeProps) {
 
     // 발광 강도 애니메이션
     const material = meshRef.current.material as THREE.MeshStandardMaterial;
+    // 기본 강도 설정
+    const baseIntensity = isDark ? 0.5 : 0.1;
+    const hoverIntensity = isDark ? 1.2 : 0.3;
+    const highlightIntensity = isDark ? 0.8 : 0.2;
+
     const targetIntensity =
-      isHovered || isActive ? 1.2 : isHighlighted ? 0.8 : 0.5;
+      isHovered || isActive
+        ? hoverIntensity
+        : isHighlighted
+        ? highlightIntensity
+        : baseIntensity;
+
     material.emissiveIntensity = THREE.MathUtils.lerp(
       material.emissiveIntensity,
       targetIntensity,
@@ -106,8 +125,18 @@ export function Node({ node, position }: NodeProps) {
 
     // 글로우 투명도 애니메이션
     const glowMat = glowRef.current.material as THREE.MeshBasicMaterial;
+    // 기본 투명도 설정
+    const baseOpacity = isDark ? 0.1 : 0.05;
+    const hoverOpacity = isDark ? 0.3 : 0.15;
+    const highlightOpacity = isDark ? 0.2 : 0.1;
+
     const targetOpacity =
-      isHovered || isActive ? 0.3 : isHighlighted ? 0.2 : 0.1;
+      isHovered || isActive
+        ? hoverOpacity
+        : isHighlighted
+        ? highlightOpacity
+        : baseOpacity;
+
     glowMat.opacity = THREE.MathUtils.lerp(
       glowMat.opacity,
       targetOpacity,
@@ -176,13 +205,15 @@ export function Node({ node, position }: NodeProps) {
             className={`
               px-3 py-1.5 rounded-full
               bg-black/60 backdrop-blur-sm
-              border border-white/20
-              text-white text-sm font-medium
+              border
+              text-sm font-medium
               whitespace-nowrap
               transition-all duration-300
-              ${isHovered ? "scale-110 border-cyan-400/50" : ""}
+              ${isHovered ? "scale-110" : ""}
             `}
             style={{
+              borderColor: isHovered ? color : "rgba(255,255,255,0.2)",
+              color: "#ffffff",
               textShadow: `0 0 10px ${color}`,
             }}
           >

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
+import { getThemeColor } from "../../utils/themeUtils";
 
 type TabType = "description" | "trouble" | "lesson";
 
@@ -16,13 +17,19 @@ export function Modal() {
     activeNode,
     setActiveNode,
     setCameraTarget,
+    theme,
   } = useAppStore();
+  const isDark = theme === "dark";
+
   const [activeTab, setActiveTab] = useState<TabType>("description");
   const [isVisible, setIsVisible] = useState(false);
   const [tabDirection, setTabDirection] = useState<"left" | "right">("right");
 
   const data = nodesData as NeuralData;
   const node = data.nodes.find((n) => n.id === activeNode);
+
+  const rawColor = node?.color || "#00ffff";
+  const nodeColor = getThemeColor(rawColor, theme);
 
   // ESC 키로 모달 닫기
   const handleKeyDown = useCallback(
@@ -73,7 +80,6 @@ export function Modal() {
   const details = node.details;
   const hasTrouble = details?.trouble || details?.shooting;
   const hasLesson = details?.lesson;
-  const nodeColor = node.color || "#00ffff";
 
   const tabs: {
     id: TabType;
@@ -107,7 +113,9 @@ export function Modal() {
           isVisible ? "opacity-100" : "opacity-0"
         }`}
         style={{
-          background: `radial-gradient(ellipse at center, ${nodeColor}15 0%, transparent 50%), rgba(0, 0, 0, 0.6)`,
+          background: isDark
+            ? `radial-gradient(ellipse at center, ${nodeColor}15 0%, transparent 50%), rgba(0, 0, 0, 0.6)`
+            : `radial-gradient(ellipse at center, ${nodeColor}10 0%, transparent 60%), rgba(255, 255, 255, 0.4)`,
           backdropFilter: "blur(8px)",
         }}
       />
@@ -126,14 +134,16 @@ export function Modal() {
         `}
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)`,
+          background: isDark
+            ? `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)`
+            : `linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%)`,
           backdropFilter: "blur(24px)",
-          border: `1px solid ${nodeColor}30`,
-          boxShadow: `
-            0 0 60px ${nodeColor}20,
-            0 25px 50px -12px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15)
-          `,
+          border: isDark
+            ? `1px solid ${nodeColor}30`
+            : `1px solid rgba(255,255,255,0.8)`,
+          boxShadow: isDark
+            ? `0 0 60px ${nodeColor}20, 0 25px 50px -12px rgba(0, 0, 0, 0.5)`
+            : `0 10px 40px -10px rgba(0,0,0,0.1), 0 0 20px ${nodeColor}10`,
         }}
       >
         {/* 상단 글로우 라인 */}
@@ -141,6 +151,7 @@ export function Modal() {
           className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-3/4"
           style={{
             background: `linear-gradient(90deg, transparent, ${nodeColor}, transparent)`,
+            opacity: isDark ? 1 : 0.5,
           }}
         />
 
@@ -152,8 +163,12 @@ export function Modal() {
               <div
                 className="relative w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
                 style={{
-                  background: `linear-gradient(135deg, ${nodeColor}40, ${nodeColor}20)`,
-                  border: `1px solid ${nodeColor}50`,
+                  background: isDark
+                    ? `linear-gradient(135deg, ${nodeColor}40, ${nodeColor}20)`
+                    : `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`,
+                  border: isDark
+                    ? `1px solid ${nodeColor}50`
+                    : `1px solid ${nodeColor}30`,
                   boxShadow: `0 0 30px ${nodeColor}30`,
                 }}
               >
@@ -164,7 +179,10 @@ export function Modal() {
               </div>
 
               <div className="min-w-0">
-                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
+                <h2
+                  className="text-2xl md:text-3xl font-bold tracking-tight leading-tight transition-colors duration-300"
+                  style={{ color: isDark ? "white" : "#1f2937" }}
+                >
                   {node.label}
                 </h2>
                 <div className="flex items-center gap-2 mt-1.5">
@@ -178,7 +196,14 @@ export function Modal() {
                   >
                     {node.type}
                   </span>
-                  <span className="text-white/40 text-sm">
+                  <span
+                    className="text-sm transition-colors duration-300"
+                    style={{
+                      color: isDark
+                        ? "rgba(255,255,255,0.4)"
+                        : "rgba(0,0,0,0.5)",
+                    }}
+                  >
                     {node.connections.length}개 연결
                   </span>
                 </div>
@@ -190,13 +215,20 @@ export function Modal() {
               onClick={handleClose}
               className="group p-2.5 rounded-xl transition-all duration-300 hover:scale-110 shrink-0"
               style={{
-                background: "rgba(255, 255, 255, 0.05)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                background: isDark
+                  ? "rgba(255, 255, 255, 0.05)"
+                  : "rgba(0, 0, 0, 0.05)",
+                border: isDark
+                  ? "1px solid rgba(255, 255, 255, 0.1)"
+                  : "1px solid rgba(0, 0, 0, 0.05)",
               }}
               aria-label="닫기 (ESC)"
             >
               <svg
-                className="w-5 h-5 text-white/60 group-hover:text-white transition-colors"
+                className="w-5 h-5 transition-colors"
+                style={{
+                  color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.5)",
+                }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -216,40 +248,51 @@ export function Modal() {
         <div className="px-6 pb-4">
           <div
             className="flex gap-1 p-1 rounded-xl"
-            style={{ background: "rgba(255, 255, 255, 0.05)" }}
+            style={{
+              background: isDark
+                ? "rgba(255, 255, 255, 0.05)"
+                : "rgba(0, 0, 0, 0.03)",
+            }}
           >
             {tabs
               .filter((tab) => tab.available)
-              .map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={`
-                    relative flex-1 flex items-center justify-center gap-2
-                    px-4 py-2.5 rounded-lg text-sm font-medium
-                    transition-all duration-300
-                    ${
-                      activeTab === tab.id
-                        ? "text-white"
-                        : "text-white/50 hover:text-white/80"
-                    }
-                  `}
-                >
-                  {activeTab === tab.id && (
-                    <div
-                      className="absolute inset-0 rounded-lg transition-all duration-300"
-                      style={{
-                        background: `linear-gradient(135deg, ${nodeColor}30, ${nodeColor}15)`,
-                        border: `1px solid ${nodeColor}40`,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10">{tab.icon}</span>
-                  <span className="relative z-10 hidden sm:inline">
-                    {tab.label}
-                  </span>
-                </button>
-              ))}
+              .map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`
+                      relative flex-1 flex items-center justify-center gap-2
+                      px-4 py-2.5 rounded-lg text-sm font-medium
+                      transition-all duration-300
+                    `}
+                    style={{
+                      color: isActive
+                        ? isDark
+                          ? "white"
+                          : "#1f2937"
+                        : isDark
+                        ? "rgba(255,255,255,0.5)"
+                        : "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    {isActive && (
+                      <div
+                        className="absolute inset-0 rounded-lg transition-all duration-300"
+                        style={{
+                          background: `linear-gradient(135deg, ${nodeColor}30, ${nodeColor}15)`,
+                          border: `1px solid ${nodeColor}40`,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10">{tab.icon}</span>
+                    <span className="relative z-10 hidden sm:inline">
+                      {tab.label}
+                    </span>
+                  </button>
+                );
+              })}
           </div>
         </div>
 
@@ -266,14 +309,26 @@ export function Modal() {
             {activeTab === "description" && (
               <div className="space-y-5">
                 {/* 설명 */}
-                <p className="text-white/85 text-base leading-relaxed">
+                <p
+                  className="text-base leading-relaxed transition-colors duration-300"
+                  style={{
+                    color: isDark ? "rgba(255,255,255,0.85)" : "#374151",
+                  }}
+                >
                   {details?.description || "설명이 없습니다."}
                 </p>
 
                 {/* 사용 기술 */}
                 {details?.technologies && details.technologies.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-white/50 mb-3 uppercase tracking-wider">
+                    <h3
+                      className="text-sm font-semibold mb-3 uppercase tracking-wider transition-colors duration-300"
+                      style={{
+                        color: isDark
+                          ? "rgba(255,255,255,0.5)"
+                          : "rgba(0,0,0,0.5)",
+                      }}
+                    >
                       Tech Stack
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -282,9 +337,12 @@ export function Modal() {
                           key={tech}
                           className="px-3 py-1.5 text-sm rounded-lg transition-all duration-300 hover:scale-105 cursor-default"
                           style={{
-                            background: "rgba(255, 255, 255, 0.08)",
+                            background: isDark
+                              ? "rgba(255, 255, 255, 0.08)"
+                              : "rgba(0, 0, 0, 0.05)",
                             border: `1px solid ${nodeColor}30`,
                             color: nodeColor,
+                            fontWeight: 500,
                           }}
                         >
                           {tech}
@@ -338,7 +396,12 @@ export function Modal() {
                     <h3 className="text-lg font-semibold text-red-400 mb-2">
                       겪은 어려움
                     </h3>
-                    <p className="text-white/80 leading-relaxed">
+                    <p
+                      className="leading-relaxed transition-colors duration-300"
+                      style={{
+                        color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                      }}
+                    >
                       {details.trouble}
                     </p>
                   </div>
@@ -352,7 +415,12 @@ export function Modal() {
                     <h3 className="text-lg font-semibold text-green-400 mb-2">
                       해결 과정
                     </h3>
-                    <p className="text-white/80 leading-relaxed">
+                    <p
+                      className="leading-relaxed transition-colors duration-300"
+                      style={{
+                        color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                      }}
+                    >
                       {details.shooting}
                     </p>
                   </div>
@@ -371,10 +439,15 @@ export function Modal() {
                 <div className="flex gap-4">
                   <div className="text-3xl shrink-0">💡</div>
                   <div>
-                    <h3 className="text-lg font-semibold text-yellow-400 mb-2">
+                    <h3 className="text-lg font-semibold text-yellow-500 mb-2">
                       핵심 교훈
                     </h3>
-                    <p className="text-white/85 leading-relaxed text-lg italic">
+                    <p
+                      className="leading-relaxed text-lg italic transition-colors duration-300"
+                      style={{
+                        color: isDark ? "rgba(255,255,255,0.85)" : "#374151",
+                      }}
+                    >
                       "{details.lesson}"
                     </p>
                   </div>
@@ -385,9 +458,28 @@ export function Modal() {
         </div>
 
         {/* 하단 키보드 힌트 */}
-        <div className="px-6 pb-4 flex justify-end border-t border-white/5 pt-3">
-          <span className="text-white/30 text-xs flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">
+        <div
+          className="px-6 pb-4 flex justify-end pt-3"
+          style={{
+            borderTop: isDark
+              ? "1px solid rgba(255,255,255,0.05)"
+              : "1px solid rgba(0,0,0,0.05)",
+          }}
+        >
+          <span
+            className="text-xs flex items-center gap-1.5 transition-colors duration-300"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
+            }}
+          >
+            <kbd
+              className="px-1.5 py-0.5 rounded font-mono text-[10px]"
+              style={{
+                background: isDark
+                  ? "rgba(255,255,255,0.1)"
+                  : "rgba(0,0,0,0.05)",
+              }}
+            >
               ESC
             </kbd>
             닫기
