@@ -196,16 +196,14 @@ canvas {
   box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
 }
 
-/* 뉴럴 펄스 애니메이션 (로딩용) */
+/* 뉴럴 펄스 애니메이션 (로딩용) - opacity만 사용 */
 @keyframes neuralPulse {
   0%,
   100% {
-    opacity: 0.3;
-    transform: scale(1);
+    opacity: 0.4;
   }
   50% {
     opacity: 1;
-    transform: scale(1.1);
   }
 }
 
