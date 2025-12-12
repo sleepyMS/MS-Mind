@@ -73,6 +73,8 @@ export function CameraManager() {
       // 부드러운 감쇠 효과
       enableDamping={true}
       dampingFactor={0.05}
+      // 줌 속도 (기본값 1.0, 높을수록 빠름)
+      zoomSpeed={2.0}
       // 줌 제한
       minDistance={3}
       maxDistance={100}
