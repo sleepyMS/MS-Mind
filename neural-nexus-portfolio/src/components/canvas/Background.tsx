@@ -14,6 +14,7 @@ export function Background() {
   const isDark = theme === "dark";
   const particlesRef = useRef<THREE.Points>(null);
   const sunRef = useRef<THREE.Mesh>(null);
+  const moonRef = useRef<THREE.Mesh>(null);
 
   // 떠다니는 파티클 생성
   const particleGeometry = useMemo(() => {
@@ -71,21 +72,44 @@ export function Background() {
     if (sunRef.current) {
       sunRef.current.rotation.z += delta * 0.1;
     }
+    // 달 천천히 회전
+    if (moonRef.current) {
+      moonRef.current.rotation.y += delta * 0.05;
+    }
   });
 
   return (
     <>
-      {/* 다크 모드: 별밭 */}
+      {/* 다크 모드: 별밭 + 달 */}
       {isDark && (
-        <Stars
-          radius={200}
-          depth={100}
-          count={3000}
-          factor={4}
-          saturation={0.5}
-          fade
-          speed={0.5}
-        />
+        <>
+          <Stars
+            radius={200}
+            depth={100}
+            count={3000}
+            factor={4}
+            saturation={0.5}
+            fade
+            speed={0.5}
+          />
+          {/* 달 */}
+          <group position={[-30, 25, -50]}>
+            <mesh ref={moonRef} rotation={[0, 0, Math.PI / 8]}>
+              <sphereGeometry args={[6, 32, 32]} />
+              <meshStandardMaterial
+                color="#e0e0e0"
+                emissive="#aaaaaa"
+                emissiveIntensity={0.2}
+                roughness={0.8}
+              />
+            </mesh>
+            {/* 달 글로우 */}
+            <mesh>
+              <sphereGeometry args={[9, 32, 32]} />
+              <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
+            </mesh>
+          </group>
+        </>
       )}
 
       {/* 라이트 모드: 태양 */}

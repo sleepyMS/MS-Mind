@@ -101,9 +101,12 @@ export function SidePanel() {
         aria-label={isSidePanelOpen ? "Close panel" : "Open panel"}
       >
         <svg
-          className={`w-5 h-5 text-white/70 transition-transform duration-300 ${
+          className={`w-5 h-5 transition-transform duration-300 ${
             isSidePanelOpen ? "rotate-180" : ""
           }`}
+          style={{
+            color: isDark ? "rgba(255, 255, 255, 0.7)" : "#4b5563", // 다크: 흰색, 라이트: 진한 회색
+          }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

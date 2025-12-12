@@ -8,12 +8,12 @@ export const NEON_COLORS = {
 };
 
 export const PRINT_COLORS = {
-  cyan: "#0077be", // Ocean Blue
-  magenta: "#800080", // Purple
-  lime: "#4a7a00", // Dark Lime/Green
-  green: "#008040", // Dark Green
-  yellow: "#d4af37", // Metallic Gold/Dark Yellow
-  amber: "#d97706", // Dark Amber
+  cyan: "#0056b3", // Darker Blue for Light Mode
+  magenta: "#6b21a8", // Darker Purple for Light Mode
+  lime: "#15803d", // Strong Green for Light Mode
+  green: "#166534", // Dark Green for Light Mode
+  yellow: "#b45309", // Dark Amber/Orange for Light Mode (Yellow is too light)
+  amber: "#92400e", // Extra Dark Amber for Light Mode
 };
 
 /**

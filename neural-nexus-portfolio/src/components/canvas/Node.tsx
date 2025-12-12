@@ -80,7 +80,7 @@ export function Node({ node, position }: NodeProps) {
     return new THREE.MeshBasicMaterial({
       color: color,
       transparent: true,
-      opacity: isDark ? 0.15 : 0.05, // 라이트 모드에서는 글로우 투명도 낮춤
+      opacity: isDark ? 0.15 : 0.1, // 라이트 모드에서도 글로우를 좀 더 보이게 (0.05 -> 0.1)
     });
   }, [color, isDark]);
 
@@ -106,9 +106,9 @@ export function Node({ node, position }: NodeProps) {
     // 발광 강도 애니메이션
     const material = meshRef.current.material as THREE.MeshStandardMaterial;
     // 기본 강도 설정
-    const baseIntensity = isDark ? 0.5 : 0.1;
-    const hoverIntensity = isDark ? 1.2 : 0.3;
-    const highlightIntensity = isDark ? 0.8 : 0.2;
+    const baseIntensity = isDark ? 0.5 : 0.2; // 라이트 모드 발광 약간 증가
+    const hoverIntensity = isDark ? 1.2 : 0.4;
+    const highlightIntensity = isDark ? 0.8 : 0.3;
 
     const targetIntensity =
       isHovered || isActive
@@ -126,9 +126,9 @@ export function Node({ node, position }: NodeProps) {
     // 글로우 투명도 애니메이션
     const glowMat = glowRef.current.material as THREE.MeshBasicMaterial;
     // 기본 투명도 설정
-    const baseOpacity = isDark ? 0.1 : 0.05;
-    const hoverOpacity = isDark ? 0.3 : 0.15;
-    const highlightOpacity = isDark ? 0.2 : 0.1;
+    const baseOpacity = isDark ? 0.1 : 0.1; // 라이트 모드 투명도 증가
+    const hoverOpacity = isDark ? 0.3 : 0.2;
+    const highlightOpacity = isDark ? 0.2 : 0.15;
 
     const targetOpacity =
       isHovered || isActive

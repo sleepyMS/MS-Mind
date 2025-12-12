@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
+import { getThemeColor } from "../../utils/themeUtils";
 
 /**
  * 신경망 구조 미니맵 컴포넌트
@@ -15,7 +16,9 @@ export function MiniMap() {
     setActiveNode,
     setModalOpen,
     setCameraTarget,
+    theme,
   } = useAppStore();
+  const isDark = theme === "dark";
 
   const data = nodesData as NeuralData;
 
@@ -72,15 +75,21 @@ export function MiniMap() {
     <div
       className="fixed bottom-6 right-6 z-30 w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%)",
+        background: isDark
+          ? "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%)"
+          : "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%)",
         backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: isDark
+          ? "1px solid rgba(255,255,255,0.1)"
+          : "1px solid rgba(0,0,0,0.1)",
         boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
       }}
     >
       {/* 타이틀 */}
-      <div className="absolute top-2 left-2 text-[10px] text-white/40 font-medium uppercase tracking-wider">
+      <div
+        className="absolute top-2 left-2 text-[10px] font-medium uppercase tracking-wider"
+        style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)" }}
+      >
         Map
       </div>
 
@@ -103,7 +112,7 @@ export function MiniMap() {
                   y1={fromNode.y}
                   x2={toNode.x}
                   y2={toNode.y}
-                  stroke="rgba(255,255,255,0.3)"
+                  stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)"}
                   strokeWidth="0.5"
                 />
               );
@@ -116,6 +125,7 @@ export function MiniMap() {
           if (!node) return null;
           const isActive = activeNode === node.id;
           const isHovered = hoveredNode === node.id;
+          const nodeColor = getThemeColor(node.color || "#00ffff", theme);
 
           // 노드 타입별 크기
           const baseSize =
@@ -130,7 +140,7 @@ export function MiniMap() {
                   cx={node.x}
                   cy={node.y}
                   r={size * 2}
-                  fill={node.color || "#00ffff"}
+                  fill={nodeColor}
                   opacity="0.3"
                 />
               )}
@@ -139,7 +149,7 @@ export function MiniMap() {
                 cx={node.x}
                 cy={node.y}
                 r={size}
-                fill={node.color || "#00ffff"}
+                fill={nodeColor}
                 className="cursor-pointer transition-all duration-200 hover:opacity-80"
                 onClick={() => handleNodeClick(node.id, node.position!)}
               />
@@ -151,12 +161,32 @@ export function MiniMap() {
       {/* 범례 */}
       <div className="absolute bottom-2 left-2 right-2 flex justify-center gap-2">
         <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-          <span className="text-[8px] text-white/40">메인</span>
+          <div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: getThemeColor("#00ffff", theme) }}
+          />
+          <span
+            className="text-[8px]"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)",
+            }}
+          >
+            메인
+          </span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-          <span className="text-[8px] text-white/40">프로젝트</span>
+          <div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: getThemeColor("#ff00ff", theme) }}
+          />
+          <span
+            className="text-[8px]"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)",
+            }}
+          >
+            프로젝트
+          </span>
         </div>
       </div>
     </div>

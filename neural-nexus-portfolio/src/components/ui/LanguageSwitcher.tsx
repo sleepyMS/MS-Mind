@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { changeLanguage } from "../../i18n";
+import { useAppStore } from "../../stores/useAppStore";
 
 interface Language {
   code: string;
@@ -20,6 +21,8 @@ export function LanguageSwitcher() {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme } = useAppStore();
+  const isDark = theme === "dark";
 
   const currentLang =
     languages.find((l) => l.code === i18n.language) || languages[0];
@@ -51,20 +54,24 @@ export function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="group flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 hover:scale-105"
         style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+          background: isDark
+            ? "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
+            : "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%)",
           backdropFilter: "blur(12px)",
           border: isOpen
             ? "1px solid rgba(0, 255, 255, 0.3)"
-            : "1px solid rgba(255,255,255,0.15)",
+            : isDark
+            ? "1px solid rgba(255,255,255,0.15)"
+            : "1px solid rgba(0,0,0,0.1)",
           boxShadow: isOpen
             ? "0 0 20px rgba(0, 255, 255, 0.2)"
-            : "0 4px 20px rgba(0,0,0,0.3)",
+            : "0 4px 20px rgba(0,0,0,0.1)",
         }}
       >
         {/* 언어 아이콘 */}
         <svg
-          className="w-4 h-4 text-white/60"
+          className="w-4 h-4 transition-colors"
+          style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#4b5563" }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -78,15 +85,19 @@ export function LanguageSwitcher() {
         </svg>
 
         {/* 현재 언어 */}
-        <span className="text-sm font-medium text-white/80">
+        <span
+          className="text-sm font-medium transition-colors"
+          style={{ color: isDark ? "rgba(255,255,255,0.8)" : "#1f2937" }}
+        >
           {currentLang.code.toUpperCase()}
         </span>
 
         {/* 화살표 */}
         <svg
-          className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 ${
+          className={`w-3.5 h-3.5 transition-all duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
+          style={{ color: isDark ? "rgba(255,255,255,0.4)" : "#9ca3af" }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -105,11 +116,14 @@ export function LanguageSwitcher() {
         <div
           className="absolute top-full right-0 mt-2 py-1 rounded-xl overflow-hidden animate-fadeIn"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(0,0,16,0.98) 0%, rgba(0,0,16,0.95) 100%)",
+            background: isDark
+              ? "linear-gradient(180deg, rgba(0,0,16,0.98) 0%, rgba(0,0,16,0.95) 100%)"
+              : "rgba(255,255,255,0.95)",
             backdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+            border: isDark
+              ? "1px solid rgba(255,255,255,0.1)"
+              : "1px solid rgba(0,0,0,0.1)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
             minWidth: "140px",
           }}
         >
@@ -123,8 +137,24 @@ export function LanguageSwitcher() {
                 className={`
                   w-full flex items-center gap-3 px-4 py-2.5 text-left
                   transition-all duration-200
-                  ${isActive ? "bg-cyan-400/10" : "hover:bg-white/5"}
                 `}
+                style={{
+                  background: isActive
+                    ? isDark
+                      ? "rgba(0, 255, 255, 0.1)"
+                      : "rgba(8, 145, 178, 0.1)"
+                    : "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.background = isDark
+                      ? "rgba(255,255,255,0.05)"
+                      : "rgba(0,0,0,0.05)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.background = "transparent";
+                }}
               >
                 {/* 플래그 - 고정 너비로 정렬 */}
                 <span className="w-6 h-6 flex items-center justify-center text-lg">
@@ -133,9 +163,16 @@ export function LanguageSwitcher() {
 
                 {/* 언어 이름 */}
                 <span
-                  className={`text-sm font-medium ${
-                    isActive ? "text-cyan-400" : "text-white/70"
-                  }`}
+                  className="text-sm font-medium transition-colors"
+                  style={{
+                    color: isActive
+                      ? isDark
+                        ? "#22d3ee"
+                        : "#0891b2"
+                      : isDark
+                      ? "rgba(255,255,255,0.7)"
+                      : "#374151",
+                  }}
                 >
                   {lang.name}
                 </span>
@@ -143,7 +180,8 @@ export function LanguageSwitcher() {
                 {/* 체크 표시 */}
                 {isActive && (
                   <svg
-                    className="w-4 h-4 ml-auto text-cyan-400"
+                    className="w-4 h-4 ml-auto"
+                    style={{ color: isDark ? "#22d3ee" : "#0891b2" }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
