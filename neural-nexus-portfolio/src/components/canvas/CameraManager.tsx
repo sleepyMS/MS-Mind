@@ -1,14 +1,13 @@
 import { useRef, useEffect } from "react";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import gsap from "gsap";
 import { useAppStore } from "../../stores/useAppStore";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 /**
  * 카메라 관리 컴포넌트
- * OrbitControls와 GSAP를 활용한 부드러운 카메라 이동
+ * 부드러운 Lerp 기반 카메라 이동
  */
 export function CameraManager() {
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -17,50 +16,81 @@ export function CameraManager() {
   const { cameraTarget, isAnimating, setIsAnimating, isModalOpen } =
     useAppStore();
 
-  // 타겟이 변경되면 카메라 비행 애니메이션 실행
+  // 애니메이션 상태를 ref로 관리 (렌더링 최적화)
+  const animationRef = useRef({
+    isActive: false,
+    progress: 0,
+    startPosition: new THREE.Vector3(),
+    targetPosition: new THREE.Vector3(),
+    startLookAt: new THREE.Vector3(),
+    targetLookAt: new THREE.Vector3(),
+    duration: 1.5,
+  });
+
+  // 타겟이 변경되면 애니메이션 시작
   useEffect(() => {
     if (!cameraTarget || !controlsRef.current) return;
 
+    const targetLookAt = new THREE.Vector3(...cameraTarget);
+    const cameraOffset = new THREE.Vector3(0, 2, 8);
+    const targetCameraPosition = targetLookAt.clone().add(cameraOffset);
+
+    // 현재 위치 저장
+    animationRef.current.startPosition.copy(camera.position);
+    animationRef.current.targetPosition.copy(targetCameraPosition);
+    animationRef.current.startLookAt.copy(controlsRef.current.target);
+    animationRef.current.targetLookAt.copy(targetLookAt);
+    animationRef.current.progress = 0;
+    animationRef.current.isActive = true;
+
+    // 이동 거리에 따라 duration 조절 (멀면 더 오래)
+    const distance = camera.position.distanceTo(targetCameraPosition);
+    animationRef.current.duration = Math.min(
+      Math.max(distance * 0.1, 1.0),
+      2.5
+    );
+
     setIsAnimating(true);
-
-    const targetPosition = new THREE.Vector3(...cameraTarget);
-
-    // 노드 정면으로 카메라 위치 오프셋 계산
-    const cameraOffset = new THREE.Vector3(0, 1, 5);
-    const finalCameraPosition = targetPosition.clone().add(cameraOffset);
-
-    // GSAP로 카메라 위치 애니메이션
-    gsap.to(camera.position, {
-      x: finalCameraPosition.x,
-      y: finalCameraPosition.y,
-      z: finalCameraPosition.z,
-      duration: 1.5,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        // 애니메이션 중 컨트롤 업데이트
-        if (controlsRef.current) {
-          controlsRef.current.update();
-        }
-      },
-      onComplete: () => {
-        setIsAnimating(false);
-      },
-    });
-
-    // OrbitControls 타겟 애니메이션
-    gsap.to(controlsRef.current.target, {
-      x: targetPosition.x,
-      y: targetPosition.y,
-      z: targetPosition.z,
-      duration: 1.5,
-      ease: "power2.inOut",
-    });
   }, [cameraTarget, camera, setIsAnimating]);
 
-  // 모달 닫힐 때 카메라 리셋 (선택적)
+  // 매 프레임 부드러운 보간
+  useFrame((_, delta) => {
+    if (!animationRef.current.isActive || !controlsRef.current) return;
+
+    const anim = animationRef.current;
+
+    // 진행도 업데이트 (더 부드러운 이징)
+    anim.progress += delta / anim.duration;
+
+    if (anim.progress >= 1) {
+      // 애니메이션 완료
+      anim.progress = 1;
+      anim.isActive = false;
+      setIsAnimating(false);
+    }
+
+    // easeInOutCubic 이징 함수
+    const t = anim.progress;
+    const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    // 카메라 위치 보간
+    camera.position.lerpVectors(anim.startPosition, anim.targetPosition, ease);
+
+    // OrbitControls 타겟 보간
+    controlsRef.current.target.lerpVectors(
+      anim.startLookAt,
+      anim.targetLookAt,
+      ease
+    );
+
+    // 컨트롤 업데이트 (damping 비활성화 상태에서)
+    controlsRef.current.update();
+  });
+
+  // 모달 닫힐 때 처리
   useEffect(() => {
     if (!isModalOpen && controlsRef.current) {
-      // 기본 뷰로 돌아가기 또는 현재 위치 유지
+      // 현재 위치 유지
     }
   }, [isModalOpen]);
 
@@ -70,20 +100,13 @@ export function CameraManager() {
       enablePan={true}
       enableZoom={true}
       enableRotate={true}
-      // 부드러운 감쇠 효과
-      enableDamping={true}
+      // 애니메이션 중에는 damping 비활성화로 흔들림 방지
+      enableDamping={!isAnimating}
       dampingFactor={0.05}
-      // 줌 속도 (기본값 1.0, 높을수록 빠름)
-      zoomSpeed={2.0}
-      // 줌 제한
+      zoomSpeed={1.5}
       minDistance={3}
       maxDistance={100}
-      // 패닝 제한 (선택적)
-      // maxPolarAngle={Math.PI / 1.5}
-      // 유휴 상태 자동 회전 (선택적)
-      // autoRotate={!isAnimating && !isModalOpen}
-      // autoRotateSpeed={0.5}
-      // 애니메이션 중 컨트롤 비활성화
+      // 애니메이션 중 사용자 입력 비활성화
       enabled={!isAnimating}
     />
   );
