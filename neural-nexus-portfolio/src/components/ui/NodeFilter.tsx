@@ -138,12 +138,12 @@ export function NodeFilter() {
       {/* 메인 컨트롤 바 (내용물) */}
       <div
         className={`
-          flex items-center gap-1.5 p-1.5 rounded-2xl transition-all duration-500
+          flex items-center gap-1.5 rounded-2xl transition-all
           overflow-hidden
           ${
             isExpanded
-              ? "max-w-[500px] opacity-100 translate-x-0"
-              : "max-w-0 opacity-0 translate-x-10 md:max-w-none md:opacity-100 md:translate-x-0"
+              ? "max-w-[500px] p-1.5 opacity-100 translate-x-0 duration-500"
+              : "max-w-0 p-0 opacity-0 translate-x-4 border-none duration-0 md:max-w-none md:p-1.5 md:opacity-100 md:translate-x-0 md:border-solid md:duration-500"
           }
         `}
         style={{
