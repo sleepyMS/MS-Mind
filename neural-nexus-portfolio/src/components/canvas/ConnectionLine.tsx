@@ -12,6 +12,8 @@ interface ConnectionLineProps {
 /**
  * 시냅스 연결선 컴포넌트
  * 노드 사이를 전기 펄스 효과로 연결하는 쉐이더 라인
+ *
+ * 주의: start와 end 위치가 정확히 노드 중심과 일치해야 함
  */
 export function ConnectionLine({
   start,
@@ -19,11 +21,11 @@ export function ConnectionLine({
   color = "#00ffff",
   isHighlighted = false,
 }: ConnectionLineProps) {
-  const lineRef = useRef<THREE.Line>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
-  // CatmullRom 곡선을 사용한 부드러운 라인 지오메트리 생성
-  const geometry = useMemo(() => {
+  // 결정론적(deterministic) 곡선 생성 - 랜덤 제거
+  // start와 end 좌표를 시드로 사용하여 일관된 곡선 생성
+  const lineObject = useMemo(() => {
     const startVec = new THREE.Vector3(...start);
     const endVec = new THREE.Vector3(...end);
 
@@ -32,21 +34,41 @@ export function ConnectionLine({
       .addVectors(startVec, endVec)
       .multiplyScalar(0.5);
 
-    // 유기적인 곡선을 위한 수직 오프셋 추가
+    // 결정론적 오프셋: 좌표값을 기반으로 일관된 오프셋 생성
     const direction = new THREE.Vector3().subVectors(endVec, startVec);
     const length = direction.length();
 
-    // 부드러운 곡선을 위한 컨트롤 포인트 생성
-    const offset = new THREE.Vector3(
-      (Math.random() - 0.5) * length * 0.2,
-      (Math.random() - 0.5) * length * 0.2,
-      (Math.random() - 0.5) * length * 0.2
-    );
-    mid.add(offset);
+    // 시드 값을 좌표에서 생성 (일관성 보장)
+    const seed =
+      (start[0] + end[0]) * 1000 +
+      (start[1] + end[1]) * 100 +
+      (start[2] + end[2]);
+    const pseudoRandom = (seed: number) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
 
-    const curve = new THREE.CatmullRomCurve3([startVec, mid, endVec]);
-    const points = curve.getPoints(50);
-    const geom = new THREE.BufferGeometry().setFromPoints(points);
+    // 부드러운 곡선을 위한 수직 오프셋 (결정론적)
+    const perpendicular = new THREE.Vector3()
+      .crossVectors(direction.normalize(), new THREE.Vector3(0, 1, 0))
+      .normalize();
+
+    // 방향이 거의 수직일 경우 다른 축 사용
+    if (perpendicular.length() < 0.1) {
+      perpendicular
+        .crossVectors(direction.normalize(), new THREE.Vector3(1, 0, 0))
+        .normalize();
+    }
+
+    // 결정론적 오프셋 적용 (곡선의 휘어짐 정도)
+    const curveAmount = length * 0.15;
+    const offsetValue = (pseudoRandom(seed) - 0.5) * 2;
+    mid.add(perpendicular.multiplyScalar(curveAmount * offsetValue));
+
+    // 직선에 가까운 곡선 (3개의 점으로 부드러운 곡선)
+    const curve = new THREE.QuadraticBezierCurve3(startVec, mid, endVec);
+    const points = curve.getPoints(30);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
     // 쉐이더용 UV 좌표 추가
     const uvs = new Float32Array(points.length * 2);
@@ -54,14 +76,10 @@ export function ConnectionLine({
       uvs[i * 2] = i / (points.length - 1);
       uvs[i * 2 + 1] = 0;
     }
-    geom.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 
-    return geom;
-  }, [start, end]);
-
-  // 전기 펄스 효과를 위한 쉐이더 머티리얼 생성
-  const material = useMemo(() => {
-    return new THREE.ShaderMaterial({
+    // 전기 펄스 효과를 위한 쉐이더 머티리얼
+    const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uColor: { value: new THREE.Color(color) },
@@ -88,7 +106,7 @@ export function ConnectionLine({
         void main() {
           // 라인을 따라 이동하는 여러 펄스 생성
           float pulse = sin((vUv.x - uTime * uPulseSpeed) * 10.0) * 0.5 + 0.5;
-          pulse = pow(pulse, 8.0);  // 펄스를 더 날카롭게
+          pulse = pow(pulse, 8.0);
           
           // 두 번째 더 빠른 펄스
           float pulse2 = sin((vUv.x - uTime * uPulseSpeed * 1.5) * 15.0) * 0.5 + 0.5;
@@ -96,8 +114,8 @@ export function ConnectionLine({
           
           // 펄스 합성
           float combinedPulse = max(pulse * 0.8, pulse2 * 0.6);
-          float baseGlow = 0.3;  // 기본 빛남
-          float edgeFade = smoothstep(0.0, 0.1, vUv.x) * smoothstep(1.0, 0.9, vUv.x);  // 양끝 페이드
+          float baseGlow = 0.3;
+          float edgeFade = smoothstep(0.0, 0.1, vUv.x) * smoothstep(1.0, 0.9, vUv.x);
           float finalAlpha = (baseGlow + combinedPulse * 0.7) * edgeFade * uOpacity;
           
           // 펄스에 따른 색상 변화
@@ -107,28 +125,27 @@ export function ConnectionLine({
       `,
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending, // 가산 블렌딩으로 빛나는 효과
+      blending: THREE.AdditiveBlending,
     });
-  }, [color]);
+
+    return new THREE.Line(geometry, material);
+  }, [start[0], start[1], start[2], end[0], end[1], end[2], color]);
 
   // 쉐이더 애니메이션 업데이트
   useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    const material = lineObject.material as THREE.ShaderMaterial;
+    if (material.uniforms) {
+      material.uniforms.uTime.value = state.clock.elapsedTime;
 
       // 하이라이트 시 투명도 증가
       const targetOpacity = isHighlighted ? 1.0 : 0.5;
-      materialRef.current.uniforms.uOpacity.value = THREE.MathUtils.lerp(
-        materialRef.current.uniforms.uOpacity.value,
+      material.uniforms.uOpacity.value = THREE.MathUtils.lerp(
+        material.uniforms.uOpacity.value,
         targetOpacity,
         0.1
       );
     }
   });
 
-  return (
-    <primitive object={new THREE.Line(geometry, material)} ref={lineRef}>
-      <primitive object={material} ref={materialRef} attach="material" />
-    </primitive>
-  );
+  return <primitive object={lineObject} />;
 }

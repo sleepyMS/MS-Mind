@@ -29,6 +29,8 @@ const DEFAULT_COLORS: Record<string, string> = {
 /**
  * 뉴런 노드 컴포넌트
  * 빛나는 구체로 프로젝트/스킬을 시각화
+ *
+ * 참고: 떠다니는 애니메이션 제거됨 - 연결선과 위치 동기화 문제 방지
  */
 export function Node({ node, position }: NodeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -73,7 +75,7 @@ export function Node({ node, position }: NodeProps) {
     });
   }, [color]);
 
-  // 매 프레임 애니메이션 (호버/활성 효과)
+  // 매 프레임 애니메이션 (호버/활성 효과만, 위치 이동 없음)
   useFrame((_, delta) => {
     if (!meshRef.current || !glowRef.current) return;
 
@@ -112,10 +114,8 @@ export function Node({ node, position }: NodeProps) {
       delta * 5
     );
 
-    // 부드러운 떠다니는 애니메이션
-    meshRef.current.position.y =
-      position[1] + Math.sin(Date.now() * 0.001 + position[0]) * 0.05;
-    glowRef.current.position.y = meshRef.current.position.y;
+    // 참고: 떠다니는 애니메이션 제거됨
+    // 연결선 끝점이 노드 중심과 항상 일치하도록 위치 고정
   });
 
   const handlePointerOver = () => {
