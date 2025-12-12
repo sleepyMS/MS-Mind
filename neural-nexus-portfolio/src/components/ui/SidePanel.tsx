@@ -26,6 +26,7 @@ export function SidePanel() {
     setModalOpen,
     setCameraTarget,
     nodePositions,
+    setHoveredNode,
   } = useAppStore();
 
   const [expandedTypes, setExpandedTypes] = useState<NodeType[]>([
@@ -33,6 +34,7 @@ export function SidePanel() {
     "project",
     "skill",
   ]);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const data = nodesData as NeuralData;
 
   const filteredNodes = data.nodes.filter(
@@ -65,6 +67,11 @@ export function SidePanel() {
     setModalOpen(true);
   };
 
+  const handleNodeHover = (nodeId: string | null) => {
+    setHoveredNodeId(nodeId);
+    setHoveredNode(nodeId);
+  };
+
   return (
     <>
       {/* 토글 버튼 */}
@@ -73,7 +80,7 @@ export function SidePanel() {
         className={`
           fixed left-4 top-1/2 -translate-y-1/2 z-40
           w-10 h-10 rounded-xl flex items-center justify-center
-          transition-all duration-300
+          transition-all duration-300 hover:scale-110
           ${
             isSidePanelOpen
               ? "translate-x-64 md:translate-x-72"
@@ -85,6 +92,7 @@ export function SidePanel() {
             "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
           backdropFilter: "blur(10px)",
           border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
         }}
         aria-label={isSidePanelOpen ? "패널 닫기" : "패널 열기"}
       >
@@ -115,9 +123,10 @@ export function SidePanel() {
         `}
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,16,0.95) 0%, rgba(0,0,16,0.9) 100%)",
+            "linear-gradient(180deg, rgba(0,0,16,0.98) 0%, rgba(0,0,16,0.95) 100%)",
           backdropFilter: "blur(20px)",
           borderRight: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: isSidePanelOpen ? "4px 0 30px rgba(0,0,0,0.5)" : "none",
         }}
       >
         {/* 헤더 */}
@@ -128,20 +137,20 @@ export function SidePanel() {
           </h2>
 
           {/* 검색창 */}
-          <div className="relative">
+          <div className="relative group">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="검색..."
-              className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm text-white placeholder-white/40 outline-none transition-all focus:ring-2"
+              className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm text-white placeholder-white/40 outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
               style={{
                 background: "rgba(255,255,255,0.08)",
                 border: "1px solid rgba(255,255,255,0.15)",
               }}
             />
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-cyan-400 transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -156,10 +165,10 @@ export function SidePanel() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/20 transition-all"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-3 h-3"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -187,22 +196,39 @@ export function SidePanel() {
 
             return (
               <div key={type} className="mb-3">
+                {/* 그룹 헤더 */}
                 <button
                   onClick={() => toggleType(type)}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5"
-                  style={{ color: typeInfo.color }}
+                  className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                  style={{
+                    background: isExpanded
+                      ? `${typeInfo.color}10`
+                      : "transparent",
+                    border: isExpanded
+                      ? `1px solid ${typeInfo.color}30`
+                      : "1px solid transparent",
+                  }}
                 >
                   <div className="flex items-center gap-2">
-                    <span>{typeInfo.icon}</span>
-                    <span>{typeInfo.label}</span>
-                    <span className="text-white/40 text-xs">
-                      ({nodes.length})
+                    <span className="text-base">{typeInfo.icon}</span>
+                    <span style={{ color: typeInfo.color }}>
+                      {typeInfo.label}
+                    </span>
+                    <span
+                      className="px-1.5 py-0.5 rounded-md text-xs"
+                      style={{
+                        background: `${typeInfo.color}20`,
+                        color: typeInfo.color,
+                      }}
+                    >
+                      {nodes.length}
                     </span>
                   </div>
                   <svg
-                    className={`w-4 h-4 transition-transform ${
+                    className={`w-4 h-4 transition-transform duration-200 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
+                    style={{ color: typeInfo.color }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -216,25 +242,87 @@ export function SidePanel() {
                   </svg>
                 </button>
 
+                {/* 노드 항목들 */}
                 {isExpanded && (
-                  <div className="mt-1 ml-2 space-y-1">
-                    {nodes.map((node) => (
-                      <button
-                        key={node.id}
-                        onClick={() => handleNodeClick(node.id)}
-                        className="group w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-all hover:bg-white/10"
-                      >
-                        <div
-                          className="w-2 h-2 rounded-full shrink-0"
+                  <div className="mt-2 ml-1 space-y-1">
+                    {nodes.map((node) => {
+                      const isHovered = hoveredNodeId === node.id;
+                      const nodeColor = node.color || typeInfo.color;
+
+                      return (
+                        <button
+                          key={node.id}
+                          onClick={() => handleNodeClick(node.id)}
+                          onMouseEnter={() => handleNodeHover(node.id)}
+                          onMouseLeave={() => handleNodeHover(null)}
+                          className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-200"
                           style={{
-                            backgroundColor: node.color || typeInfo.color,
+                            background: isHovered
+                              ? `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`
+                              : "transparent",
+                            border: isHovered
+                              ? `1px solid ${nodeColor}40`
+                              : "1px solid transparent",
+                            transform: isHovered
+                              ? "translateX(4px)"
+                              : "translateX(0)",
                           }}
-                        />
-                        <span className="text-white/80 group-hover:text-white truncate">
-                          {node.label}
-                        </span>
-                      </button>
-                    ))}
+                        >
+                          {/* 노드 인디케이터 */}
+                          <div
+                            className="relative w-3 h-3 rounded-full shrink-0 transition-all duration-200"
+                            style={{
+                              backgroundColor: nodeColor,
+                              boxShadow: isHovered
+                                ? `0 0 12px ${nodeColor}`
+                                : "none",
+                            }}
+                          >
+                            {isHovered && (
+                              <div
+                                className="absolute inset-0 rounded-full animate-ping"
+                                style={{
+                                  backgroundColor: nodeColor,
+                                  opacity: 0.5,
+                                }}
+                              />
+                            )}
+                          </div>
+
+                          {/* 노드 이름 */}
+                          <span
+                            className="truncate transition-colors duration-200"
+                            style={{
+                              color: isHovered
+                                ? nodeColor
+                                : "rgba(255,255,255,0.7)",
+                            }}
+                          >
+                            {node.label}
+                          </span>
+
+                          {/* 화살표 */}
+                          <svg
+                            className={`w-4 h-4 ml-auto transition-all duration-200 ${
+                              isHovered
+                                ? "opacity-100 translate-x-0"
+                                : "opacity-0 -translate-x-2"
+                            }`}
+                            style={{ color: nodeColor }}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -242,17 +330,30 @@ export function SidePanel() {
           })}
 
           {filteredNodes.length === 0 && (
-            <div className="text-center py-8 text-white/40 text-sm">
-              검색 결과가 없습니다
+            <div className="text-center py-12">
+              <div className="text-4xl mb-3">🔍</div>
+              <p className="text-white/40 text-sm">검색 결과가 없습니다</p>
             </div>
           )}
         </div>
 
         {/* 푸터 */}
         <div className="p-4 border-t border-white/10">
-          <p className="text-white/30 text-xs text-center">
-            총 {data.nodes.length}개의 노드
-          </p>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-white/30">
+              총 {data.nodes.length}개의 노드
+            </span>
+            <div className="flex gap-1">
+              {(["main", "project", "skill"] as NodeType[]).map((type) => (
+                <div
+                  key={type}
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: typeLabels[type].color }}
+                  title={typeLabels[type].label}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

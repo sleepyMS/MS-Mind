@@ -166,6 +166,7 @@ export function Node({ node, position }: NodeProps) {
         <Html
           position={[0, size + 0.5, 0]}
           center
+          zIndexRange={[10, 0]}
           style={{
             pointerEvents: "none",
             userSelect: "none",

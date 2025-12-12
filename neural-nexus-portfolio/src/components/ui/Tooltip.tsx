@@ -61,7 +61,7 @@ export function Tooltip() {
     <div
       ref={tooltipRef}
       className={`
-        fixed z-40 pointer-events-none
+        fixed z-50 pointer-events-none
         transition-all duration-200 ease-out
         ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}
       `}
