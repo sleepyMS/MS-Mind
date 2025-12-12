@@ -61,6 +61,17 @@ export function SidePanel() {
           o.items.some((i) =>
             i.toLowerCase().includes(searchQuery.toLowerCase())
           )
+      ) ||
+      node.details?.challenges?.some(
+        (c) =>
+          c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.solution.toLowerCase().includes(searchQuery.toLowerCase())
+      ) ||
+      node.details?.learnings?.some(
+        (l) =>
+          l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          l.content.toLowerCase().includes(searchQuery.toLowerCase())
       )
   );
 

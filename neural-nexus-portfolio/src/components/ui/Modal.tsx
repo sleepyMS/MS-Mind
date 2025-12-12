@@ -117,13 +117,17 @@ export function Modal() {
       id: "trouble",
       label: "트러블슈팅",
       icon: "🔧",
-      available: Boolean(hasTrouble),
+      available: Boolean(
+        hasTrouble || (details?.challenges && details.challenges.length > 0)
+      ),
     },
     {
       id: "lesson",
       label: "배운 점",
       icon: "💡",
-      available: Boolean(hasLesson),
+      available: Boolean(
+        hasLesson || (details?.learnings && details.learnings.length > 0)
+      ),
     },
   ];
 
@@ -148,7 +152,7 @@ export function Modal() {
       {/* 모달 본체 */}
       <div
         className={`
-          relative w-full max-w-2xl max-h-[85vh] overflow-hidden
+          relative w-[90vw] md:w-[85vw] max-w-5xl max-h-[90vh] flex flex-col overflow-hidden
           rounded-3xl
           transition-all duration-500 ease-out
           ${
@@ -322,7 +326,7 @@ export function Modal() {
         </div>
 
         {/* 컨텐츠 영역 */}
-        <div className="relative px-6 pb-6 max-h-[50vh] overflow-y-auto custom-scrollbar">
+        <div className="relative px-6 pb-6 flex-1 overflow-y-auto custom-scrollbar min-h-0">
           <div
             className={`transition-all duration-300 ${
               tabDirection === "right"
@@ -343,8 +347,8 @@ export function Modal() {
                   {details?.description || "설명이 없습니다."}
                 </p>
 
-                {/* 사용 기술 */}
-                {details?.technologies && details.technologies.length > 0 && (
+                {/* 핵심 특징 (Core Features) */}
+                {details?.coreFeatures && details.coreFeatures.length > 0 && (
                   <div>
                     <h3
                       className="text-sm font-semibold mb-3 uppercase tracking-wider transition-colors duration-300"
@@ -354,58 +358,162 @@ export function Modal() {
                           : "rgba(0,0,0,0.5)",
                       }}
                     >
-                      Tech Stack
+                      Highlights
                     </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {details.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1.5 text-sm rounded-lg transition-all duration-300 hover:scale-105 cursor-default"
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {details.coreFeatures.map((feature, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg"
                           style={{
                             background: isDark
-                              ? "rgba(255, 255, 255, 0.08)"
-                              : "rgba(0, 0, 0, 0.05)",
-                            border: `1px solid ${nodeColor}30`,
-                            color: nodeColor,
-                            fontWeight: 500,
+                              ? "rgba(255,255,255,0.05)"
+                              : "rgba(0,0,0,0.03)",
+                            color: isDark ? "rgba(255,255,255,0.9)" : "#1f2937",
                           }}
                         >
-                          {tech}
-                        </span>
+                          <span className="text-cyan-400">✓</span> {feature}
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 )}
 
-                {/* 외부 링크 */}
-                {details?.link && (
-                  <div className="pt-2">
-                    <a
-                      href={details.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                {/* 기술 스택 선정 이유 (Tech Stack Docs) */}
+                {details?.techStackDocs && details.techStackDocs.length > 0 ? (
+                  <div>
+                    <h3
+                      className="text-sm font-semibold mb-3 uppercase tracking-wider transition-colors duration-300"
                       style={{
-                        background: `linear-gradient(135deg, ${nodeColor}25, ${nodeColor}10)`,
-                        border: `1px solid ${nodeColor}40`,
-                        color: nodeColor,
+                        color: isDark
+                          ? "rgba(255,255,255,0.5)"
+                          : "rgba(0,0,0,0.5)",
                       }}
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                      Tech Stack & Decisions
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {details.techStackDocs.map((tech) => (
+                        <div
+                          key={tech.name}
+                          className="p-3 rounded-xl transition-all hover:bg-opacity-80"
+                          style={{
+                            background: isDark
+                              ? "rgba(255, 255, 255, 0.03)"
+                              : "rgba(0, 0, 0, 0.02)",
+                            border: `1px solid ${nodeColor}20`,
+                          }}
+                        >
+                          <div
+                            className="font-bold mb-1"
+                            style={{ color: nodeColor }}
+                          >
+                            {tech.name}
+                          </div>
+                          <div
+                            className="text-xs leading-relaxed"
+                            style={{
+                              color: isDark
+                                ? "rgba(255, 255, 255, 0.6)"
+                                : "rgba(0, 0, 0, 0.6)",
+                            }}
+                          >
+                            {tech.description}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Fallback to simple tag list if no detailed docs
+                  details?.technologies &&
+                  details.technologies.length > 0 && (
+                    <div>
+                      <h3
+                        className="text-sm font-semibold mb-3 uppercase tracking-wider transition-colors duration-300"
+                        style={{
+                          color: isDark
+                            ? "rgba(255,255,255,0.5)"
+                            : "rgba(0,0,0,0.5)",
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
-                      <span className="font-medium">프로젝트 보기</span>
-                    </a>
+                        Tech Stack
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {details.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1.5 text-sm rounded-lg transition-all duration-300 hover:scale-105 cursor-default"
+                            style={{
+                              background: isDark
+                                ? "rgba(255, 255, 255, 0.08)"
+                                : "rgba(0, 0, 0, 0.05)",
+                              border: `1px solid ${nodeColor}30`,
+                              color: nodeColor,
+                              fontWeight: 500,
+                            }}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                )}
+
+                {/* 외부 링크 및 배포 링크 */}
+                {(details?.link || details?.deployLink) && (
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    {details?.link && (
+                      <a
+                        href={details.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                        style={{
+                          background: `linear-gradient(135deg, ${nodeColor}25, ${nodeColor}10)`,
+                          border: `1px solid ${nodeColor}40`,
+                          color: nodeColor,
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                        <span className="font-medium">프로젝트 보기</span>
+                      </a>
+                    )}
+
+                    {details?.deployLink && (
+                      <a
+                        href={details.deployLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                        style={{
+                          background: isDark
+                            ? `linear-gradient(135deg, #10b981 30%, #059669 100%)`
+                            : `linear-gradient(135deg, #34d399 30%, #10b981 100%)`,
+                          boxShadow: `0 0 20px ${
+                            isDark ? "#10b98140" : "#34d39940"
+                          }`,
+                          color: "white",
+                          border: "none",
+                        }}
+                      >
+                        <span className="text-lg">🚀</span>
+                        <span className="font-bold">Live Demo</span>
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
@@ -481,70 +589,176 @@ export function Modal() {
 
             {activeTab === "trouble" && (
               <div className="space-y-6">
-                {details?.trouble && (
-                  <div className="relative pl-5 border-l-2 border-red-400/50">
-                    <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center">
-                      <span className="text-sm">⚡</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-red-400 mb-2">
-                      겪은 어려움
-                    </h3>
-                    <p
-                      className="leading-relaxed transition-colors duration-300"
-                      style={{
-                        color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
-                      }}
-                    >
-                      {details.trouble}
-                    </p>
-                  </div>
-                )}
+                {/* Detailed Challenges (New format) */}
+                {details?.challenges && details.challenges.length > 0 ? (
+                  <div className="space-y-8">
+                    {details.challenges.map((challenge, idx) => (
+                      <div
+                        key={idx}
+                        className="relative p-5 rounded-2xl transition-all hover:translate-x-1"
+                        style={{
+                          background: isDark
+                            ? "rgba(255,255,255,0.03)"
+                            : "rgba(0,0,0,0.02)",
+                          border: isDark
+                            ? "1px solid rgba(255,255,255,0.05)"
+                            : "1px solid rgba(0,0,0,0.05)",
+                        }}
+                      >
+                        <h3
+                          className="text-lg font-bold mb-4 flex items-center gap-2"
+                          style={{ color: isDark ? "#f87171" : "#dc2626" }}
+                        >
+                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-red-500/10 text-sm">
+                            !
+                          </span>
+                          {challenge.title}
+                        </h3>
 
-                {details?.shooting && (
-                  <div className="relative pl-5 border-l-2 border-green-400/50">
-                    <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                      <span className="text-sm">🎯</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-green-400 mb-2">
-                      해결 과정
-                    </h3>
-                    <p
-                      className="leading-relaxed transition-colors duration-300"
-                      style={{
-                        color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
-                      }}
-                    >
-                      {details.shooting}
-                    </p>
+                        <div className="space-y-4">
+                          <div className="space-y-1">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-red-400">
+                              Challenge
+                            </span>
+                            <p
+                              className="text-sm leading-relaxed"
+                              style={{
+                                color: isDark
+                                  ? "rgba(255,255,255,0.7)"
+                                  : "#4b5563",
+                              }}
+                            >
+                              {challenge.problem}
+                            </p>
+                          </div>
+
+                          <div className="space-y-1 pl-4 border-l-2 border-green-500/30">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-green-400">
+                              Solution
+                            </span>
+                            <p
+                              className="text-sm leading-relaxed"
+                              style={{
+                                color: isDark
+                                  ? "rgba(255,255,255,0.9)"
+                                  : "#1f2937",
+                              }}
+                            >
+                              {challenge.solution}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  // Simple Trouble/Shooting (Legacy format)
+                  <>
+                    {details?.trouble && (
+                      <div className="relative pl-5 border-l-2 border-red-400/50">
+                        <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center">
+                          <span className="text-sm">⚡</span>
+                        </div>
+                        <h3 className="text-lg font-semibold text-red-400 mb-2">
+                          겪은 어려움
+                        </h3>
+                        <p
+                          className="leading-relaxed transition-colors duration-300"
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                          }}
+                        >
+                          {details.trouble}
+                        </p>
+                      </div>
+                    )}
+
+                    {details?.shooting && (
+                      <div className="relative pl-5 border-l-2 border-green-400/50">
+                        <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                          <span className="text-sm">🎯</span>
+                        </div>
+                        <h3 className="text-lg font-semibold text-green-400 mb-2">
+                          해결 과정
+                        </h3>
+                        <p
+                          className="leading-relaxed transition-colors duration-300"
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                          }}
+                        >
+                          {details.shooting}
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
 
-            {activeTab === "lesson" && details?.lesson && (
-              <div
-                className="p-5 rounded-2xl"
-                style={{
-                  background: `linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(234, 179, 8, 0.05))`,
-                  border: "1px solid rgba(234, 179, 8, 0.2)",
-                }}
-              >
-                <div className="flex gap-4">
-                  <div className="text-3xl shrink-0">💡</div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-yellow-500 mb-2">
-                      핵심 교훈
-                    </h3>
-                    <p
-                      className="leading-relaxed text-lg italic transition-colors duration-300"
+            {activeTab === "lesson" && (
+              <div className="space-y-6">
+                {/* Detailed Learnings (New Format) */}
+                {details?.learnings && details.learnings.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4">
+                    {details.learnings.map((learning, idx) => (
+                      <div
+                        key={idx}
+                        className="p-5 rounded-2xl transition-all hover:-translate-y-1"
+                        style={{
+                          background: `linear-gradient(135deg, ${
+                            isDark
+                              ? "rgba(234, 179, 8, 0.1)"
+                              : "rgba(234, 179, 8, 0.05)"
+                          }, transparent)`,
+                          border: "1px solid rgba(234, 179, 8, 0.2)",
+                        }}
+                      >
+                        <h3 className="text-base font-bold text-yellow-500 mb-2 flex items-center gap-2">
+                          <span>💡</span> {learning.title}
+                        </h3>
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{
+                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                          }}
+                        >
+                          {learning.content}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  // Simple Lesson (Legacy Format)
+                  details?.lesson && (
+                    <div
+                      className="p-5 rounded-2xl"
                       style={{
-                        color: isDark ? "rgba(255,255,255,0.85)" : "#374151",
+                        background: `linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(234, 179, 8, 0.05))`,
+                        border: "1px solid rgba(234, 179, 8, 0.2)",
                       }}
                     >
-                      "{details.lesson}"
-                    </p>
-                  </div>
-                </div>
+                      <div className="flex gap-4">
+                        <div className="text-3xl shrink-0">💡</div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-yellow-500 mb-2">
+                            핵심 교훈
+                          </h3>
+                          <p
+                            className="leading-relaxed text-lg italic transition-colors duration-300"
+                            style={{
+                              color: isDark
+                                ? "rgba(255,255,255,0.85)"
+                                : "#374151",
+                            }}
+                          >
+                            "{details.lesson}"
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             )}
           </div>

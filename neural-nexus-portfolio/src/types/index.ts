@@ -7,14 +7,19 @@ export type ThemeType = "dark" | "light";
  */
 export interface NodeDetails {
   description: string; // 설명
-  trouble?: string; // 겪은 어려움
-  shooting?: string; // 해결 과정
-  lesson?: string; // 배운 점
+  trouble?: string; // 겪은 어려움 (Simple version)
+  shooting?: string; // 해결 과정 (Simple version)
+  lesson?: string; // 배운 점 (Simple version)
   technologies?: string[]; // 사용 기술
-  link?: string; // 외부 링크
+  link?: string; // 외부 링크 (Github)
+  deployLink?: string; // 배포 링크 (Vercel etc)
   image?: string; // 이미지 경로
-  features?: { title: string; items: string[] }[]; // 주요 기능
-  optimizations?: { title: string; items: string[] }[]; // 최적화 내용
+  features?: { title: string; items: string[] }[]; // 주요 기능 (Detailed)
+  optimizations?: { title: string; items: string[] }[]; // 최적화 내용 (Detailed)
+  challenges?: { title: string; problem: string; solution: string }[]; // 트러블 슈팅 (Detailed)
+  learnings?: { title: string; content: string }[]; // 배운 점 (Detailed)
+  techStackDocs?: { name: string; description: string }[]; // 기술 스택 선정 이유
+  coreFeatures?: string[]; // 핵심 특징 (반응형, 접근성 등)
 }
 
 /**
