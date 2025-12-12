@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Neural Nexus",
+    "subtitle": "Interactive Portfolio",
+    "loading": "Loading portfolio..."
+  },
+  "sidebar": {
+    "title": "Node Explorer",
+    "searchPlaceholder": "Search...",
+    "noResults": "No results found",
+    "totalNodes": "Total {{count}} nodes"
+  },
+  "nodeTypes": {
+    "main": "Main",
+    "project": "Project",
+    "skill": "Skill",
+    "lesson": "Lesson"
+  },
+  "modal": {
+    "tabs": {
+      "description": "Overview",
+      "trouble": "Problem Solving",
+      "lesson": "Lessons Learned"
+    },
+    "techStack": "Tech Stack",
+    "viewProject": "View Project",
+    "connections": "{{count}} connections",
+    "trouble": "Challenges",
+    "solution": "Solution",
+    "keyLesson": "Key Lesson",
+    "closeHint": "Press ESC to close"
+  },
+  "tooltip": {
+    "clickToView": "Click to view details"
+  },
+  "filter": {
+    "show": "Show",
+    "hide": "Hide"
+  },
+  "language": {
+    "toggle": "한국어"
+  }
+}

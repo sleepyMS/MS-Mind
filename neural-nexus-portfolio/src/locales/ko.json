@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Neural Nexus",
+    "subtitle": "인터랙티브 포트폴리오",
+    "loading": "포트폴리오 로딩 중..."
+  },
+  "sidebar": {
+    "title": "노드 탐색",
+    "searchPlaceholder": "검색...",
+    "noResults": "검색 결과가 없습니다",
+    "totalNodes": "총 {{count}}개의 노드"
+  },
+  "nodeTypes": {
+    "main": "메인",
+    "project": "프로젝트",
+    "skill": "스킬",
+    "lesson": "교훈"
+  },
+  "modal": {
+    "tabs": {
+      "description": "개요",
+      "trouble": "문제 해결",
+      "lesson": "배운 점"
+    },
+    "techStack": "사용 기술",
+    "viewProject": "프로젝트 보기",
+    "connections": "{{count}}개 연결",
+    "trouble": "겪은 어려움",
+    "solution": "해결 과정",
+    "keyLesson": "핵심 교훈",
+    "closeHint": "ESC로 닫기"
+  },
+  "tooltip": {
+    "clickToView": "클릭하여 상세 보기"
+  },
+  "filter": {
+    "show": "보기",
+    "hide": "숨기기"
+  },
+  "language": {
+    "toggle": "English"
+  }
+}

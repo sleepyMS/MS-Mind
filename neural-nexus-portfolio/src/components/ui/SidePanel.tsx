@@ -1,22 +1,21 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData, NodeType } from "../../types";
 
-const typeLabels: Record<
-  NodeType,
-  { label: string; icon: string; color: string }
-> = {
-  main: { label: "메인", icon: "👤", color: "#00ffff" },
-  project: { label: "프로젝트", icon: "🚀", color: "#ff00ff" },
-  skill: { label: "스킬", icon: "⚡", color: "#88ce02" },
-  lesson: { label: "교훈", icon: "💡", color: "#f59e0b" },
+const typeConfig: Record<NodeType, { icon: string; color: string }> = {
+  main: { icon: "👤", color: "#00ffff" },
+  project: { icon: "🚀", color: "#ff00ff" },
+  skill: { icon: "⚡", color: "#88ce02" },
+  lesson: { icon: "💡", color: "#f59e0b" },
 };
 
 /**
  * 노드 탐색을 위한 사이드 패널 컴포넌트
  */
 export function SidePanel() {
+  const { t } = useTranslation();
   const {
     isSidePanelOpen,
     setSidePanelOpen,
@@ -94,7 +93,7 @@ export function SidePanel() {
           border: "1px solid rgba(255,255,255,0.15)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
         }}
-        aria-label={isSidePanelOpen ? "패널 닫기" : "패널 열기"}
+        aria-label={isSidePanelOpen ? "Close panel" : "Open panel"}
       >
         <svg
           className={`w-5 h-5 text-white/70 transition-transform duration-300 ${
@@ -133,7 +132,7 @@ export function SidePanel() {
         <div className="p-4 border-b border-white/10">
           <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
             <span className="text-cyan-400">🧠</span>
-            노드 탐색
+            {t("sidebar.title")}
           </h2>
 
           {/* 검색창 */}
@@ -142,7 +141,7 @@ export function SidePanel() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="검색..."
+              placeholder={t("sidebar.searchPlaceholder")}
               className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm text-white placeholder-white/40 outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
               style={{
                 background: "rgba(255,255,255,0.08)",
@@ -187,11 +186,11 @@ export function SidePanel() {
 
         {/* 노드 목록 */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
-          {(Object.keys(typeLabels) as NodeType[]).map((type) => {
+          {(Object.keys(typeConfig) as NodeType[]).map((type) => {
             const nodes = groupedNodes[type] || [];
             if (nodes.length === 0) return null;
 
-            const typeInfo = typeLabels[type];
+            const config = typeConfig[type];
             const isExpanded = expandedTypes.includes(type);
 
             return (
@@ -202,23 +201,23 @@ export function SidePanel() {
                   className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                   style={{
                     background: isExpanded
-                      ? `${typeInfo.color}10`
+                      ? `${config.color}10`
                       : "transparent",
                     border: isExpanded
-                      ? `1px solid ${typeInfo.color}30`
+                      ? `1px solid ${config.color}30`
                       : "1px solid transparent",
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-base">{typeInfo.icon}</span>
-                    <span style={{ color: typeInfo.color }}>
-                      {typeInfo.label}
+                    <span className="text-base">{config.icon}</span>
+                    <span style={{ color: config.color }}>
+                      {t(`nodeTypes.${type}`)}
                     </span>
                     <span
                       className="px-1.5 py-0.5 rounded-md text-xs"
                       style={{
-                        background: `${typeInfo.color}20`,
-                        color: typeInfo.color,
+                        background: `${config.color}20`,
+                        color: config.color,
                       }}
                     >
                       {nodes.length}
@@ -228,7 +227,7 @@ export function SidePanel() {
                     className={`w-4 h-4 transition-transform duration-200 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
-                    style={{ color: typeInfo.color }}
+                    style={{ color: config.color }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -247,7 +246,7 @@ export function SidePanel() {
                   <div className="mt-2 ml-1 space-y-1">
                     {nodes.map((node) => {
                       const isHovered = hoveredNodeId === node.id;
-                      const nodeColor = node.color || typeInfo.color;
+                      const nodeColor = node.color || config.color;
 
                       return (
                         <button
@@ -268,7 +267,6 @@ export function SidePanel() {
                               : "translateX(0)",
                           }}
                         >
-                          {/* 노드 인디케이터 */}
                           <div
                             className="relative w-3 h-3 rounded-full shrink-0 transition-all duration-200"
                             style={{
@@ -289,7 +287,6 @@ export function SidePanel() {
                             )}
                           </div>
 
-                          {/* 노드 이름 */}
                           <span
                             className="truncate transition-colors duration-200"
                             style={{
@@ -301,7 +298,6 @@ export function SidePanel() {
                             {node.label}
                           </span>
 
-                          {/* 화살표 */}
                           <svg
                             className={`w-4 h-4 ml-auto transition-all duration-200 ${
                               isHovered
@@ -332,7 +328,7 @@ export function SidePanel() {
           {filteredNodes.length === 0 && (
             <div className="text-center py-12">
               <div className="text-4xl mb-3">🔍</div>
-              <p className="text-white/40 text-sm">검색 결과가 없습니다</p>
+              <p className="text-white/40 text-sm">{t("sidebar.noResults")}</p>
             </div>
           )}
         </div>
@@ -341,15 +337,15 @@ export function SidePanel() {
         <div className="p-4 border-t border-white/10">
           <div className="flex items-center justify-between text-xs">
             <span className="text-white/30">
-              총 {data.nodes.length}개의 노드
+              {t("sidebar.totalNodes", { count: data.nodes.length })}
             </span>
             <div className="flex gap-1">
               {(["main", "project", "skill"] as NodeType[]).map((type) => (
                 <div
                   key={type}
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: typeLabels[type].color }}
-                  title={typeLabels[type].label}
+                  style={{ backgroundColor: typeConfig[type].color }}
+                  title={t(`nodeTypes.${type}`)}
                 />
               ))}
             </div>

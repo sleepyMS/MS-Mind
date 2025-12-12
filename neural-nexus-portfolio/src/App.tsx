@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Scene } from "./components/canvas/Scene";
 import { Modal } from "./components/ui/Modal";
 import { Tooltip } from "./components/ui/Tooltip";
@@ -16,6 +17,7 @@ import "./index.css";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const { setLoading } = useAppStore();
+  const { t } = useTranslation();
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -48,20 +50,26 @@ function App() {
         `}
       >
         <p className="text-white/40 text-sm">
-          드래그로 회전 • 스크롤로 줌 • 노드 클릭으로 탐색
+          {t("app.title") === "Neural Nexus"
+            ? "Drag to rotate • Scroll to zoom • Click nodes to explore"
+            : "드래그로 회전 • 스크롤로 줌 • 노드 클릭으로 탐색"}
         </p>
         <div className="flex gap-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-white/50 text-xs">메인</span>
+            <span className="text-white/50 text-xs">{t("nodeTypes.main")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-full bg-fuchsia-400 animate-pulse" />
-            <span className="text-white/50 text-xs">프로젝트</span>
+            <span className="text-white/50 text-xs">
+              {t("nodeTypes.project")}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-white/50 text-xs">스킬</span>
+            <span className="text-white/50 text-xs">
+              {t("nodeTypes.skill")}
+            </span>
           </div>
         </div>
       </div>
@@ -75,9 +83,9 @@ function App() {
         `}
       >
         <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
-          Neural Nexus
+          {t("app.title")}
         </h1>
-        <p className="text-white/50 text-sm mt-1">Min Seok의 포트폴리오</p>
+        <p className="text-white/50 text-sm mt-1">{t("app.subtitle")}</p>
       </div>
     </div>
   );
