@@ -1,0 +1,132 @@
+{
+  "nodes": [
+    {
+      "id": "me",
+      "type": "main",
+      "label": "Min Seok",
+      "connections": [
+        "project-chatbot",
+        "project-portfolio",
+        "project-processing"
+      ],
+      "details": {
+        "description": "Creative Developer passionate about building immersive web experiences with cutting-edge technologies.",
+        "technologies": ["React", "TypeScript", "Three.js", "Node.js", "Python"]
+      },
+      "color": "#00ffff"
+    },
+    {
+      "id": "project-chatbot",
+      "type": "project",
+      "label": "MS-Mind Chatbot",
+      "connections": ["me", "skill-react", "skill-typescript", "skill-python"],
+      "details": {
+        "description": "AI-powered chatbot with real-time conversation capabilities, authentication system, and dark mode support.",
+        "trouble": "Handling token refresh and maintaining session state across page reloads was challenging.",
+        "shooting": "Implemented a robust token refresh mechanism with interceptors and local storage caching for session persistence.",
+        "lesson": "Learned the importance of proper state management and the nuances of JWT authentication flows.",
+        "technologies": ["React", "TypeScript", "FastAPI", "PostgreSQL"],
+        "link": "https://github.com/sleepyMS/MS-Mind"
+      },
+      "color": "#ff00ff"
+    },
+    {
+      "id": "project-portfolio",
+      "type": "project",
+      "label": "Neural Portfolio",
+      "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
+      "details": {
+        "description": "This portfolio itself! A 3D neural network visualization showcasing projects as interconnected neurons.",
+        "trouble": "Achieving smooth camera animations while maintaining 60fps with many nodes and connections.",
+        "shooting": "Used instanced meshes, optimized shaders, and GSAP for hardware-accelerated animations.",
+        "lesson": "Deep understanding of WebGL performance optimization and the power of custom shaders.",
+        "technologies": ["React", "Three.js", "GSAP", "TypeScript"]
+      },
+      "color": "#ff00ff"
+    },
+    {
+      "id": "project-processing",
+      "type": "project",
+      "label": "Processing Games",
+      "connections": ["me", "skill-processing", "skill-arduino"],
+      "details": {
+        "description": "Collection of interactive games built with Processing, featuring Arduino joystick controls.",
+        "trouble": "Synchronizing Arduino input with game state and handling multiple game modes.",
+        "shooting": "Created a modular input system that abstracts hardware controls for all game modes.",
+        "lesson": "Hardware-software integration requires careful consideration of timing and state management.",
+        "technologies": ["Processing", "Arduino", "Java"]
+      },
+      "color": "#ff00ff"
+    },
+    {
+      "id": "skill-react",
+      "type": "skill",
+      "label": "React 19",
+      "connections": ["project-chatbot", "project-portfolio"],
+      "details": {
+        "description": "Modern React development with hooks, concurrent features, and server components."
+      },
+      "color": "#61dafb"
+    },
+    {
+      "id": "skill-typescript",
+      "type": "skill",
+      "label": "TypeScript",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Type-safe JavaScript development for scalable applications."
+      },
+      "color": "#3178c6"
+    },
+    {
+      "id": "skill-threejs",
+      "type": "skill",
+      "label": "Three.js / R3F",
+      "connections": ["project-portfolio"],
+      "details": {
+        "description": "3D graphics programming with WebGL, React Three Fiber, and custom shaders."
+      },
+      "color": "#049ef4"
+    },
+    {
+      "id": "skill-gsap",
+      "type": "skill",
+      "label": "GSAP",
+      "connections": ["project-portfolio"],
+      "details": {
+        "description": "Professional-grade animations for the web."
+      },
+      "color": "#88ce02"
+    },
+    {
+      "id": "skill-python",
+      "type": "skill",
+      "label": "Python / FastAPI",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Backend development with FastAPI, async programming, and AI integrations."
+      },
+      "color": "#3776ab"
+    },
+    {
+      "id": "skill-processing",
+      "type": "skill",
+      "label": "Processing",
+      "connections": ["project-processing"],
+      "details": {
+        "description": "Creative coding and visual programming."
+      },
+      "color": "#006699"
+    },
+    {
+      "id": "skill-arduino",
+      "type": "skill",
+      "label": "Arduino",
+      "connections": ["project-processing"],
+      "details": {
+        "description": "Hardware prototyping and IoT development."
+      },
+      "color": "#00979d"
+    }
+  ]
+}
