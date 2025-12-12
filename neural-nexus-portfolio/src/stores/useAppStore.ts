@@ -20,7 +20,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   // UI 상태
   visibleNodeTypes: ["main", "project", "skill"], // 기본: 모든 타입 표시
-  isSidePanelOpen: false, // 사이드 패널 닫힘
+  isSidePanelOpen: true, // 사이드 패널 기본 열림
   isLoading: true, // 초기 로딩 상태
   searchQuery: "", // 검색어
 
