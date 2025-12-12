@@ -17,12 +17,20 @@ const languages: Language[] = [
 /**
  * 언어 전환 드롭다운 컴포넌트
  */
-export function LanguageSwitcher() {
+export interface LanguageSwitcherProps {
+  className?: string;
+}
+
+/**
+ * 언어 전환 드롭다운 컴포넌트
+ */
+export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { theme } = useAppStore();
   const isDark = theme === "dark";
+  const [hoveredLang, setHoveredLang] = useState<string | null>(null);
 
   const currentLang =
     languages.find((l) => l.code === i18n.language) || languages[0];
@@ -48,30 +56,36 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div ref={dropdownRef} className="fixed top-20 right-6 z-30">
+    <div ref={dropdownRef} className={`relative shrink-0 ${className}`}>
       {/* 트리거 버튼 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 hover:scale-105"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200"
         style={{
-          background: isDark
-            ? "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
-            : "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%)",
-          backdropFilter: "blur(12px)",
+          background: isOpen
+            ? isDark
+              ? "rgba(255,255,255,0.1)"
+              : "rgba(0,0,0,0.05)"
+            : "transparent",
           border: isOpen
-            ? "1px solid rgba(0, 255, 255, 0.3)"
-            : isDark
-            ? "1px solid rgba(255,255,255,0.15)"
-            : "1px solid rgba(0,0,0,0.1)",
-          boxShadow: isOpen
-            ? "0 0 20px rgba(0, 255, 255, 0.2)"
-            : "0 4px 20px rgba(0,0,0,0.1)",
+            ? isDark
+              ? "1px solid rgba(0, 255, 255, 0.25)"
+              : "1px solid rgba(0,0,0,0.15)"
+            : "1px solid transparent",
         }}
       >
         {/* 언어 아이콘 */}
         <svg
-          className="w-4 h-4 transition-colors"
-          style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#4b5563" }}
+          className="w-4 h-4"
+          style={{
+            color: isOpen
+              ? isDark
+                ? "#00ffff"
+                : "#0891b2"
+              : isDark
+              ? "rgba(255,255,255,0.6)"
+              : "rgba(0,0,0,0.5)",
+          }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -86,18 +100,33 @@ export function LanguageSwitcher() {
 
         {/* 현재 언어 */}
         <span
-          className="text-sm font-medium transition-colors"
-          style={{ color: isDark ? "rgba(255,255,255,0.8)" : "#1f2937" }}
+          className="text-xs font-semibold"
+          style={{
+            color: isOpen
+              ? isDark
+                ? "#00ffff"
+                : "#0891b2"
+              : isDark
+              ? "rgba(255,255,255,0.7)"
+              : "rgba(0,0,0,0.6)",
+          }}
         >
           {currentLang.code.toUpperCase()}
         </span>
 
         {/* 화살표 */}
         <svg
-          className={`w-3.5 h-3.5 transition-all duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          style={{ color: isDark ? "rgba(255,255,255,0.4)" : "#9ca3af" }}
+          className="w-3 h-3 transition-transform duration-200"
+          style={{
+            color: isOpen
+              ? isDark
+                ? "#00ffff"
+                : "#0891b2"
+              : isDark
+              ? "rgba(255,255,255,0.4)"
+              : "rgba(0,0,0,0.4)",
+            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+          }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -114,64 +143,61 @@ export function LanguageSwitcher() {
       {/* 드롭다운 메뉴 */}
       {isOpen && (
         <div
-          className="absolute top-full right-0 mt-2 py-1 rounded-xl overflow-hidden animate-fadeIn"
+          className="absolute top-full right-0 mt-2 py-2 rounded-xl overflow-hidden animate-fadeIn"
           style={{
             background: isDark
-              ? "linear-gradient(180deg, rgba(0,0,16,0.98) 0%, rgba(0,0,16,0.95) 100%)"
-              : "rgba(255,255,255,0.95)",
+              ? "linear-gradient(180deg, rgba(10,10,30,0.98) 0%, rgba(5,5,20,0.95) 100%)"
+              : "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,250,255,0.95) 100%)",
             backdropFilter: "blur(20px)",
             border: isDark
-              ? "1px solid rgba(255,255,255,0.1)"
+              ? "1px solid rgba(255,255,255,0.12)"
               : "1px solid rgba(0,0,0,0.1)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+            boxShadow: isDark
+              ? "0 12px 40px rgba(0,0,0,0.6)"
+              : "0 12px 40px rgba(0,0,0,0.15)",
             minWidth: "140px",
           }}
         >
           {languages.map((lang) => {
             const isActive = lang.code === currentLang.code;
+            const isItemHovered = hoveredLang === lang.code && !isActive;
+            const activeColor = isDark ? "#00ffff" : "#0056b3";
 
             return (
               <button
                 key={lang.code}
                 onClick={() => handleSelect(lang.code)}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-2.5 text-left
-                  transition-all duration-200
-                `}
+                onMouseEnter={() => setHoveredLang(lang.code)}
+                onMouseLeave={() => setHoveredLang(null)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 transition-all duration-150 text-left"
                 style={{
                   background: isActive
                     ? isDark
-                      ? "rgba(0, 255, 255, 0.1)"
+                      ? "rgba(0, 255, 255, 0.12)"
                       : "rgba(8, 145, 178, 0.1)"
+                    : isItemHovered
+                    ? isDark
+                      ? "rgba(255, 255, 255, 0.06)"
+                      : "rgba(0,0,0,0.05)"
                     : "transparent",
                 }}
-                onMouseEnter={(e) => {
-                  if (!isActive)
-                    e.currentTarget.style.background = isDark
-                      ? "rgba(255,255,255,0.05)"
-                      : "rgba(0,0,0,0.05)";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive)
-                    e.currentTarget.style.background = "transparent";
-                }}
               >
-                {/* 플래그 - 고정 너비로 정렬 */}
-                <span className="w-6 h-6 flex items-center justify-center text-lg">
-                  {lang.flag}
-                </span>
+                {/* 플래그 */}
+                <span className="text-base">{lang.flag}</span>
 
                 {/* 언어 이름 */}
                 <span
-                  className="text-sm font-medium transition-colors"
+                  className="text-sm font-medium flex-1"
                   style={{
                     color: isActive
+                      ? activeColor
+                      : isItemHovered
                       ? isDark
-                        ? "#22d3ee"
-                        : "#0891b2"
+                        ? "#ffffff"
+                        : "#000000"
                       : isDark
                       ? "rgba(255,255,255,0.7)"
-                      : "#374151",
+                      : "rgba(0,0,0,0.6)",
                   }}
                 >
                   {lang.name}
@@ -180,8 +206,8 @@ export function LanguageSwitcher() {
                 {/* 체크 표시 */}
                 {isActive && (
                   <svg
-                    className="w-4 h-4 ml-auto"
-                    style={{ color: isDark ? "#22d3ee" : "#0891b2" }}
+                    className="w-4 h-4"
+                    style={{ color: activeColor }}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -189,7 +215,7 @@ export function LanguageSwitcher() {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth={2.5}
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
