@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
-import type { NeuralData, NodeType, ProjectCategory } from "../../types";
+import type {
+  NeuralData,
+  NodeType,
+  ProjectCategory,
+  SkillCategory,
+} from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
 const typeConfig: Record<
@@ -43,6 +48,43 @@ const categoryConfig: Record<
     label: "크리에이티브",
     darkColor: "#10b981",
     lightColor: "#059669",
+  },
+};
+
+// 스킬 카테고리 설정
+const skillCategoryConfig: Record<
+  SkillCategory,
+  { icon: string; label: string; darkColor: string; lightColor: string }
+> = {
+  language: {
+    icon: "💻",
+    label: "언어",
+    darkColor: "#3b82f6",
+    lightColor: "#2563eb",
+  },
+  framework: {
+    icon: "🏗️",
+    label: "프레임워크",
+    darkColor: "#8b5cf6",
+    lightColor: "#7c3aed",
+  },
+  library: {
+    icon: "📦",
+    label: "라이브러리",
+    darkColor: "#ec4899",
+    lightColor: "#db2777",
+  },
+  tool: {
+    icon: "🔧",
+    label: "도구",
+    darkColor: "#f97316",
+    lightColor: "#ea580c",
+  },
+  database: {
+    icon: "🗄️",
+    label: "데이터베이스",
+    darkColor: "#14b8a6",
+    lightColor: "#0d9488",
   },
 };
 
@@ -124,13 +166,34 @@ export function SidePanel() {
     {} as Record<ProjectCategory, typeof data.nodes>
   );
 
-  // 카테고리 확장 상태
+  // 스킬을 카테고리별로 그룹화
+  const skillsByCategory = (groupedNodes.skill || []).reduce((acc, node) => {
+    const category = (node.skillCategory || "library") as SkillCategory;
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(node);
+    return acc;
+  }, {} as Record<SkillCategory, typeof data.nodes>);
+
+  // 프로젝트 카테고리 확장 상태
   const [expandedCategories, setExpandedCategories] = useState<
     ProjectCategory[]
   >(["frontend", "backend", "ai-ml", "creative"]);
 
+  // 스킬 카테고리 확장 상태
+  const [expandedSkillCategories, setExpandedSkillCategories] = useState<
+    SkillCategory[]
+  >(["language", "framework", "library", "tool", "database"]);
+
   const toggleCategory = (category: ProjectCategory) => {
     setExpandedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const toggleSkillCategory = (category: SkillCategory) => {
+    setExpandedSkillCategories((prev) =>
       prev.includes(category)
         ? prev.filter((c) => c !== category)
         : [...prev, category]
@@ -434,6 +497,127 @@ export function SidePanel() {
                               </button>
 
                               {/* 카테고리 내 노드들 */}
+                              {isCatExpanded && (
+                                <div className="mt-1 ml-3 space-y-1">
+                                  {categoryNodes.map((node) => {
+                                    const isHovered = hoveredNodeId === node.id;
+                                    const nodeColor = getThemeColor(
+                                      node.color || catColor,
+                                      theme
+                                    );
+                                    return (
+                                      <button
+                                        key={node.id}
+                                        onClick={() => handleNodeClick(node.id)}
+                                        onMouseEnter={() =>
+                                          handleNodeHover(node.id)
+                                        }
+                                        onMouseLeave={() =>
+                                          handleNodeHover(null)
+                                        }
+                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300"
+                                        style={{
+                                          background: isHovered
+                                            ? `${nodeColor}15`
+                                            : "transparent",
+                                          border: isHovered
+                                            ? `1px solid ${nodeColor}30`
+                                            : "1px solid transparent",
+                                          transform: isHovered
+                                            ? "translateX(4px)"
+                                            : "translateX(0)",
+                                        }}
+                                      >
+                                        <div
+                                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                                          style={{ backgroundColor: nodeColor }}
+                                        />
+                                        <span
+                                          className="truncate"
+                                          style={{
+                                            color: isHovered
+                                              ? nodeColor
+                                              : isDark
+                                              ? "rgba(255,255,255,0.7)"
+                                              : "rgba(0,0,0,0.6)",
+                                          }}
+                                        >
+                                          {node.label}
+                                        </span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      : type === "skill"
+                      ? // 스킬 카테고리별로 서브그룹 렌더링
+                        (
+                          [
+                            "language",
+                            "framework",
+                            "database",
+                            "library",
+                            "tool",
+                          ] as SkillCategory[]
+                        ).map((category) => {
+                          const categoryNodes =
+                            skillsByCategory[category] || [];
+                          if (categoryNodes.length === 0) return null;
+
+                          const catConfig = skillCategoryConfig[category];
+                          const catColor = isDark
+                            ? catConfig.darkColor
+                            : catConfig.lightColor;
+                          const isCatExpanded =
+                            expandedSkillCategories.includes(category);
+
+                          return (
+                            <div key={category} className="mb-2">
+                              {/* 스킬 카테고리 헤더 */}
+                              <button
+                                onClick={() => toggleSkillCategory(category)}
+                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200"
+                                style={{
+                                  background: isCatExpanded
+                                    ? `${catColor}15`
+                                    : "transparent",
+                                }}
+                              >
+                                <span>{catConfig.icon}</span>
+                                <span style={{ color: catColor }}>
+                                  {catConfig.label}
+                                </span>
+                                <span
+                                  className="px-1 py-0.5 rounded text-xs"
+                                  style={{
+                                    background: `${catColor}20`,
+                                    color: catColor,
+                                  }}
+                                >
+                                  {categoryNodes.length}
+                                </span>
+                                <svg
+                                  className={`w-3 h-3 ml-auto transition-transform ${
+                                    isCatExpanded ? "rotate-180" : ""
+                                  }`}
+                                  style={{ color: catColor }}
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+
+                              {/* 카테고리 내 스킬들 */}
                               {isCatExpanded && (
                                 <div className="mt-1 ml-3 space-y-1">
                                   {categoryNodes.map((node) => {
