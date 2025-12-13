@@ -812,7 +812,7 @@ export function Modal() {
                   </div>
                 )}
 
-                {/* 기술 스택 선정 이유 (Tech Stack Docs) */}
+                {/* 기술 스택 선정 이유 (Tech Stack Docs) - 테이블 형식 */}
                 {details?.techStackDocs && details.techStackDocs.length > 0 ? (
                   <div>
                     <h3
@@ -825,36 +825,111 @@ export function Modal() {
                     >
                       Tech Stack & Decisions
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {details.techStackDocs.map((tech) => (
-                        <div
-                          key={tech.name}
-                          className="p-3 rounded-xl transition-all hover:bg-opacity-80"
-                          style={{
-                            background: isDark
-                              ? "rgba(255, 255, 255, 0.03)"
-                              : "rgba(0, 0, 0, 0.02)",
-                            border: `1px solid ${nodeColor}20`,
-                          }}
-                        >
-                          <div
-                            className="font-bold mb-1"
-                            style={{ color: nodeColor }}
-                          >
-                            {tech.name}
-                          </div>
-                          <div
-                            className="text-xs leading-relaxed"
+                    <div
+                      className="rounded-xl overflow-hidden"
+                      style={{
+                        border: isDark
+                          ? `1px solid ${nodeColor}20`
+                          : "1px solid rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <table className="w-full">
+                        <thead>
+                          <tr
                             style={{
-                              color: isDark
-                                ? "rgba(255, 255, 255, 0.6)"
-                                : "rgba(0, 0, 0, 0.6)",
+                              background: isDark
+                                ? `linear-gradient(135deg, ${nodeColor}15, ${nodeColor}08)`
+                                : `linear-gradient(135deg, ${nodeColor}08, ${nodeColor}04)`,
                             }}
                           >
-                            {tech.description}
-                          </div>
-                        </div>
-                      ))}
+                            <th
+                              className="text-left px-4 py-2.5 text-xs font-semibold uppercase tracking-wider"
+                              style={{
+                                color: nodeColor,
+                                width: "140px",
+                                borderBottom: isDark
+                                  ? `1px solid ${nodeColor}20`
+                                  : `1px solid ${nodeColor}15`,
+                              }}
+                            >
+                              기술
+                            </th>
+                            <th
+                              className="text-left px-4 py-2.5 text-xs font-semibold uppercase tracking-wider"
+                              style={{
+                                color: isDark
+                                  ? "rgba(255,255,255,0.5)"
+                                  : "rgba(0,0,0,0.5)",
+                                borderBottom: isDark
+                                  ? `1px solid ${nodeColor}20`
+                                  : `1px solid ${nodeColor}15`,
+                              }}
+                            >
+                              선정 이유
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {details.techStackDocs.map((tech, idx) => (
+                            <tr
+                              key={tech.name}
+                              className="transition-all duration-200 hover:bg-opacity-50"
+                              style={{
+                                background:
+                                  idx % 2 === 0
+                                    ? "transparent"
+                                    : isDark
+                                    ? "rgba(255,255,255,0.02)"
+                                    : "rgba(0,0,0,0.015)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = `${nodeColor}10`;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background =
+                                  idx % 2 === 0
+                                    ? "transparent"
+                                    : isDark
+                                    ? "rgba(255,255,255,0.02)"
+                                    : "rgba(0,0,0,0.015)";
+                              }}
+                            >
+                              <td
+                                className="px-4 py-3 font-bold text-sm"
+                                style={{
+                                  color: nodeColor,
+                                  borderBottom:
+                                    idx ===
+                                    (details.techStackDocs?.length || 0) - 1
+                                      ? "none"
+                                      : isDark
+                                      ? "1px solid rgba(255,255,255,0.05)"
+                                      : "1px solid rgba(0,0,0,0.05)",
+                                }}
+                              >
+                                {tech.name}
+                              </td>
+                              <td
+                                className="px-4 py-3 text-sm leading-relaxed"
+                                style={{
+                                  color: isDark
+                                    ? "rgba(255,255,255,0.75)"
+                                    : "#4b5563",
+                                  borderBottom:
+                                    idx ===
+                                    (details.techStackDocs?.length || 0) - 1
+                                      ? "none"
+                                      : isDark
+                                      ? "1px solid rgba(255,255,255,0.05)"
+                                      : "1px solid rgba(0,0,0,0.05)",
+                                }}
+                              >
+                                {tech.description}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 ) : (
