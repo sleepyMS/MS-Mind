@@ -338,7 +338,7 @@
     {
       "id": "project-cortex",
       "type": "project",
-      "label": "Cortex",
+      "label": "Cortex-Backend",
       "connections": [
         "me",
         "skill-python",
