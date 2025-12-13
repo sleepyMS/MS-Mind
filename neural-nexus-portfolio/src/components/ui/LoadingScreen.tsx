@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useAppStore } from "../../stores/useAppStore";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -7,37 +8,58 @@ interface LoadingScreenProps {
 
 /**
  * 초기 로딩 스크린 컴포넌트
- * 신경망 형태의 애니메이션으로 로딩 상태 표시
+ * 시간 기반 진행률 + 실제 에셋 로딩 진행률 조합
  */
 export function LoadingScreen({
   onComplete,
   minDuration = 2000,
 }: LoadingScreenProps) {
-  const [progress, setProgress] = useState(0);
+  const { loadingProgress } = useAppStore();
+  const [timeProgress, setTimeProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const startTimeRef = useRef(Date.now());
+  const completedRef = useRef(false);
 
+  // 시간 기반 진행률 (0-100, minDuration 동안)
   useEffect(() => {
-    const startTime = Date.now();
-
     const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
+      const elapsed = Date.now() - startTimeRef.current;
       const newProgress = Math.min((elapsed / minDuration) * 100, 100);
-      setProgress(newProgress);
-
-      if (newProgress >= 100) {
-        clearInterval(interval);
-        // 100%가 표시된 후 잠시 대기 후 종료
-        setTimeout(() => {
-          setIsExiting(true);
-          setTimeout(() => {
-            onComplete?.();
-          }, 50);
-        }, 50); // 50ms 동안 100% 상태 표시
-      }
+      setTimeProgress(newProgress);
     }, 50);
 
     return () => clearInterval(interval);
-  }, [minDuration, onComplete]);
+  }, [minDuration]);
+
+  // 최종 진행률: 시간 기반과 실제 로딩의 최대값
+  // 실제 로딩이 없으면 (0%) 시간 기반으로만 동작
+  const displayProgress =
+    loadingProgress > 0
+      ? Math.max(timeProgress, loadingProgress)
+      : timeProgress;
+
+  // 완료 조건: 시간 100% 도달 + (실제 로딩이 있으면 100% 도달)
+  useEffect(() => {
+    if (completedRef.current) return;
+
+    // 시간 기반 100% 도달 시
+    if (timeProgress >= 100) {
+      // 실제 로딩 진행률이 있고 100% 미만이면 대기
+      if (loadingProgress > 0 && loadingProgress < 100) {
+        return;
+      }
+
+      completedRef.current = true;
+
+      // 100% 표시 후 잠시 대기
+      setTimeout(() => {
+        setIsExiting(true);
+        setTimeout(() => {
+          onComplete?.();
+        }, 400);
+      }, 50);
+    }
+  }, [timeProgress, loadingProgress, onComplete]);
 
   return (
     <div
@@ -116,7 +138,7 @@ export function LoadingScreen({
         <div
           className="h-full rounded-full"
           style={{
-            width: `${progress}%`,
+            width: `${displayProgress}%`,
             background: "linear-gradient(90deg, #00ffff, #ff00ff)",
             boxShadow: "0 0 20px #00ffff50",
           }}
@@ -125,7 +147,7 @@ export function LoadingScreen({
 
       {/* 퍼센트 */}
       <span className="text-white/30 text-xs mt-2 font-mono">
-        {Math.round(progress)}%
+        {Math.round(displayProgress)}%
       </span>
     </div>
   );

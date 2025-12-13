@@ -1,5 +1,6 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { useProgress } from "@react-three/drei";
 import { Node } from "./Node";
 import { ConnectionLine } from "./ConnectionLine";
 import { CameraManager } from "./CameraManager";
@@ -83,6 +84,20 @@ function SceneTransitionWrapper({ children }: { children: React.ReactNode }) {
   });
 
   return <group ref={groupRef}>{children}</group>;
+}
+
+/**
+ * 실제 에셋 로딩 진행률을 전역 스토어에 동기화하는 컴포넌트
+ */
+function LoadingTracker() {
+  const { progress } = useProgress();
+  const { setLoadingProgress } = useAppStore();
+
+  useEffect(() => {
+    setLoadingProgress(progress);
+  }, [progress, setLoadingProgress]);
+
+  return null;
 }
 
 /**
@@ -323,6 +338,9 @@ export function Scene() {
 
         {/* 후처리 효과 (Bloom) */}
         <PostProcessing />
+
+        {/* 로딩 진행률 추적 */}
+        <LoadingTracker />
       </Canvas>
     </div>
   );
