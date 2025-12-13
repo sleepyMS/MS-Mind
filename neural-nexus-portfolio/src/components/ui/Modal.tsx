@@ -349,9 +349,14 @@ export function Modal() {
       {/* 모달 본체 */}
       <div
         className={`
-          relative w-[90vw] md:w-[85vw] max-w-5xl max-h-[90vh] flex flex-col overflow-hidden
+          relative max-h-[90vh] flex flex-col overflow-hidden
           rounded-3xl
           transition-all duration-500 ease-out
+          ${
+            node?.type === "skill" || node?.type === "lesson"
+              ? "w-[90vw] md:w-[500px] max-w-lg" // 스킬/교훈 노드: 좁은 너비
+              : "w-[90vw] md:w-[85vw] max-w-5xl" // 프로젝트/메인 노드: 넓은 너비
+          }
           ${
             isVisible
               ? "opacity-100 translate-y-0 scale-100"

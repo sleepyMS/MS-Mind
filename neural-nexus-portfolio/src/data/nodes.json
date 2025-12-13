@@ -14,7 +14,7 @@
         "project-paper-tft"
       ],
       "details": {
-        "description": "Creative Developer passionate about building immersive web experiences with cutting-edge technologies.",
+        "description": "창의적인 개발자로서, 최신 기술을 활용한 몰입형 웹 경험을 만드는 것에 열정을 가지고 있습니다.",
         "technologies": ["React", "TypeScript", "Three.js", "Node.js", "Python"]
       },
       "color": "#00ffff"
@@ -196,10 +196,10 @@
       "label": "Neural Portfolio",
       "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
       "details": {
-        "description": "This portfolio itself! A 3D neural network visualization showcasing projects as interconnected neurons.",
-        "trouble": "Achieving smooth camera animations while maintaining 60fps with many nodes and connections.",
-        "shooting": "Used instanced meshes, optimized shaders, and GSAP for hardware-accelerated animations.",
-        "lesson": "Deep understanding of WebGL performance optimization and the power of custom shaders.",
+        "description": "지금 보고 계신 포트폴리오입니다! 프로젝트들을 상호 연결된 뉴런으로 시각화한 3D 신경망 기반 포트폴리오입니다.",
+        "trouble": "많은 노드와 연결선을 유지하면서 부드러운 카메라 애니메이션과 60fps 성능을 달성하는 것이 어려웠습니다.",
+        "shooting": "Instanced Mesh, 최적화된 셰이더, 하드웨어 가속 애니메이션을 위한 GSAP을 활용했습니다.",
+        "lesson": "WebGL 성능 최적화와 커스텀 셰이더의 강력함에 대해 깊이 이해하게 되었습니다.",
         "technologies": ["React", "Three.js", "GSAP", "TypeScript"]
       },
       "color": "#ff00ff"
@@ -210,10 +210,10 @@
       "label": "Processing Games",
       "connections": ["me", "skill-processing", "skill-arduino"],
       "details": {
-        "description": "Collection of interactive games built with Processing, featuring Arduino joystick controls.",
-        "trouble": "Synchronizing Arduino input with game state and handling multiple game modes.",
-        "shooting": "Created a modular input system that abstracts hardware controls for all game modes.",
-        "lesson": "Hardware-software integration requires careful consideration of timing and state management.",
+        "description": "Processing으로 제작한 인터랙티브 게임 컬렉션입니다. Arduino 조이스틱 컨트롤을 통해 하드웨어와 소프트웨어를 연동했습니다.",
+        "trouble": "Arduino 입력을 게임 상태와 동기화하고 다양한 게임 모드를 처리하는 것이 어려웠습니다.",
+        "shooting": "모든 게임 모드에서 하드웨어 컨트롤을 추상화하는 모듈식 입력 시스템을 구축했습니다.",
+        "lesson": "하드웨어-소프트웨어 통합에는 타이밍과 상태 관리에 대한 세심한 고려가 필요합니다.",
         "technologies": ["Processing", "Arduino", "Java"]
       },
       "color": "#ff00ff"
@@ -224,7 +224,7 @@
       "label": "React 19",
       "connections": ["project-chatbot", "project-portfolio"],
       "details": {
-        "description": "Modern React development with hooks, concurrent features, and server components."
+        "description": "Meta에서 개발한 UI 라이브러리로, Hooks를 활용한 함수형 컴포넌트 개발을 지원합니다. 선언적 UI 패러다임과 Virtual DOM을 통해 효율적인 렌더링을 제공하며, Concurrent Mode와 Server Components 같은 최신 기능으로 대규모 애플리케이션 개발에 적합합니다."
       },
       "color": "#61dafb"
     },
@@ -234,7 +234,7 @@
       "label": "TypeScript",
       "connections": ["project-chatbot", "project-cortex-fe"],
       "details": {
-        "description": "Type-safe JavaScript development for scalable applications."
+        "description": "Microsoft에서 개발한 JavaScript의 슈퍼셋으로, 정적 타입 검사를 통해 컴파일 시점에 오류를 잡아냅니다. 인터페이스, 제네릭, 유니온 타입 등 강력한 타입 시스템으로 대규모 애플리케이션의 안정성과 유지보수성을 크게 향상시킵니다."
       },
       "color": "#3178c6"
     },
@@ -244,7 +244,7 @@
       "label": "Three.js / R3F",
       "connections": ["project-portfolio"],
       "details": {
-        "description": "3D graphics programming with WebGL, React Three Fiber, and custom shaders."
+        "description": "WebGL 기반의 3D 그래픽 라이브러리로, 브라우저에서 고품질 3D 경험을 구현합니다. React Three Fiber(R3F)를 통해 React와 선언적으로 통합 가능하며, 커스텀 셰이더 작성, 포스트 프로세싱, 물리 엔진 연동 등 고급 그래픽 기법을 지원합니다."
       },
       "color": "#049ef4"
     },
@@ -254,7 +254,7 @@
       "label": "GSAP",
       "connections": ["project-portfolio"],
       "details": {
-        "description": "Professional-grade animations for the web."
+        "description": "GreenSock Animation Platform의 약자로, 웹에서 가장 강력한 JavaScript 애니메이션 라이브러리입니다. 하드웨어 가속, 타임라인 기반 시퀀싱, ScrollTrigger 플러그인 등을 통해 부드럽고 성능 최적화된 애니메이션을 구현합니다."
       },
       "color": "#88ce02"
     },
@@ -284,7 +284,7 @@
       "label": "Processing",
       "connections": ["project-processing"],
       "details": {
-        "description": "Creative coding and visual programming."
+        "description": "MIT 미디어 연구소에서 개발한 비주얼 아트와 크리에이티브 코딩을 위한 프로그래밍 언어 및 IDE입니다. Java 기반으로 동작하며, 인터랙티브 그래픽, 애니메이션, 데이터 시각화 등 시각 예술 작품을 쉽게 제작할 수 있습니다."
       },
       "color": "#006699"
     },
@@ -294,7 +294,7 @@
       "label": "Arduino",
       "connections": ["project-processing"],
       "details": {
-        "description": "Hardware prototyping and IoT development."
+        "description": "오픈소스 하드웨어 플랫폼으로, 마이크로컨트롤러 기반의 프로토타이핑 보드입니다. 센서, 모터, LED 등 다양한 전자 부품을 제어할 수 있으며, IoT 프로젝트와 인터랙티브 설치 작품 개발에 널리 사용됩니다."
       },
       "color": "#00979d"
     },
@@ -304,7 +304,7 @@
       "label": "Vite",
       "connections": ["project-chatbot"],
       "details": {
-        "description": "Next Generation Frontend Tooling."
+        "description": "차세대 프론트엔드 빌드 도구로, ES Modules 기반의 초고속 개발 서버와 HMR(Hot Module Replacement)을 제공합니다. Rollup 기반 번들링으로 최적화된 프로덕션 빌드를 생성하며, React, Vue, Svelte 등 다양한 프레임워크를 지원합니다."
       },
       "color": "#646cff"
     },
@@ -314,7 +314,7 @@
       "label": "TailwindCSS",
       "connections": ["project-chatbot", "project-cortex-fe"],
       "details": {
-        "description": "A utility-first CSS framework for rapidly building custom designs."
+        "description": "Utility-First 방식의 CSS 프레임워크로, 미리 정의된 유틸리티 클래스를 조합하여 빠르게 스타일링합니다. JIT 컴파일러로 사용된 클래스만 번들에 포함되어 최소한의 CSS 파일을 생성하며, 일관된 디자인 시스템 구축에 적합합니다."
       },
       "color": "#38bdf8"
     },
@@ -324,7 +324,7 @@
       "label": "Zustand",
       "connections": ["project-chatbot", "project-cortex-fe"],
       "details": {
-        "description": "A small, fast and scalable bearbones state-management solution."
+        "description": "가볍고 빠른 React 상태 관리 라이브러리입니다. Redux 대비 보일러플레이트가 적고 러닝커브가 낮으며, 훅 기반의 직관적인 API를 제공합니다. Immer와 함께 사용하면 복잡한 중첩 상태도 쉽게 관리할 수 있습니다."
       },
       "color": "#4338ca"
     },
@@ -334,7 +334,7 @@
       "label": "Axios",
       "connections": ["project-chatbot"],
       "details": {
-        "description": "Promise based HTTP client for the browser and node.js."
+        "description": "Promise 기반의 HTTP 클라이언트로, 브라우저와 Node.js 환경 모두에서 동작합니다. 인터셉터를 통한 요청/응답 가로채기, 자동 JSON 변환, 요청 취소, 타임아웃 설정 등 API 통신에 필요한 다양한 기능을 제공합니다."
       },
       "color": "#5a29e4"
     },
@@ -344,7 +344,7 @@
       "label": "i18next",
       "connections": ["project-chatbot"],
       "details": {
-        "description": "The most popular internationalization framework for browsers and servers."
+        "description": "가장 널리 사용되는 JavaScript 국제화(i18n) 프레임워크입니다. 다국어 리소스 관리, 복수형 처리, 언어 감지, 지연 로딩 등 다국어 지원에 필요한 포괄적인 기능을 제공하며, React, Vue 등 다양한 프레임워크와 통합됩니다."
       },
       "color": "#26a69a"
     },
