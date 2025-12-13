@@ -23,6 +23,7 @@ export function Modal() {
     setActiveNode,
     setCameraTarget,
     theme,
+    nodePositions,
   } = useAppStore();
   const isDark = theme === "dark";
 
@@ -36,14 +37,18 @@ export function Modal() {
   const rawColor = node?.color || "#00ffff";
   const nodeColor = getThemeColor(rawColor, theme);
 
-  // ESC 키로 모달 닫기
+  // ESC 키로 모달 닫기, 화살표 키로 노드 순회
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape" && isModalOpen) {
         handleClose();
+      } else if (e.key === "ArrowLeft" && isModalOpen) {
+        navigateNode(-1);
+      } else if (e.key === "ArrowRight" && isModalOpen) {
+        navigateNode(1);
       }
     },
-    [isModalOpen]
+    [isModalOpen, activeNode]
   );
 
   useEffect(() => {
@@ -84,6 +89,26 @@ export function Modal() {
     const newIndex = tabOrder.indexOf(newTab);
     setTabDirection(newIndex > currentIndex ? "right" : "left");
     setActiveTab(newTab);
+  };
+
+  // 노드 순회 함수
+  const navigateNode = (direction: -1 | 1) => {
+    const currentIndex = data.nodes.findIndex((n) => n.id === activeNode);
+    if (currentIndex === -1) return;
+
+    let newIndex = currentIndex + direction;
+    // 순환 처리
+    if (newIndex < 0) newIndex = data.nodes.length - 1;
+    if (newIndex >= data.nodes.length) newIndex = 0;
+
+    const newNode = data.nodes[newIndex];
+    const newPosition = nodePositions.get(newNode.id);
+
+    setActiveNode(newNode.id);
+    if (newPosition) {
+      setCameraTarget(newPosition);
+    }
+    setActiveTab("description"); // 탭 초기화
   };
 
   if (!isModalOpen || !node) return null;
@@ -148,6 +173,116 @@ export function Modal() {
           backdropFilter: "blur(8px)",
         }}
       />
+
+      {/* 이전 노드 버튼 (왼쪽) */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          navigateNode(-1);
+        }}
+        className={`
+          absolute left-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:left-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
+          p-3 md:p-4 rounded-full
+          transition-all duration-300
+          hover:scale-110 active:scale-95
+          ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+          }
+        `}
+        style={{
+          background: isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(8px)",
+          border: isDark
+            ? "1px solid rgba(255, 255, 255, 0.2)"
+            : "1px solid rgba(0, 0, 0, 0.1)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = `${nodeColor}40`;
+          e.currentTarget.style.borderColor = nodeColor;
+          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)";
+          e.currentTarget.style.borderColor = isDark
+            ? "rgba(255, 255, 255, 0.2)"
+            : "rgba(0, 0, 0, 0.1)";
+          e.currentTarget.style.boxShadow = "none";
+        }}
+        aria-label="이전 노드"
+      >
+        <svg
+          className="w-5 h-5 md:w-6 md:h-6"
+          style={{ color: isDark ? "white" : "#1f2937" }}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
+      {/* 다음 노드 버튼 (오른쪽) */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          navigateNode(1);
+        }}
+        className={`
+          absolute right-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:right-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
+          p-3 md:p-4 rounded-full
+          transition-all duration-300
+          hover:scale-110 active:scale-95
+          ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"}
+        `}
+        style={{
+          background: isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(8px)",
+          border: isDark
+            ? "1px solid rgba(255, 255, 255, 0.2)"
+            : "1px solid rgba(0, 0, 0, 0.1)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = `${nodeColor}40`;
+          e.currentTarget.style.borderColor = nodeColor;
+          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)";
+          e.currentTarget.style.borderColor = isDark
+            ? "rgba(255, 255, 255, 0.2)"
+            : "rgba(0, 0, 0, 0.1)";
+          e.currentTarget.style.boxShadow = "none";
+        }}
+        aria-label="다음 노드"
+      >
+        <svg
+          className="w-5 h-5 md:w-6 md:h-6"
+          style={{ color: isDark ? "white" : "#1f2937" }}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
 
       {/* 모달 본체 */}
       <div
@@ -856,13 +991,41 @@ export function Modal() {
 
         {/* 하단 키보드 힌트 */}
         <div
-          className="px-6 pb-4 flex justify-end pt-3"
+          className="px-6 pb-4 flex justify-end items-center gap-4 pt-3"
           style={{
             borderTop: isDark
               ? "1px solid rgba(255,255,255,0.05)"
               : "1px solid rgba(0,0,0,0.05)",
           }}
         >
+          <span
+            className="text-xs flex items-center gap-1.5 transition-colors duration-300"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
+            }}
+          >
+            <kbd
+              className="px-1.5 py-0.5 rounded font-mono text-[10px]"
+              style={{
+                background: isDark
+                  ? "rgba(255,255,255,0.1)"
+                  : "rgba(0,0,0,0.05)",
+              }}
+            >
+              ←
+            </kbd>
+            <kbd
+              className="px-1.5 py-0.5 rounded font-mono text-[10px]"
+              style={{
+                background: isDark
+                  ? "rgba(255,255,255,0.1)"
+                  : "rgba(0,0,0,0.05)",
+              }}
+            >
+              →
+            </kbd>
+            순회
+          </span>
           <span
             className="text-xs flex items-center gap-1.5 transition-colors duration-300"
             style={{
