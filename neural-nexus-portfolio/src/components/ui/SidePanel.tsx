@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import nodesData from "../../data/nodes.json";
+import { nodesData } from "../../data";
 import type { NeuralData, NodeType } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppStore } from "../../stores/useAppStore";
-import nodesData from "../../data/nodes.json";
+import { nodesData } from "../../data";
 import type { NeuralData } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 

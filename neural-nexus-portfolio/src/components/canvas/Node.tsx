@@ -16,8 +16,8 @@ interface NodeProps {
 const NODE_SIZES: Record<string, number> = {
   main: 2.2, // 메인 노드 (나)
   project: 1.8, // 프로젝트 노드
-  skill: 1.5, // 스킬 노드
-  lesson: 1.3, // 교훈 노드
+  skill: 1.2, // 스킬 노드
+  lesson: 1.0, // 교훈 노드
 };
 
 // 노드 타입별 기본 색상

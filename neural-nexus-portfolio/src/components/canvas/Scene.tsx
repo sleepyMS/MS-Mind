@@ -8,7 +8,7 @@ import { Background } from "./Background";
 import { PostProcessing } from "./PostProcessing";
 import { useForceGraph } from "../../hooks/useForceGraph";
 import { useAppStore } from "../../stores/useAppStore";
-import nodesData from "../../data/nodes.json";
+import { nodesData } from "../../data";
 import type { NeuralData } from "../../types";
 import * as THREE from "three";
 
