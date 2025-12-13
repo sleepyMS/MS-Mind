@@ -110,7 +110,7 @@ export function Background() {
               <meshStandardMaterial
                 map={moonTexture}
                 emissive="#aabbcc"
-                emissiveIntensity={1.0}
+                emissiveIntensity={1.8}
                 emissiveMap={moonTexture}
                 roughness={0.95}
                 metalness={0}
