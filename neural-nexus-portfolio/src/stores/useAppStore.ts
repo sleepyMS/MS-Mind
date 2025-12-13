@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { AppState, NodeType, ThemeType } from "../types";
+import type { AppState, NodeType, ProjectCategory, ThemeType } from "../types";
 
 /**
  * 전역 상태 스토어
@@ -21,6 +21,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   // UI 상태
   visibleNodeTypes: ["main", "project", "skill"], // 기본: 모든 타입 표시
+  visibleCategories: ["frontend", "backend", "ai-ml", "creative"], // 기본: 모든 카테고리 표시
   isSidePanelOpen: true, // 사이드 패널 기본 열림
   isLoading: true, // 초기 로딩 상태
   loadingProgress: 0, // 로딩 진행률 (0-100)
@@ -62,6 +63,22 @@ export const useAppStore = create<AppState>((set, get) => ({
         ? current.filter((t) => t !== type)
         : [...current, type],
     });
+  },
+  toggleCategory: (category: ProjectCategory) => {
+    const current = get().visibleCategories;
+    const isVisible = current.includes(category);
+
+    // 최소 1개의 카테고리는 항상 보이도록
+    if (isVisible && current.length === 1) return;
+
+    set({
+      visibleCategories: isVisible
+        ? current.filter((c) => c !== category)
+        : [...current, category],
+    });
+  },
+  resetCategoryFilter: () => {
+    set({ visibleCategories: ["frontend", "backend", "ai-ml", "creative"] });
   },
   setSidePanelOpen: (open) => set({ isSidePanelOpen: open }),
   setLoading: (loading) => set({ isLoading: loading }),

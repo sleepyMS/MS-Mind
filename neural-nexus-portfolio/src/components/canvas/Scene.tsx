@@ -110,6 +110,7 @@ export function Scene() {
     highlightedNodes,
     isModalOpen,
     visibleNodeTypes,
+    visibleCategories,
     theme,
     nodePositions,
   } = useAppStore();
@@ -159,12 +160,69 @@ export function Scene() {
     return lines;
   }, [nodes, positions]);
 
-  // visible 노드 ID 집합
+  // 선택된 카테고리의 프로젝트 ID들
+  const visibleProjectIds = useMemo(() => {
+    return new Set(
+      nodes
+        .filter(
+          (n) =>
+            n.type === "project" &&
+            n.category &&
+            visibleCategories.includes(n.category)
+        )
+        .map((n) => n.id)
+    );
+  }, [nodes, visibleCategories]);
+
+  // 스킬이 visible 카테고리 프로젝트에 연결되어 있는지 확인
+  const isSkillConnectedToVisibleProject = useMemo(() => {
+    const connectedSkills = new Set<string>();
+    nodes.forEach((node) => {
+      if (node.type === "skill") {
+        // 이 스킬이 보이는 프로젝트에 연결되어 있는지 확인
+        const hasConnection = node.connections.some((connId) =>
+          visibleProjectIds.has(connId)
+        );
+        if (hasConnection) {
+          connectedSkills.add(node.id);
+        }
+      }
+    });
+    return connectedSkills;
+  }, [nodes, visibleProjectIds]);
+
+  // visible 노드 ID 집합 (타입 + 카테고리 필터 적용)
   const visibleNodeIds = useMemo(() => {
     return new Set(
-      nodes.filter((n) => visibleNodeTypes.includes(n.type)).map((n) => n.id)
+      nodes
+        .filter((n) => {
+          // 먼저 타입 필터 체크
+          if (!visibleNodeTypes.includes(n.type)) return false;
+
+          // main 노드는 항상 표시
+          if (n.type === "main") return true;
+
+          // 프로젝트는 카테고리 체크
+          if (n.type === "project") {
+            return n.category && visibleCategories.includes(n.category);
+          }
+
+          // 스킬은 보이는 프로젝트에 연결된 것만 표시
+          if (n.type === "skill") {
+            return isSkillConnectedToVisibleProject.has(n.id);
+          }
+
+          // lesson 등 다른 타입은 그대로 표시
+          return true;
+        })
+        .map((n) => n.id)
     );
-  }, [nodes, visibleNodeTypes]);
+  }, [
+    nodes,
+    visibleNodeTypes,
+    visibleCategories,
+    isSkillConnectedToVisibleProject,
+  ]);
 
   // 간접 연결 계산: 숨겨진 노드를 통해 연결된 visible 노드들을 찾아 연결
   const indirectConnections = useMemo(() => {
@@ -307,13 +365,13 @@ export function Scene() {
           {/* 배경 요소 (별, 파티클) */}
           <Background />
 
-          {/* 뉴런 노드들 - visibleNodeTypes에 따라 표시/숨김 */}
+          {/* 뉴런 노드들 - visibleNodeIds에 따라 표시/숨김 (타입 + 카테고리 필터) */}
           {nodes.map((node) => {
             const position = positions.get(node.id);
             if (!position) return null;
 
-            const isVisible = visibleNodeTypes.includes(node.type);
-            if (!isVisible) return null;
+            // visibleNodeIds에 포함된 노드만 렌더링
+            if (!visibleNodeIds.has(node.id)) return null;
 
             return <Node key={node.id} node={node} position={position} />;
           })}

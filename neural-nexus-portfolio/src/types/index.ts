@@ -101,6 +101,7 @@ export interface AppState {
 
   // UI 상태
   visibleNodeTypes: NodeType[]; // 표시할 노드 타입 필터
+  visibleCategories: ProjectCategory[]; // 표시할 카테고리 필터
   isSidePanelOpen: boolean; // 사이드 패널 열림 상태
   isLoading: boolean; // 로딩 상태
   loadingProgress: number; // 로딩 진행률 (0-100)
@@ -120,6 +121,8 @@ export interface AppState {
 
   // UI 액션들
   toggleNodeType: (type: NodeType) => void;
+  toggleCategory: (category: ProjectCategory) => void;
+  resetCategoryFilter: () => void;
   setSidePanelOpen: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
   setLoadingProgress: (progress: number) => void;
