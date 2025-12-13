@@ -257,9 +257,9 @@ export function NodeFilter() {
                 </span>
                 {isProject && isActive && !allCategoriesSelected && (
                   <span
-                    className="text-xs px-1 rounded"
+                    className="text-xs px-1 py-0.5 rounded"
                     style={{
-                      background: `${color}30`,
+                      background: `${color}20`,
                       color: color,
                     }}
                   >
@@ -292,21 +292,21 @@ export function NodeFilter() {
                 )}
               </button>
 
-              {/* 카테고리 드롭다운 */}
+              {/* 카테고리 드롭다운 - 사이드바 스타일과 동일 */}
               {isProject && isCategoryDropdownOpen && (
                 <div
-                  className="absolute top-full left-0 mt-2 py-1.5 rounded-xl z-50 min-w-[180px] animate-in fade-in slide-in-from-top-2 duration-200"
+                  className="absolute top-full left-0 mt-2 p-2 rounded-xl z-50 min-w-[180px]"
                   style={{
                     background: isDark
-                      ? "rgba(20, 20, 30, 0.95)"
+                      ? "rgba(15, 15, 25, 0.95)"
                       : "rgba(255, 255, 255, 0.95)",
                     backdropFilter: "blur(16px)",
                     border: `1px solid ${
-                      isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)"
+                      isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
                     }`,
                     boxShadow: isDark
-                      ? "0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)"
-                      : "0 12px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)",
+                      ? "0 8px 32px rgba(0,0,0,0.5)"
+                      : "0 8px 32px rgba(0,0,0,0.15)",
                   }}
                 >
                   {/* 전체 선택 버튼 */}
@@ -317,120 +317,108 @@ export function NodeFilter() {
                     }}
                     onMouseEnter={() => setHoveredCategory("all")}
                     onMouseLeave={() => setHoveredCategory(null)}
-                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs transition-all duration-150 cursor-pointer rounded-lg mx-1"
+                    className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 cursor-pointer"
                     style={{
                       background:
-                        hoveredCategory === "all"
+                        allCategoriesSelected || hoveredCategory === "all"
                           ? isDark
                             ? "rgba(255,255,255,0.1)"
                             : "rgba(0,0,0,0.05)"
                           : "transparent",
-                      color: allCategoriesSelected
-                        ? isDark
-                          ? "#fff"
-                          : "#000"
-                        : isDark
-                        ? "rgba(255,255,255,0.5)"
-                        : "rgba(0,0,0,0.5)",
-                      width: "calc(100% - 8px)",
                       transform:
                         hoveredCategory === "all"
-                          ? "translateX(2px)"
+                          ? "translateX(4px)"
                           : "translateX(0)",
                     }}
                   >
-                    <span className="text-base">🌐</span>
-                    <span className="font-medium">전체 보기</span>
+                    <span>🌐</span>
+                    <span
+                      style={{
+                        color: isDark
+                          ? "rgba(255,255,255,0.8)"
+                          : "rgba(0,0,0,0.7)",
+                      }}
+                    >
+                      전체 보기
+                    </span>
                     {allCategoriesSelected && (
-                      <svg
-                        className="w-4 h-4 ml-auto text-green-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                      <span
+                        className="text-xs ml-auto"
+                        style={{
+                          color: isDark
+                            ? "rgba(255,255,255,0.7)"
+                            : "rgba(0,0,0,0.6)",
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2.5}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                        ✓
+                      </span>
                     )}
                   </button>
 
                   <div
-                    className="h-px mx-3 my-1.5"
+                    className="h-px mx-1 my-1.5"
                     style={{
                       background: isDark
-                        ? "rgba(255,255,255,0.1)"
-                        : "rgba(0,0,0,0.08)",
+                        ? "rgba(255,255,255,0.08)"
+                        : "rgba(0,0,0,0.06)",
                     }}
                   />
 
-                  {/* 카테고리 옵션들 */}
-                  {categoryOptions.map((catOption) => {
-                    const isSelected = visibleCategories.includes(
-                      catOption.category
-                    );
-                    const isHovered = hoveredCategory === catOption.category;
-                    const catColor = isDark
-                      ? catOption.darkColor
-                      : catOption.lightColor;
+                  {/* 카테고리 옵션들 - 사이드바와 동일한 스타일 */}
+                  <div className="space-y-0.5">
+                    {categoryOptions.map((catOption) => {
+                      const isSelected = visibleCategories.includes(
+                        catOption.category
+                      );
+                      const isHovered = hoveredCategory === catOption.category;
+                      const catColor = isDark
+                        ? catOption.darkColor
+                        : catOption.lightColor;
 
-                    return (
-                      <button
-                        key={catOption.category}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleCategory(catOption.category);
-                        }}
-                        onMouseEnter={() =>
-                          setHoveredCategory(catOption.category)
-                        }
-                        onMouseLeave={() => setHoveredCategory(null)}
-                        className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs transition-all duration-150 cursor-pointer rounded-lg mx-1"
-                        style={{
-                          background: isHovered
-                            ? `${catColor}15`
-                            : "transparent",
-                          color: isSelected
-                            ? catColor
-                            : isDark
-                            ? "rgba(255,255,255,0.5)"
-                            : "rgba(0,0,0,0.5)",
-                          width: "calc(100% - 8px)",
-                          transform: isHovered
-                            ? "translateX(4px)"
-                            : "translateX(0)",
-                          borderLeft: isSelected
-                            ? `2px solid ${catColor}`
-                            : "2px solid transparent",
-                        }}
-                      >
-                        <span className="text-base">{catOption.icon}</span>
-                        <span className="font-medium">{catOption.label}</span>
-                        {isSelected && (
-                          <svg
-                            className="w-4 h-4 ml-auto transition-transform duration-200"
-                            style={{
-                              color: catColor,
-                              transform: isHovered ? "scale(1.1)" : "scale(1)",
-                            }}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2.5}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={catOption.category}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleCategory(catOption.category);
+                          }}
+                          onMouseEnter={() =>
+                            setHoveredCategory(catOption.category)
+                          }
+                          onMouseLeave={() => setHoveredCategory(null)}
+                          className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 cursor-pointer"
+                          style={{
+                            background:
+                              isSelected || isHovered
+                                ? `${catColor}15`
+                                : "transparent",
+                            border:
+                              isSelected || isHovered
+                                ? `1px solid ${catColor}30`
+                                : "1px solid transparent",
+                            transform: isHovered
+                              ? "translateX(4px)"
+                              : "translateX(0)",
+                          }}
+                        >
+                          <span>{catOption.icon}</span>
+                          <span style={{ color: catColor }}>
+                            {catOption.label}
+                          </span>
+                          {isSelected && (
+                            <span
+                              className="text-xs ml-auto"
+                              style={{
+                                color: catColor,
+                              }}
+                            >
+                              ✓
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
