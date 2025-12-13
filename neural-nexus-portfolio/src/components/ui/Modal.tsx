@@ -1086,34 +1086,103 @@ export function Modal() {
             )}
 
             {activeTab === "optimizations" && details?.optimizations && (
-              <div className="space-y-8">
+              <div className="space-y-4">
                 {details.optimizations.map((opt, idx) => (
                   <div
                     key={idx}
-                    className="relative pl-6 border-l-2 border-purple-400/30"
+                    className="rounded-xl overflow-hidden transition-all hover:-translate-y-0.5"
+                    style={{
+                      background: isDark
+                        ? "rgba(139, 92, 246, 0.05)"
+                        : "rgba(139, 92, 246, 0.03)",
+                      border: isDark
+                        ? "1px solid rgba(139, 92, 246, 0.2)"
+                        : "1px solid rgba(139, 92, 246, 0.15)",
+                    }}
                   >
-                    <div className="absolute -left-[9px] top-0 w-[18px] h-[18px] rounded-full bg-purple-400/20 border border-purple-400 flex items-center justify-center">
-                      <span className="text-[10px] font-bold text-purple-400">
-                        {idx + 1}
+                    {/* 헤더 */}
+                    <div
+                      className="px-4 py-3 flex items-center gap-3"
+                      style={{
+                        background: isDark
+                          ? "linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))"
+                          : "linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.03))",
+                        borderBottom: isDark
+                          ? "1px solid rgba(139, 92, 246, 0.15)"
+                          : "1px solid rgba(139, 92, 246, 0.1)",
+                      }}
+                    >
+                      <span
+                        className="flex items-center justify-center w-7 h-7 rounded-lg text-sm font-bold"
+                        style={{
+                          background: "rgba(139, 92, 246, 0.2)",
+                          color: "#a78bfa",
+                        }}
+                      >
+                        ⚡
                       </span>
+                      <h3
+                        className="font-bold text-base"
+                        style={{ color: isDark ? "#c4b5fd" : "#7c3aed" }}
+                      >
+                        {opt.title}
+                      </h3>
                     </div>
-                    <h3 className="text-lg font-bold mb-3 text-purple-400">
-                      {opt.title}
-                    </h3>
-                    <ul className="space-y-2">
-                      {opt.items.map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-sm leading-relaxed"
-                          style={{
-                            color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
-                          }}
-                        >
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-purple-400/50 shrink-0" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+
+                    {/* 내용 - 테이블 형식 */}
+                    <div className="py-2">
+                      {opt.items.map((item, i) => {
+                        // 성능 향상 수치 감지 (예: "45초 → 0.8초", "98%", "90%")
+                        const hasMetric =
+                          /(\d+[초s%]|\d+\.\d+[초s%]|→|->)/.test(item);
+
+                        return (
+                          <div
+                            key={i}
+                            className="flex items-start gap-3 px-4 py-2"
+                            style={{
+                              background:
+                                i % 2 === 1
+                                  ? isDark
+                                    ? "rgba(139, 92, 246, 0.08)"
+                                    : "rgba(139, 92, 246, 0.05)"
+                                  : "transparent",
+                            }}
+                          >
+                            <span
+                              className="shrink-0 flex items-center justify-center"
+                              style={{ width: "20px", height: "20px" }}
+                            >
+                              {hasMetric ? (
+                                <span className="text-sm">📈</span>
+                              ) : (
+                                <span
+                                  className="inline-block w-1.5 h-1.5 rounded-full"
+                                  style={{
+                                    background: "rgba(139, 92, 246, 0.5)",
+                                  }}
+                                />
+                              )}
+                            </span>
+                            <span
+                              className="text-sm leading-relaxed"
+                              style={{
+                                color: hasMetric
+                                  ? isDark
+                                    ? "rgba(255,255,255,0.95)"
+                                    : "#1f2937"
+                                  : isDark
+                                  ? "rgba(255,255,255,0.75)"
+                                  : "#4b5563",
+                                fontWeight: hasMetric ? 500 : 400,
+                              }}
+                            >
+                              {item}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1121,37 +1190,77 @@ export function Modal() {
 
             {activeTab === "trouble" && (
               <div className="space-y-6">
-                {/* Detailed Challenges (New format) */}
+                {/* Detailed Challenges - 테이블 형식 */}
                 {details?.challenges && details.challenges.length > 0 ? (
-                  <div className="space-y-8">
+                  <div
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      border: isDark
+                        ? "1px solid rgba(239, 68, 68, 0.2)"
+                        : "1px solid rgba(239, 68, 68, 0.15)",
+                    }}
+                  >
                     {details.challenges.map((challenge, idx) => (
                       <div
                         key={idx}
-                        className="relative p-5 rounded-2xl transition-all hover:translate-x-1"
+                        className="border-b last:border-b-0"
                         style={{
-                          background: isDark
-                            ? "rgba(255,255,255,0.03)"
-                            : "rgba(0,0,0,0.02)",
-                          border: isDark
-                            ? "1px solid rgba(255,255,255,0.05)"
-                            : "1px solid rgba(0,0,0,0.05)",
+                          borderColor: isDark
+                            ? "rgba(255,255,255,0.05)"
+                            : "rgba(0,0,0,0.05)",
                         }}
                       >
-                        <h3
-                          className="text-lg font-bold mb-4 flex items-center gap-2"
-                          style={{ color: isDark ? "#f87171" : "#dc2626" }}
+                        {/* 이슈 제목 헤더 */}
+                        <div
+                          className="px-4 py-3 flex items-center gap-3"
+                          style={{
+                            background: isDark
+                              ? "rgba(239, 68, 68, 0.08)"
+                              : "rgba(239, 68, 68, 0.05)",
+                          }}
                         >
-                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-red-500/10 text-sm">
-                            !
+                          <span
+                            className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold"
+                            style={{
+                              background: "rgba(239, 68, 68, 0.2)",
+                              color: isDark ? "#f87171" : "#dc2626",
+                            }}
+                          >
+                            {idx + 1}
                           </span>
-                          {challenge.title}
-                        </h3>
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: isDark ? "#f87171" : "#dc2626" }}
+                          >
+                            {challenge.title}
+                          </h3>
+                        </div>
 
-                        <div className="space-y-4">
-                          <div className="space-y-1">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-red-400">
-                              Challenge
-                            </span>
+                        {/* 문제/해결 테이블 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2">
+                          {/* 문제 셀 */}
+                          <div
+                            className="px-4 py-3"
+                            style={{
+                              background: isDark
+                                ? "rgba(239, 68, 68, 0.03)"
+                                : "rgba(239, 68, 68, 0.02)",
+                              borderRight: isDark
+                                ? "1px solid rgba(255,255,255,0.05)"
+                                : "1px solid rgba(0,0,0,0.05)",
+                            }}
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-red-500">❌</span>
+                              <span
+                                className="text-xs font-bold uppercase tracking-wider"
+                                style={{
+                                  color: isDark ? "#f87171" : "#dc2626",
+                                }}
+                              >
+                                Challenge
+                              </span>
+                            </div>
                             <p
                               className="text-sm leading-relaxed"
                               style={{
@@ -1164,10 +1273,26 @@ export function Modal() {
                             </p>
                           </div>
 
-                          <div className="space-y-1 pl-4 border-l-2 border-green-500/30">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-green-400">
-                              Solution
-                            </span>
+                          {/* 해결 셀 */}
+                          <div
+                            className="px-4 py-3"
+                            style={{
+                              background: isDark
+                                ? "rgba(34, 197, 94, 0.03)"
+                                : "rgba(34, 197, 94, 0.02)",
+                            }}
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-green-500">✅</span>
+                              <span
+                                className="text-xs font-bold uppercase tracking-wider"
+                                style={{
+                                  color: isDark ? "#4ade80" : "#16a34a",
+                                }}
+                              >
+                                Solution
+                              </span>
+                            </div>
                             <p
                               className="text-sm leading-relaxed"
                               style={{
