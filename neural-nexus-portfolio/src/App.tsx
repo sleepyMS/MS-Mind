@@ -32,10 +32,12 @@ function App() {
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[var(--bg-primary)]">
-      {/* 로딩 스크린 */}
-      {isLoading && (
-        <LoadingScreen onComplete={handleLoadingComplete} minDuration={2500} />
-      )}
+      {/* 로딩 스크린 - 항상 렌더링하되 내부에서 애니메이션 처리 */}
+      <LoadingScreen
+        onComplete={handleLoadingComplete}
+        minDuration={2500}
+        show={isLoading}
+      />
 
       {/* 3D 씬 */}
       <Scene />
@@ -52,8 +54,12 @@ function App() {
       <div
         className={`
           fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none
-          transition-opacity duration-500
-          ${isLoading ? "opacity-0" : "opacity-100"}
+          transition-all duration-700 ease-out
+          ${
+            isLoading
+              ? "opacity-0 scale-95 translate-y-4"
+              : "opacity-100 scale-100 translate-y-0"
+          }
         `}
       >
         <p className="text-sm text-[var(--text-tertiary)]">
@@ -96,8 +102,12 @@ function App() {
       <div
         className={`
           fixed top-6 left-6 pointer-events-none
-          transition-all duration-500
-          ${isLoading ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}
+          transition-all duration-700 ease-out delay-100
+          ${
+            isLoading
+              ? "opacity-0 scale-90 -translate-y-4"
+              : "opacity-100 scale-100 translate-y-0"
+          }
         `}
       >
         <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">

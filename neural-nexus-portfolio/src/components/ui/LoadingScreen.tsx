@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useAppStore } from "../../stores/useAppStore";
+import gsap from "gsap";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
   minDuration?: number;
+  show?: boolean;
 }
 
 /**
@@ -12,11 +14,13 @@ interface LoadingScreenProps {
  */
 export function LoadingScreen({
   onComplete,
-  minDuration = 2000,
+  minDuration = 1500,
+  show = true,
 }: LoadingScreenProps) {
   const { loadingProgress } = useAppStore();
   const [timeProgress, setTimeProgress] = useState(0);
-  const [isExiting, setIsExiting] = useState(false);
+  const [shouldRender, setShouldRender] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef(Date.now());
   const completedRef = useRef(false);
 
@@ -32,42 +36,46 @@ export function LoadingScreen({
   }, [minDuration]);
 
   // 최종 진행률: 시간 기반과 실제 로딩의 최대값
-  // 실제 로딩이 없으면 (0%) 시간 기반으로만 동작
   const displayProgress =
     loadingProgress > 0
       ? Math.max(timeProgress, loadingProgress)
       : timeProgress;
 
-  // 완료 조건: 시간 100% 도달 + (실제 로딩이 있으면 100% 도달)
+  // 완료 조건 및 애니메이션
   useEffect(() => {
     if (completedRef.current) return;
 
-    // 시간 기반 100% 도달 시
     if (timeProgress >= 100) {
-      // 실제 로딩 진행률이 있고 100% 미만이면 대기
       if (loadingProgress > 0 && loadingProgress < 100) {
         return;
       }
 
       completedRef.current = true;
 
-      // 100% 표시 후 잠시 대기
-      setTimeout(() => {
-        setIsExiting(true);
-        setTimeout(() => {
-          onComplete?.();
-        }, 400);
-      }, 50);
+      // GSAP 애니메이션으로 부드러운 퇴장 효과 구현
+      if (containerRef.current) {
+        // 즉시 애니메이션 시작 (딜레이 제거)
+        gsap.to(containerRef.current, {
+          duration: 1.2,
+          scale: 1.5, // 빨려들어가는 효과
+          opacity: 0,
+          filter: "blur(20px)",
+          ease: "power3.inOut", // 부드러운 가속/감속
+          onComplete: () => {
+            setShouldRender(false);
+            onComplete?.();
+          },
+        });
+      }
     }
   }, [timeProgress, loadingProgress, onComplete]);
 
+  if (!shouldRender) return null;
+
   return (
     <div
-      className={`
-        fixed inset-0 z-[100] flex flex-col items-center justify-center
-        bg-[#000010] transition-opacity duration-500
-        ${isExiting ? "opacity-0 pointer-events-none" : "opacity-100"}
-      `}
+      ref={containerRef}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#000010] origin-center"
     >
       {/* 뉴럴 네트워크 애니메이션 */}
       <div className="relative w-48 h-48 mb-8">
