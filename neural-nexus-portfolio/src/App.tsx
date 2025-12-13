@@ -33,11 +33,7 @@ function App() {
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[var(--bg-primary)]">
       {/* 로딩 스크린 - 항상 렌더링하되 내부에서 애니메이션 처리 */}
-      <LoadingScreen
-        onComplete={handleLoadingComplete}
-        minDuration={2500}
-        show={isLoading}
-      />
+      <LoadingScreen onComplete={handleLoadingComplete} minDuration={2500} />
 
       {/* 3D 씬 */}
       <Scene />

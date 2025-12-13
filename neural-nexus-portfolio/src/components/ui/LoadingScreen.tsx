@@ -5,7 +5,6 @@ import gsap from "gsap";
 interface LoadingScreenProps {
   onComplete?: () => void;
   minDuration?: number;
-  show?: boolean;
 }
 
 /**
@@ -15,7 +14,6 @@ interface LoadingScreenProps {
 export function LoadingScreen({
   onComplete,
   minDuration = 1500,
-  show = true,
 }: LoadingScreenProps) {
   const { loadingProgress } = useAppStore();
   const [timeProgress, setTimeProgress] = useState(0);
