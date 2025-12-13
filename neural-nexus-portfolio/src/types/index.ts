@@ -65,6 +65,7 @@ export interface AppState {
   // 카메라 상태
   cameraTarget: [number, number, number] | null; // 카메라 이동 목표
   isAnimating: boolean; // 애니메이션 진행 중 여부
+  isDragging: boolean; // 노드 드래그 중 여부
 
   // UI 상태
   visibleNodeTypes: NodeType[]; // 표시할 노드 타입 필터
@@ -82,6 +83,7 @@ export interface AppState {
   setModalOpen: (open: boolean) => void;
   setCameraTarget: (target: [number, number, number] | null) => void;
   setIsAnimating: (animating: boolean) => void;
+  setIsDragging: (dragging: boolean) => void;
 
   // UI 액션들
   toggleNodeType: (type: NodeType) => void;
@@ -95,4 +97,5 @@ export interface AppState {
   // 계산된 노드 위치 (포스 시뮬레이션 결과)
   nodePositions: Map<string, [number, number, number]>;
   setNodePositions: (positions: Map<string, [number, number, number]>) => void;
+  updateNodePosition: (id: string, position: [number, number, number]) => void;
 }

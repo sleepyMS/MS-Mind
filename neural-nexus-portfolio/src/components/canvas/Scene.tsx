@@ -90,16 +90,24 @@ function SceneTransitionWrapper({ children }: { children: React.ReactNode }) {
  * 모든 뉴런 노드와 시냅스 라인을 렌더링하고 관리
  */
 export function Scene() {
-  const { highlightedNodes, isModalOpen, visibleNodeTypes, theme } =
-    useAppStore();
+  const {
+    highlightedNodes,
+    isModalOpen,
+    visibleNodeTypes,
+    theme,
+    nodePositions,
+  } = useAppStore();
   const isDark = theme === "dark";
 
   // JSON 데이터를 타입화된 데이터로 변환
   const data = nodesData as NeuralData;
   const nodes = data.nodes;
 
-  // 포스 시뮬레이션으로 유기적인 노드 위치 계산
-  const positions = useForceGraph(nodes);
+  // 포스 시뮬레이션으로 유기적인 노드 위치 계산 (초기화)
+  useForceGraph(nodes);
+
+  // 스토어의 위치 정보 사용
+  const positions = nodePositions;
 
   // 모든 연결선 데이터 생성 (직접 연결)
   const allConnections = useMemo(() => {

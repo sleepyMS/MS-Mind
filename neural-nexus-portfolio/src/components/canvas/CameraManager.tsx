@@ -19,6 +19,7 @@ export function CameraManager() {
     setIsAnimating,
     isModalOpen,
     sceneRotation,
+    isDragging,
   } = useAppStore();
 
   // 애니메이션 상태를 ref로 관리 (렌더링 최적화)
@@ -123,7 +124,7 @@ export function CameraManager() {
       minDistance={3}
       maxDistance={100}
       // 애니메이션 중 사용자 입력 비활성화
-      enabled={!isAnimating}
+      enabled={!isAnimating && !isDragging}
     />
   );
 }

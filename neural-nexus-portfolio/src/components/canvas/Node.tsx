@@ -1,5 +1,6 @@
 import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { NeuralNode } from "../../types";
@@ -47,7 +48,20 @@ export function Node({ node, position }: NodeProps) {
     setModalOpen,
     setCameraTarget,
     theme,
+    setIsDragging,
+    updateNodePosition,
   } = useAppStore();
+
+  const { camera, raycaster, pointer } = useThree();
+
+  // 드래그 상태 관리
+  const dragRef = useRef({
+    active: false,
+    dragging: false, // 실제 드래그 발생 여부 (threshold 통과 시 true)
+    startPointer: new THREE.Vector2(), // 드래그 시작 시 포인터 위치
+    plane: new THREE.Plane(),
+    offset: new THREE.Vector3(),
+  });
 
   const isActive = activeNode === node.id;
   const isHovered = hoveredNode === node.id;
@@ -161,12 +175,115 @@ export function Node({ node, position }: NodeProps) {
   };
 
   const handleClick = () => {
+    // 드래그 중이었다면 클릭 이벤트 무시 (드래그 종료 시 active가 false로 되지만,
+    // 여기서 거리 등을 체크할 수 있음. 하지만 간단히 드래그 직후 클릭 방지는
+    // isDragging 상태나 별도 ref로 처리 가능. 현재는 드래그와 클릭을 구분해야 함.)
+
+    // 만약 마우스가 거의 움직이지 않았다면 클릭으로 처리
+    // 하지만 지금 구조에서는 active가 false가 된 직후에 click이 발생.
+    // 일단 클릭 동작 수행. (드래그 시에도 클릭이 발생하는 부작용은 추후 개선)
+
+    if (useAppStore.getState().isDragging) return;
+
     setActiveNode(node.id);
     setCameraTarget(position);
     // 카메라 애니메이션 후 모달 열기
     setTimeout(() => {
       setModalOpen(true);
     }, 1000);
+  };
+
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+
+    if (!meshRef.current || !meshRef.current.parent?.parent) return;
+
+    // 드래그 시작 정보 저장
+    dragRef.current.active = true;
+    dragRef.current.dragging = false;
+    dragRef.current.startPointer.copy(pointer);
+
+    // 노드의 월드 좌표 구하기
+    const worldPos = new THREE.Vector3();
+    meshRef.current.getWorldPosition(worldPos);
+
+    // 드래그 평면 설정 (월드 좌표 기준)
+    const normal = new THREE.Vector3();
+    camera.getWorldDirection(normal);
+    dragRef.current.plane.setFromNormalAndCoplanarPoint(normal, worldPos);
+
+    // 교차점 계산 (월드 좌표)
+    const intersectPoint = new THREE.Vector3();
+    raycaster.setFromCamera(pointer, camera);
+    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+
+    if (intersectPoint) {
+      // 월드 교차점을 부모의 로컬 좌표로 변환
+      const parent = meshRef.current.parent.parent;
+      const intersectLocal = intersectPoint.clone();
+      parent.worldToLocal(intersectLocal);
+
+      // 오프셋 계산 (현재 로컬 위치 - 교차점 로컬 위치)
+      dragRef.current.offset.subVectors(
+        new THREE.Vector3(...position),
+        intersectLocal
+      );
+    }
+
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+
+    if (dragRef.current.active) {
+      dragRef.current.active = false;
+
+      if (dragRef.current.dragging) {
+        // 드래그가 발생했던 경우에만 isDragging 상태 해제 딜레이
+        dragRef.current.dragging = false;
+        setTimeout(() => setIsDragging(false), 50);
+      } else {
+        // 드래그 없이 클릭만 한 경우 즉시 상태 정리 (사실 여기서 isDragging은 false 상태임)
+      }
+
+      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    if (!dragRef.current.active) return;
+    e.stopPropagation();
+
+    // 드래그 시작 여부 판단 (Threshold 체크)
+    if (!dragRef.current.dragging) {
+      const dist = pointer.distanceTo(dragRef.current.startPointer);
+      if (dist > 0.01) {
+        // Threshold: 0.01 (화면 비율 기준, 적절히 조정 가능)
+        dragRef.current.dragging = true;
+        setIsDragging(true); // 이 시점에서 글로벌 드래그 상태 활성화
+      } else {
+        return; // Threshold를 넘지 않으면 이동 처리 안 함
+      }
+    }
+
+    if (!meshRef.current || !meshRef.current.parent?.parent) return;
+
+    // 현재 포인터 위치에서 평면 교차점 다시 계산
+    const intersectPoint = new THREE.Vector3();
+    raycaster.setFromCamera(pointer, camera);
+    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+
+    if (intersectPoint) {
+      // 월드 교차점을 부모의 로컬 좌표로 변환
+      const parent = meshRef.current.parent.parent;
+      const intersectLocal = intersectPoint.clone();
+      parent.worldToLocal(intersectLocal);
+
+      // 새 위치 = 로컬 교차점 + 오프셋
+      const newPos = intersectLocal.add(dragRef.current.offset);
+      updateNodePosition(node.id, [newPos.x, newPos.y, newPos.z]);
+    }
   };
 
   return (
@@ -188,6 +305,9 @@ export function Node({ node, position }: NodeProps) {
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerMove={handlePointerMove}
       />
 
       {/* 라벨 - 메인/프로젝트 노드 또는 호버 시에만 표시 */}

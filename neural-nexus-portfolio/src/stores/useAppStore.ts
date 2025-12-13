@@ -17,6 +17,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   // 카메라 상태
   cameraTarget: null, // 카메라 이동 목표 좌표
   isAnimating: false, // 애니메이션 진행 중 여부
+  isDragging: false, // 노드 드래그 중 여부
 
   // UI 상태
   visibleNodeTypes: ["main", "project", "skill"], // 기본: 모든 타입 표시
@@ -37,7 +38,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   setModalOpen: (open) => set({ isModalOpen: open }),
   setCameraTarget: (target) => set({ cameraTarget: target }),
   setIsAnimating: (animating) => set({ isAnimating: animating }),
+  setIsDragging: (dragging) => set({ isDragging: dragging }),
   setNodePositions: (positions) => set({ nodePositions: positions }),
+  updateNodePosition: (id, position) => {
+    set((state) => {
+      const newPositions = new Map(state.nodePositions);
+      newPositions.set(id, position);
+      return { nodePositions: newPositions };
+    });
+  },
 
   // UI 액션들
   toggleNodeType: (type: NodeType) => {
