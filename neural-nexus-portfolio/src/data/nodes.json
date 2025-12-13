@@ -345,7 +345,8 @@
         "skill-celery",
         "skill-redis",
         "skill-timescaledb",
-        "skill-docker"
+        "skill-docker",
+        "skill-postgresql"
       ],
       "details": {
         "description": "개인 투자자를 위한 데이터 기반 퀀트 투자 및 자동매매 플랫폼입니다. 사용자가 코딩 없이 UI로 투자 전략을 수립하면, 시스템이 과거 데이터를 기반으로 수익률을 검증(백테스팅)하고, 실제 거래소와 연동하여 24시간 자동매매를 수행합니다.",
@@ -647,6 +648,16 @@
         "description": "컨테이너 기반의 애플리케이션 배포 및 환경 일관성을 보장합니다."
       },
       "color": "#2496ed"
+    },
+    {
+      "id": "skill-postgresql",
+      "type": "skill",
+      "label": "PostgreSQL",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "관계형 데이터베이스로, 사용자/전략/백테스트 데이터 저장 및 Optuna Study 공유 저장소로 활용됩니다."
+      },
+      "color": "#336791"
     }
   ]
 }
