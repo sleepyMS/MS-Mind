@@ -1,6 +1,6 @@
 import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
+import { Stars, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useAppStore } from "../../stores/useAppStore";
 
@@ -15,6 +15,9 @@ export function Background() {
   const particlesRef = useRef<THREE.Points>(null);
   const sunRef = useRef<THREE.Mesh>(null);
   const moonRef = useRef<THREE.Mesh>(null);
+
+  // 달 텍스처 로드 (로컬 이미지)
+  const moonTexture = useTexture("/images/moon_texture.jpg");
 
   // 떠다니는 파티클 생성
   const particleGeometry = useMemo(() => {
@@ -93,20 +96,25 @@ export function Background() {
             speed={0.5}
           />
           {/* 달 */}
-          <group position={[-30, 25, -50]}>
+          <group position={[-60, 40, -150]}>
+            {/* 달빛 광원 - 달 뒤쪽에서 비추기 */}
+            <pointLight
+              position={[0, 0, -20]}
+              color="#b0c4de"
+              intensity={30}
+              distance={300}
+              decay={2}
+            />
             <mesh ref={moonRef} rotation={[0, 0, Math.PI / 8]}>
-              <sphereGeometry args={[6, 32, 32]} />
+              <sphereGeometry args={[12, 64, 64]} />
               <meshStandardMaterial
-                color="#e0e0e0"
-                emissive="#aaaaaa"
-                emissiveIntensity={0.2}
-                roughness={0.8}
+                map={moonTexture}
+                emissive="#aabbcc"
+                emissiveIntensity={1.0}
+                emissiveMap={moonTexture}
+                roughness={0.95}
+                metalness={0}
               />
-            </mesh>
-            {/* 달 글로우 */}
-            <mesh>
-              <sphereGeometry args={[9, 32, 32]} />
-              <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
             </mesh>
           </group>
         </>
@@ -114,15 +122,24 @@ export function Background() {
 
       {/* 라이트 모드: 태양 */}
       {!isDark && (
-        <mesh ref={sunRef} position={[30, 25, -50]}>
-          <sphereGeometry args={[8, 32, 32]} />
-          <meshBasicMaterial color="#ffd93d" />
-          {/* 태양 글로우 */}
-          <mesh>
-            <sphereGeometry args={[12, 32, 32]} />
-            <meshBasicMaterial color="#fff3b0" transparent opacity={0.3} />
+        <group position={[60, 40, -150]}>
+          {/* 태양빛 광원 - 따뜻한 노란 빛 */}
+          <pointLight
+            color="#fff5e0"
+            intensity={100}
+            distance={400}
+            decay={2}
+          />
+          <mesh ref={sunRef}>
+            <sphereGeometry args={[16, 32, 32]} />
+            <meshBasicMaterial color="#ffd93d" />
+            {/* 태양 글로우 */}
+            <mesh>
+              <sphereGeometry args={[24, 32, 32]} />
+              <meshBasicMaterial color="#fff3b0" transparent opacity={0.3} />
+            </mesh>
           </mesh>
-        </mesh>
+        </group>
       )}
 
       {/* 떠다니는 파티클 */}

@@ -39,8 +39,9 @@ function SceneColor({ isDark }: { isDark: boolean }) {
   // Fog 타겟 값
   // Fog 타겟 값
   // 라이트 모드에서는 안개를 거의 안 보이게 설정 (매우 멀리)
-  const targetFogNear = isDark ? 30 : 500;
-  const targetFogFar = isDark ? 150 : 1000;
+  // 다크 모드에서도 달/별이 보이도록 fogFar를 충분히 늘림
+  const targetFogNear = isDark ? 50 : 500;
+  const targetFogFar = isDark ? 250 : 1000;
 
   useFrame((_, delta) => {
     // 부드러운 보간 속도
