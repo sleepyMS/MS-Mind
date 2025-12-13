@@ -214,7 +214,7 @@ export function Modal() {
                 >
                   {node.label}
                 </h2>
-                <div className="flex items-center gap-2 mt-1.5">
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <span
                     className="px-2.5 py-0.5 text-xs font-semibold rounded-full uppercase tracking-wider"
                     style={{
@@ -233,7 +233,36 @@ export function Modal() {
                         : "rgba(0,0,0,0.5)",
                     }}
                   >
-                    {node.connections.length}개 연결
+                    {(() => {
+                      // 연결된 노드들의 타입별 개수 계산
+                      const connectionTypes: Record<string, number> = {};
+                      node.connections.forEach((connId) => {
+                        const connNode = data.nodes.find(
+                          (n) => n.id === connId
+                        );
+                        if (connNode) {
+                          const type = connNode.type;
+                          connectionTypes[type] =
+                            (connectionTypes[type] || 0) + 1;
+                        }
+                      });
+
+                      const typeLabels: Record<string, string> = {
+                        main: "메인",
+                        project: "프로젝트",
+                        skill: "스킬",
+                        lesson: "교훈",
+                      };
+
+                      const parts = Object.entries(connectionTypes)
+                        .map(
+                          ([type, count]) =>
+                            `${typeLabels[type] || type} ${count}개`
+                        )
+                        .join(", ");
+
+                      return parts ? `${parts} 연결` : "연결 없음";
+                    })()}
                   </span>
                 </div>
               </div>
