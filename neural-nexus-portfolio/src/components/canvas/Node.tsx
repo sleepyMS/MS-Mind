@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
@@ -161,17 +161,74 @@ export function Node({ node, position }: NodeProps) {
     // 연결선 끝점이 노드 중심과 항상 일치하도록 위치 고정
   });
 
-  const handlePointerOver = () => {
+  // 호버 상태 추적을 위한 Refs (이중 체크 전략)
+  const isMeshHovered = useRef(false);
+  const isLabelHovered = useRef(false);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const scheduleUnhover = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+
+    hoverTimeoutRef.current = setTimeout(() => {
+      // Mesh와 Label 둘 다 호버 상태가 아닐 때만 해제
+      if (!isMeshHovered.current && !isLabelHovered.current) {
+        setHoveredNode(null);
+        setHighlightedNodes([]);
+        document.body.style.cursor = "auto";
+      }
+    }, 10); // 10ms: 깜빡임 방지용 최소 딜레이 (이벤트 루프 처리 확보)
+  };
+
+  // Mesh용 이벤트 핸들러
+  const handleMeshPointerOver = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    isMeshHovered.current = true;
+
+    // 호버 진입 시 기존 언호버 타이머 취소
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+
     setHoveredNode(node.id);
-    // 연결된 노드들 하이라이트
     setHighlightedNodes([node.id, ...node.connections]);
     document.body.style.cursor = "pointer";
   };
 
-  const handlePointerOut = () => {
-    setHoveredNode(null);
-    setHighlightedNodes([]);
-    document.body.style.cursor = "auto";
+  const handleMeshPointerOut = () => {
+    isMeshHovered.current = false;
+    scheduleUnhover();
+  };
+
+  // Label용 이벤트 핸들러
+  const handleLabelMouseEnter = () => {
+    isLabelHovered.current = true;
+
+    // 호버 진입 시 기존 언호버 타이머 취소
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+
+    setHoveredNode(node.id);
+    setHighlightedNodes([node.id, ...node.connections]);
+    document.body.style.cursor = "pointer";
+  };
+
+  const handleLabelMouseLeave = () => {
+    isLabelHovered.current = false;
+    scheduleUnhover();
   };
 
   const handleClick = () => {
@@ -407,8 +464,8 @@ export function Node({ node, position }: NodeProps) {
         geometry={geometry}
         material={mainMaterial}
         scale={size}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
+        onPointerOver={handleMeshPointerOver}
+        onPointerOut={handleMeshPointerOut}
         onClick={handleClick}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
@@ -441,8 +498,8 @@ export function Node({ node, position }: NodeProps) {
               color: "#ffffff",
               textShadow: `0 0 10px ${color}`,
             }}
-            onMouseEnter={handlePointerOver}
-            onMouseLeave={handlePointerOut}
+            onMouseEnter={handleLabelMouseEnter}
+            onMouseLeave={handleLabelMouseLeave}
             onClick={handleClick}
             onMouseDown={handleLabelMouseDown}
           >
