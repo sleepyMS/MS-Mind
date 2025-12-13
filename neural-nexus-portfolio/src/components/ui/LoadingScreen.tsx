@@ -26,10 +26,13 @@ export function LoadingScreen({
 
       if (newProgress >= 100) {
         clearInterval(interval);
-        setIsExiting(true);
+        // 100%가 표시된 후 잠시 대기 후 종료
         setTimeout(() => {
-          onComplete?.();
-        }, 500);
+          setIsExiting(true);
+          setTimeout(() => {
+            onComplete?.();
+          }, 50);
+        }, 50); // 50ms 동안 100% 상태 표시
       }
     }, 50);
 
@@ -111,7 +114,7 @@ export function LoadingScreen({
       {/* 프로그레스 바 */}
       <div className="w-48 h-1 rounded-full bg-white/10 overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-100 ease-out"
+          className="h-full rounded-full"
           style={{
             width: `${progress}%`,
             background: "linear-gradient(90deg, #00ffff, #ff00ff)",
