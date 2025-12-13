@@ -19,7 +19,16 @@
       "id": "project-chatbot",
       "type": "project",
       "label": "GangNaengBot-FE",
-      "connections": ["me", "skill-react", "skill-typescript"],
+      "connections": [
+        "me",
+        "skill-react",
+        "skill-typescript",
+        "skill-vite",
+        "skill-tailwind",
+        "skill-zustand",
+        "skill-axios",
+        "skill-i18next"
+      ],
       "details": {
         "description": "강남대학교 학생들을 위한 AI 챗봇 서비스 강냉봇의 프론트엔드 프로젝트입니다. 사용자에게 친숙한 대화형 인터페이스를 통해 학교 생활에 필요한 정보를 쉽고 빠르게 제공합니다.",
         "technologies": [
@@ -274,6 +283,56 @@
         "description": "Hardware prototyping and IoT development."
       },
       "color": "#00979d"
+    },
+    {
+      "id": "skill-vite",
+      "type": "skill",
+      "label": "Vite",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Next Generation Frontend Tooling."
+      },
+      "color": "#646cff"
+    },
+    {
+      "id": "skill-tailwind",
+      "type": "skill",
+      "label": "TailwindCSS",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "A utility-first CSS framework for rapidly building custom designs."
+      },
+      "color": "#38bdf8"
+    },
+    {
+      "id": "skill-zustand",
+      "type": "skill",
+      "label": "Zustand",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "A small, fast and scalable bearbones state-management solution."
+      },
+      "color": "#4338ca"
+    },
+    {
+      "id": "skill-axios",
+      "type": "skill",
+      "label": "Axios",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Promise based HTTP client for the browser and node.js."
+      },
+      "color": "#5a29e4"
+    },
+    {
+      "id": "skill-i18next",
+      "type": "skill",
+      "label": "i18next",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "The most popular internationalization framework for browsers and servers."
+      },
+      "color": "#26a69a"
     }
   ]
 }
