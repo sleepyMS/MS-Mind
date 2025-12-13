@@ -286,6 +286,111 @@ export function Node({ node, position }: NodeProps) {
     }
   };
 
+  // === 라벨용 DOM 드래그 핸들러 ===
+  const handleLabelMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!meshRef.current || !meshRef.current.parent?.parent) return;
+
+    // 드래그 시작 정보 저장
+    dragRef.current.active = true;
+    dragRef.current.dragging = false;
+    dragRef.current.startPointer.set(
+      (e.clientX / window.innerWidth) * 2 - 1,
+      -(e.clientY / window.innerHeight) * 2 + 1
+    );
+
+    // 노드의 월드 좌표 구하기
+    const worldPos = new THREE.Vector3();
+    meshRef.current.getWorldPosition(worldPos);
+
+    // 드래그 평면 설정 (월드 좌표 기준)
+    const normal = new THREE.Vector3();
+    camera.getWorldDirection(normal);
+    dragRef.current.plane.setFromNormalAndCoplanarPoint(normal, worldPos);
+
+    // 교차점 계산 (월드 좌표)
+    const currentPointer = new THREE.Vector2(
+      (e.clientX / window.innerWidth) * 2 - 1,
+      -(e.clientY / window.innerHeight) * 2 + 1
+    );
+    const intersectPoint = new THREE.Vector3();
+    raycaster.setFromCamera(currentPointer, camera);
+    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+
+    if (intersectPoint) {
+      // 월드 교차점을 부모의 로컬 좌표로 변환
+      const parent = meshRef.current.parent.parent;
+      const intersectLocal = intersectPoint.clone();
+      parent.worldToLocal(intersectLocal);
+
+      // 오프셋 계산 (현재 로컬 위치 - 교차점 로컬 위치)
+      dragRef.current.offset.subVectors(
+        new THREE.Vector3(...position),
+        intersectLocal
+      );
+    }
+
+    // 글로벌 이벤트 리스너 등록
+    window.addEventListener("mousemove", handleLabelMouseMove);
+    window.addEventListener("mouseup", handleLabelMouseUp);
+  };
+
+  const handleLabelMouseMove = (e: MouseEvent) => {
+    if (!dragRef.current.active) return;
+    e.preventDefault();
+
+    const currentPointer = new THREE.Vector2(
+      (e.clientX / window.innerWidth) * 2 - 1,
+      -(e.clientY / window.innerHeight) * 2 + 1
+    );
+
+    // 드래그 시작 여부 판단 (Threshold 체크)
+    if (!dragRef.current.dragging) {
+      const dist = currentPointer.distanceTo(dragRef.current.startPointer);
+      if (dist > 0.01) {
+        dragRef.current.dragging = true;
+        setIsDragging(true);
+      } else {
+        return;
+      }
+    }
+
+    if (!meshRef.current || !meshRef.current.parent?.parent) return;
+
+    // 현재 포인터 위치에서 평면 교차점 다시 계산
+    const intersectPoint = new THREE.Vector3();
+    raycaster.setFromCamera(currentPointer, camera);
+    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+
+    if (intersectPoint) {
+      // 월드 교차점을 부모의 로컬 좌표로 변환
+      const parent = meshRef.current.parent.parent;
+      const intersectLocal = intersectPoint.clone();
+      parent.worldToLocal(intersectLocal);
+
+      // 새 위치 = 로컬 교차점 + 오프셋
+      const newPos = intersectLocal.add(dragRef.current.offset);
+      updateNodePosition(node.id, [newPos.x, newPos.y, newPos.z]);
+    }
+  };
+
+  const handleLabelMouseUp = () => {
+    if (dragRef.current.active) {
+      dragRef.current.active = false;
+
+      if (dragRef.current.dragging) {
+        dragRef.current.dragging = false;
+        setTimeout(() => setIsDragging(false), 50);
+      }
+    }
+
+    // 글로벌 이벤트 리스너 제거
+    window.removeEventListener("mousemove", handleLabelMouseMove);
+    window.removeEventListener("mouseup", handleLabelMouseUp);
+  };
+
   return (
     <group position={position}>
       {/* 글로우 구체 (크고 투명) */}
@@ -317,7 +422,6 @@ export function Node({ node, position }: NodeProps) {
           center
           zIndexRange={[10, 0]}
           style={{
-            pointerEvents: "none",
             userSelect: "none",
           }}
         >
@@ -329,6 +433,7 @@ export function Node({ node, position }: NodeProps) {
               text-sm font-medium
               whitespace-nowrap
               transition-all duration-300
+              cursor-pointer
               ${isHovered ? "scale-110" : ""}
             `}
             style={{
@@ -336,6 +441,10 @@ export function Node({ node, position }: NodeProps) {
               color: "#ffffff",
               textShadow: `0 0 10px ${color}`,
             }}
+            onMouseEnter={handlePointerOver}
+            onMouseLeave={handlePointerOut}
+            onClick={handleClick}
+            onMouseDown={handleLabelMouseDown}
           >
             {node.label}
           </div>
