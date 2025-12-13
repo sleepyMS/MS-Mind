@@ -130,7 +130,37 @@ export function Tooltip() {
               color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)",
             }}
           >
-            {node.connections.length}개 연결
+            {(() => {
+              // 연결된 노드들의 타입별 개수 계산
+              const connectionsByType: Record<string, number> = {};
+              node.connections.forEach((connId) => {
+                const connNode = data.nodes.find((n) => n.id === connId);
+                if (connNode) {
+                  const type = connNode.type;
+                  connectionsByType[type] = (connectionsByType[type] || 0) + 1;
+                }
+              });
+
+              const typeLabels: Record<string, string> = {
+                main: "메인",
+                project: "프로젝트",
+                skill: "스킬",
+                lesson: "교훈",
+              };
+
+              // 타입 순서 정의: main → project → skill → lesson
+              const typeOrder = ["main", "project", "skill", "lesson"];
+
+              const parts = typeOrder
+                .filter((type) => connectionsByType[type])
+                .map(
+                  (type) =>
+                    `${typeLabels[type] || type} ${connectionsByType[type]}개`
+                )
+                .join(", ");
+
+              return parts ? `${parts} 연결` : "연결 없음";
+            })()}
           </span>
         </div>
 
