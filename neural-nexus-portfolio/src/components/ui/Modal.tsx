@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppStore } from "../../stores/useAppStore";
 import nodesData from "../../data/nodes.json";
 import type { NeuralData } from "../../types";
@@ -30,6 +30,8 @@ export function Modal() {
   const [activeTab, setActiveTab] = useState<TabType>("description");
   const [isVisible, setIsVisible] = useState(false);
   const [tabDirection, setTabDirection] = useState<"left" | "right">("right");
+  const [isConnectionsOpen, setIsConnectionsOpen] = useState(false);
+  const connectionsRef = useRef<HTMLDivElement>(null);
 
   const data = nodesData as NeuralData;
   const node = data.nodes.find((n) => n.id === activeNode);
@@ -67,6 +69,23 @@ export function Modal() {
     }
   }, [isModalOpen]);
 
+  // 연결 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        connectionsRef.current &&
+        !connectionsRef.current.contains(event.target as Node)
+      ) {
+        setIsConnectionsOpen(false);
+      }
+    };
+
+    if (isConnectionsOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isConnectionsOpen]);
+
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(() => {
@@ -74,7 +93,22 @@ export function Modal() {
       setActiveNode(null);
       setCameraTarget(null);
       setActiveTab("description");
+      setIsConnectionsOpen(false);
     }, 300);
+  };
+
+  // 특정 노드로 이동하는 함수
+  const navigateToNode = (nodeId: string) => {
+    const targetNode = data.nodes.find((n) => n.id === nodeId);
+    if (!targetNode) return;
+
+    const newPosition = nodePositions.get(nodeId);
+    setActiveNode(nodeId);
+    if (newPosition) {
+      setCameraTarget(newPosition);
+    }
+    setActiveTab("description");
+    setIsConnectionsOpen(false);
   };
 
   const handleTabChange = (newTab: TabType) => {
@@ -360,25 +394,32 @@ export function Modal() {
                   >
                     {node.type}
                   </span>
-                  <span
-                    className="text-sm transition-colors duration-300"
-                    style={{
-                      color: isDark
-                        ? "rgba(255,255,255,0.4)"
-                        : "rgba(0,0,0,0.5)",
-                    }}
-                  >
+
+                  {/* 연결 노드 드롭다운 */}
+                  <div className="relative" ref={connectionsRef}>
                     {(() => {
-                      // 연결된 노드들의 타입별 개수 계산
-                      const connectionTypes: Record<string, number> = {};
+                      // 연결된 노드들의 타입별 개수 및 목록 계산
+                      const connectionsByType: Record<
+                        string,
+                        Array<{ id: string; label: string; color: string }>
+                      > = {};
                       node.connections.forEach((connId) => {
                         const connNode = data.nodes.find(
                           (n) => n.id === connId
                         );
                         if (connNode) {
                           const type = connNode.type;
-                          connectionTypes[type] =
-                            (connectionTypes[type] || 0) + 1;
+                          if (!connectionsByType[type]) {
+                            connectionsByType[type] = [];
+                          }
+                          connectionsByType[type].push({
+                            id: connNode.id,
+                            label: connNode.label,
+                            color: getThemeColor(
+                              connNode.color || "#00ffff",
+                              theme
+                            ),
+                          });
                         }
                       });
 
@@ -389,16 +430,197 @@ export function Modal() {
                         lesson: "교훈",
                       };
 
-                      const parts = Object.entries(connectionTypes)
+                      const typeIcons: Record<string, string> = {
+                        main: "🏠",
+                        project: "📁",
+                        skill: "⚡",
+                        lesson: "💡",
+                      };
+
+                      const parts = Object.entries(connectionsByType)
                         .map(
-                          ([type, count]) =>
-                            `${typeLabels[type] || type} ${count}개`
+                          ([type, nodes]) =>
+                            `${typeLabels[type] || type} ${nodes.length}개`
                         )
                         .join(", ");
 
-                      return parts ? `${parts} 연결` : "연결 없음";
+                      const totalConnections = node.connections.length;
+
+                      return (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsConnectionsOpen(!isConnectionsOpen);
+                            }}
+                            className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                            style={{
+                              color: isDark
+                                ? "rgba(255,255,255,0.6)"
+                                : "rgba(0,0,0,0.6)",
+                              background: isConnectionsOpen
+                                ? isDark
+                                  ? "rgba(255,255,255,0.1)"
+                                  : "rgba(0,0,0,0.05)"
+                                : "transparent",
+                              border: isConnectionsOpen
+                                ? `1px solid ${nodeColor}40`
+                                : "1px solid transparent",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = isDark
+                                ? "rgba(255,255,255,0.1)"
+                                : "rgba(0,0,0,0.05)";
+                              e.currentTarget.style.color = isDark
+                                ? "rgba(255,255,255,0.9)"
+                                : "rgba(0,0,0,0.8)";
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isConnectionsOpen) {
+                                e.currentTarget.style.background =
+                                  "transparent";
+                                e.currentTarget.style.color = isDark
+                                  ? "rgba(255,255,255,0.6)"
+                                  : "rgba(0,0,0,0.6)";
+                              }
+                            }}
+                          >
+                            <span>🔗</span>
+                            <span>{parts ? `${parts} 연결` : "연결 없음"}</span>
+                            {totalConnections > 0 && (
+                              <svg
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                                  isConnectionsOpen ? "rotate-180" : ""
+                                }`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            )}
+                          </button>
+
+                          {/* 드롭다운 목록 */}
+                          {isConnectionsOpen && totalConnections > 0 && (
+                            <div
+                              className="absolute top-full left-0 mt-2 min-w-[220px] max-h-[300px] overflow-y-auto rounded-xl z-50 custom-scrollbar"
+                              style={{
+                                background: isDark
+                                  ? "rgba(20, 20, 30, 0.95)"
+                                  : "rgba(255, 255, 255, 0.98)",
+                                backdropFilter: "blur(16px)",
+                                border: isDark
+                                  ? `1px solid ${nodeColor}30`
+                                  : "1px solid rgba(0,0,0,0.1)",
+                                boxShadow: isDark
+                                  ? `0 10px 40px rgba(0,0,0,0.5), 0 0 20px ${nodeColor}15`
+                                  : "0 10px 40px rgba(0,0,0,0.15)",
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {Object.entries(connectionsByType).map(
+                                ([type, nodes], groupIndex) => (
+                                  <div key={type}>
+                                    {/* 타입 헤더 */}
+                                    <div
+                                      className="px-3 py-2 text-xs font-semibold uppercase tracking-wider sticky top-0"
+                                      style={{
+                                        color: isDark
+                                          ? "rgba(255,255,255,0.4)"
+                                          : "rgba(0,0,0,0.4)",
+                                        background: isDark
+                                          ? "rgba(20, 20, 30, 0.98)"
+                                          : "rgba(255, 255, 255, 0.98)",
+                                        borderBottom: isDark
+                                          ? "1px solid rgba(255,255,255,0.05)"
+                                          : "1px solid rgba(0,0,0,0.05)",
+                                      }}
+                                    >
+                                      {typeIcons[type] || "📌"}{" "}
+                                      {typeLabels[type] || type} ({nodes.length}
+                                      )
+                                    </div>
+
+                                    {/* 노드 목록 */}
+                                    {nodes.map((connNode) => (
+                                      <button
+                                        key={connNode.id}
+                                        onClick={() =>
+                                          navigateToNode(connNode.id)
+                                        }
+                                        className="w-full px-3 py-2.5 flex items-center gap-2.5 text-left transition-all duration-200"
+                                        style={{
+                                          color: isDark
+                                            ? "rgba(255,255,255,0.85)"
+                                            : "#374151",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = `${connNode.color}15`;
+                                          e.currentTarget.style.paddingLeft =
+                                            "16px";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background =
+                                            "transparent";
+                                          e.currentTarget.style.paddingLeft =
+                                            "12px";
+                                        }}
+                                      >
+                                        <div
+                                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                                          style={{
+                                            backgroundColor: connNode.color,
+                                            boxShadow: `0 0 8px ${connNode.color}60`,
+                                          }}
+                                        />
+                                        <span className="text-sm font-medium truncate">
+                                          {connNode.label}
+                                        </span>
+                                        <svg
+                                          className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                                          style={{ color: connNode.color }}
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 5l7 7-7 7"
+                                          />
+                                        </svg>
+                                      </button>
+                                    ))}
+
+                                    {/* 구분선 */}
+                                    {groupIndex <
+                                      Object.entries(connectionsByType).length -
+                                        1 && (
+                                      <div
+                                        className="mx-3 my-1"
+                                        style={{
+                                          borderBottom: isDark
+                                            ? "1px solid rgba(255,255,255,0.08)"
+                                            : "1px solid rgba(0,0,0,0.06)",
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
+                        </>
+                      );
                     })()}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
