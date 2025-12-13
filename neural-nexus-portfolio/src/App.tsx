@@ -106,9 +106,16 @@ function App() {
           }
         `}
       >
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
-          {t("app.title")}
-        </h1>
+        <div className="flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="Neural Nexus Logo"
+            className="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]"
+          />
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
+            {t("app.title")}
+          </h1>
+        </div>
         <p className="text-sm mt-1 text-[var(--text-tertiary)]">
           {t("app.subtitle")}
         </p>
