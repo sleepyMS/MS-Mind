@@ -242,7 +242,7 @@ export function Modal() {
             {/* 닫기 버튼 */}
             <button
               onClick={handleClose}
-              className="group p-2.5 rounded-xl transition-all duration-300 hover:scale-110 shrink-0"
+              className="group p-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shrink-0"
               style={{
                 background: isDark
                   ? "rgba(255, 255, 255, 0.05)"
@@ -251,10 +251,27 @@ export function Modal() {
                   ? "1px solid rgba(255, 255, 255, 0.1)"
                   : "1px solid rgba(0, 0, 0, 0.05)",
               }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDark
+                  ? "rgba(255, 100, 100, 0.2)"
+                  : "rgba(255, 100, 100, 0.15)";
+                e.currentTarget.style.borderColor = "rgba(255, 100, 100, 0.4)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 20px rgba(255, 100, 100, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = isDark
+                  ? "rgba(255, 255, 255, 0.05)"
+                  : "rgba(0, 0, 0, 0.05)";
+                e.currentTarget.style.borderColor = isDark
+                  ? "rgba(255, 255, 255, 0.1)"
+                  : "rgba(0, 0, 0, 0.05)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
               aria-label="닫기 (ESC)"
             >
               <svg
-                className="w-5 h-5 transition-colors"
+                className="w-5 h-5 transition-all duration-300 group-hover:rotate-90"
                 style={{
                   color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.5)",
                 }}
@@ -295,6 +312,7 @@ export function Modal() {
                       relative flex-1 flex items-center justify-center gap-2
                       px-4 py-2.5 rounded-lg text-sm font-medium
                       transition-all duration-300
+                      ${!isActive ? "hover:bg-white/10 active:scale-95" : ""}
                     `}
                     style={{
                       color: isActive
@@ -305,6 +323,22 @@ export function Modal() {
                         ? "rgba(255,255,255,0.5)"
                         : "rgba(0,0,0,0.5)",
                     }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.color = isDark
+                          ? "white"
+                          : "#1f2937";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.color = isDark
+                          ? "rgba(255,255,255,0.5)"
+                          : "rgba(0,0,0,0.5)";
+                        e.currentTarget.style.transform = "translateY(0)";
+                      }
+                    }}
                   >
                     {isActive && (
                       <div
@@ -312,10 +346,13 @@ export function Modal() {
                         style={{
                           background: `linear-gradient(135deg, ${nodeColor}30, ${nodeColor}15)`,
                           border: `1px solid ${nodeColor}40`,
+                          boxShadow: `0 0 15px ${nodeColor}20`,
                         }}
                       />
                     )}
-                    <span className="relative z-10">{tab.icon}</span>
+                    <span className="relative z-10 transition-transform duration-200">
+                      {tab.icon}
+                    </span>
                     <span className="relative z-10 hidden sm:inline">
                       {tab.label}
                     </span>
@@ -469,15 +506,23 @@ export function Modal() {
                         href={details.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
                         style={{
                           background: `linear-gradient(135deg, ${nodeColor}25, ${nodeColor}10)`,
                           border: `1px solid ${nodeColor}40`,
                           color: nodeColor,
                         }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = `0 0 25px ${nodeColor}40`;
+                          e.currentTarget.style.borderColor = nodeColor;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = "none";
+                          e.currentTarget.style.borderColor = `${nodeColor}40`;
+                        }}
                       >
                         <svg
-                          className="w-4 h-4"
+                          className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -498,20 +543,36 @@ export function Modal() {
                         href={details.deployLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
                         style={{
                           background: isDark
-                            ? `linear-gradient(135deg, #10b981 30%, #059669 100%)`
-                            : `linear-gradient(135deg, #34d399 30%, #10b981 100%)`,
-                          boxShadow: `0 0 20px ${
-                            isDark ? "#10b98140" : "#34d39940"
-                          }`,
+                            ? `linear-gradient(135deg, ${nodeColor} 0%, ${nodeColor}cc 100%)`
+                            : `linear-gradient(135deg, ${nodeColor}ee 0%, ${nodeColor} 100%)`,
+                          boxShadow: `0 0 20px ${nodeColor}40`,
                           color: "white",
                           border: "none",
                         }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = `0 0 35px ${nodeColor}80, 0 5px 20px ${nodeColor}60`;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+                        }}
                       >
-                        <span className="text-lg">🚀</span>
-                        <span className="font-bold">Live Demo</span>
+                        <svg
+                          className="w-4 h-4 transition-transform duration-300 group-hover:scale-110"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                          />
+                        </svg>
+                        <span className="font-bold">배포 사이트</span>
                       </a>
                     )}
                   </div>
