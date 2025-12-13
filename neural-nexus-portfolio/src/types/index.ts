@@ -20,6 +20,14 @@ export interface NodeDetails {
   learnings?: { title: string; content: string }[]; // 배운 점 (Detailed)
   techStackDocs?: { name: string; description: string }[]; // 기술 스택 선정 이유
   coreFeatures?: string[]; // 핵심 특징 (반응형, 접근성 등)
+  codeExamples?: {
+    title: string;
+    category: string;
+    description: string;
+    filePath: string;
+    githubLink?: string;
+    snippet: string;
+  }[]; // 코드 예시
 }
 
 /**
