@@ -244,16 +244,37 @@ export function SidePanel() {
             const isExpanded = expandedTypes.includes(type);
 
             return (
-              <div key={type} className="mb-3">
+              <div
+                key={type}
+                className="mb-3 pb-3"
+                style={{
+                  borderBottom: `1px solid ${
+                    isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"
+                  }`,
+                }}
+              >
                 {/* 그룹 헤더 */}
                 <button
                   onClick={() => toggleType(type)}
-                  className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                  className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
                   style={{
                     background: isExpanded ? `${color}10` : "transparent",
                     border: isExpanded
                       ? `1px solid ${color}30`
                       : "1px solid transparent",
+                    boxShadow: isExpanded ? `0 4px 20px ${color}20` : "none",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isExpanded) {
+                      e.currentTarget.style.boxShadow = `0 4px 20px ${color}15`;
+                      e.currentTarget.style.background = `${color}08`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isExpanded) {
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.background = "transparent";
+                    }
                   }}
                 >
                   <div className="flex items-center gap-2">
@@ -303,7 +324,7 @@ export function SidePanel() {
                           onClick={() => handleNodeClick(node.id)}
                           onMouseEnter={() => handleNodeHover(node.id)}
                           onMouseLeave={() => handleNodeHover(null)}
-                          className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-200"
+                          className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-300"
                           style={{
                             background: isHovered
                               ? `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`
@@ -314,6 +335,9 @@ export function SidePanel() {
                             transform: isHovered
                               ? "translateX(4px)"
                               : "translateX(0)",
+                            boxShadow: isHovered
+                              ? `0 4px 16px ${nodeColor}25, 0 2px 8px ${nodeColor}15`
+                              : "none",
                           }}
                         >
                           <div
