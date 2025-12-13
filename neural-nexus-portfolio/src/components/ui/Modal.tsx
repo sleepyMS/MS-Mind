@@ -447,10 +447,16 @@ export function Modal() {
                         lesson: "💡",
                       };
 
-                      const parts = Object.entries(connectionsByType)
+                      // 타입 순서 정의: main → project → skill → lesson
+                      const typeOrder = ["main", "project", "skill", "lesson"];
+
+                      const parts = typeOrder
+                        .filter((type) => connectionsByType[type])
                         .map(
-                          ([type, nodes]) =>
-                            `${typeLabels[type] || type} ${nodes.length}개`
+                          (type) =>
+                            `${typeLabels[type] || type} ${
+                              connectionsByType[type].length
+                            }개`
                         )
                         .join(", ");
 
@@ -534,97 +540,102 @@ export function Modal() {
                               }}
                               onClick={(e) => e.stopPropagation()}
                             >
-                              {Object.entries(connectionsByType).map(
-                                ([type, nodes], groupIndex) => (
-                                  <div key={type}>
-                                    {/* 타입 헤더 */}
-                                    <div
-                                      className="px-3 py-2 text-xs font-semibold uppercase tracking-wider sticky top-0"
-                                      style={{
-                                        color: isDark
-                                          ? "rgba(255,255,255,0.4)"
-                                          : "rgba(0,0,0,0.4)",
-                                        background: isDark
-                                          ? "rgba(20, 20, 30, 0.98)"
-                                          : "rgba(255, 255, 255, 0.98)",
-                                        borderBottom: isDark
-                                          ? "1px solid rgba(255,255,255,0.05)"
-                                          : "1px solid rgba(0,0,0,0.05)",
-                                      }}
-                                    >
-                                      {typeIcons[type] || "📌"}{" "}
-                                      {typeLabels[type] || type} ({nodes.length}
-                                      )
-                                    </div>
-
-                                    {/* 노드 목록 */}
-                                    {nodes.map((connNode) => (
-                                      <button
-                                        key={connNode.id}
-                                        onClick={() =>
-                                          navigateToNode(connNode.id)
-                                        }
-                                        className="w-full px-3 py-2.5 flex items-center gap-2.5 text-left transition-all duration-200"
+                              {typeOrder
+                                .filter((type) => connectionsByType[type])
+                                .map((type, groupIndex) => {
+                                  const nodes = connectionsByType[type];
+                                  return (
+                                    <div key={type}>
+                                      {/* 타입 헤더 */}
+                                      <div
+                                        className="px-3 py-2 text-xs font-semibold uppercase tracking-wider sticky top-0"
                                         style={{
                                           color: isDark
-                                            ? "rgba(255,255,255,0.85)"
-                                            : "#374151",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.background = `${connNode.color}15`;
-                                          e.currentTarget.style.paddingLeft =
-                                            "16px";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.background =
-                                            "transparent";
-                                          e.currentTarget.style.paddingLeft =
-                                            "12px";
+                                            ? "rgba(255,255,255,0.4)"
+                                            : "rgba(0,0,0,0.4)",
+                                          background: isDark
+                                            ? "rgba(20, 20, 30, 0.98)"
+                                            : "rgba(255, 255, 255, 0.98)",
+                                          borderBottom: isDark
+                                            ? "1px solid rgba(255,255,255,0.05)"
+                                            : "1px solid rgba(0,0,0,0.05)",
                                         }}
                                       >
-                                        <div
-                                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                                        {typeIcons[type] || "📌"}{" "}
+                                        {typeLabels[type] || type} (
+                                        {nodes.length})
+                                      </div>
+
+                                      {/* 노드 목록 */}
+                                      {nodes.map((connNode) => (
+                                        <button
+                                          key={connNode.id}
+                                          onClick={() =>
+                                            navigateToNode(connNode.id)
+                                          }
+                                          className="w-full px-3 py-2.5 flex items-center gap-2.5 text-left transition-all duration-200"
                                           style={{
-                                            backgroundColor: connNode.color,
-                                            boxShadow: `0 0 8px ${connNode.color}60`,
+                                            color: isDark
+                                              ? "rgba(255,255,255,0.85)"
+                                              : "#374151",
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = `${connNode.color}15`;
+                                            e.currentTarget.style.paddingLeft =
+                                              "16px";
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.background =
+                                              "transparent";
+                                            e.currentTarget.style.paddingLeft =
+                                              "12px";
+                                          }}
+                                        >
+                                          <div
+                                            className="w-2.5 h-2.5 rounded-full shrink-0"
+                                            style={{
+                                              backgroundColor: connNode.color,
+                                              boxShadow: `0 0 8px ${connNode.color}60`,
+                                            }}
+                                          />
+                                          <span className="text-sm font-medium truncate">
+                                            {connNode.label}
+                                          </span>
+                                          <svg
+                                            className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                                            style={{ color: connNode.color }}
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M9 5l7 7-7 7"
+                                            />
+                                          </svg>
+                                        </button>
+                                      ))}
+
+                                      {/* 구분선 */}
+                                      {groupIndex <
+                                        typeOrder.filter(
+                                          (t) => connectionsByType[t]
+                                        ).length -
+                                          1 && (
+                                        <div
+                                          className="mx-3 my-1"
+                                          style={{
+                                            borderBottom: isDark
+                                              ? "1px solid rgba(255,255,255,0.08)"
+                                              : "1px solid rgba(0,0,0,0.06)",
                                           }}
                                         />
-                                        <span className="text-sm font-medium truncate">
-                                          {connNode.label}
-                                        </span>
-                                        <svg
-                                          className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
-                                          style={{ color: connNode.color }}
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                          />
-                                        </svg>
-                                      </button>
-                                    ))}
-
-                                    {/* 구분선 */}
-                                    {groupIndex <
-                                      Object.entries(connectionsByType).length -
-                                        1 && (
-                                      <div
-                                        className="mx-3 my-1"
-                                        style={{
-                                          borderBottom: isDark
-                                            ? "1px solid rgba(255,255,255,0.08)"
-                                            : "1px solid rgba(0,0,0,0.06)",
-                                        }}
-                                      />
-                                    )}
-                                  </div>
-                                )
-                              )}
+                                      )}
+                                    </div>
+                                  );
+                                })}
                             </div>
                           )}
                         </>
@@ -1432,6 +1443,8 @@ export function Modal() {
                     performance: "#6366f1",
                     troubleshooting: "#ef4444",
                     analytics: "#14b8a6",
+                    auth: "#f97316",
+                    "state-management": "#8b5cf6",
                   };
                   const categoryLabels: Record<string, string> = {
                     architecture: "아키텍처",
@@ -1443,6 +1456,8 @@ export function Modal() {
                     performance: "성능",
                     troubleshooting: "트러블슈팅",
                     analytics: "분석",
+                    auth: "인증",
+                    "state-management": "상태관리",
                   };
                   const color = categoryColors[example.category] || nodeColor;
 
@@ -1552,54 +1567,178 @@ export function Modal() {
                           <code>
                             {example.snippet
                               .split("\n")
-                              .map((line, lineIdx) => (
-                                <div
-                                  key={lineIdx}
-                                  className="hover:bg-white/5 px-1 -mx-1 rounded"
-                                >
-                                  <span
-                                    className="select-none opacity-40 mr-3 inline-block w-4 text-right"
-                                    style={{ color: "#64748b" }}
+                              .map((line, lineIdx) => {
+                                // 향상된 구문 강조 함수
+                                const highlightCode = (code: string) => {
+                                  // 주석 처리
+                                  if (
+                                    code.trim().startsWith("//") ||
+                                    code.trim().startsWith("#")
+                                  ) {
+                                    return (
+                                      <span
+                                        style={{
+                                          color: "#6b7280",
+                                          fontStyle: "italic",
+                                        }}
+                                      >
+                                        {code}
+                                      </span>
+                                    );
+                                  }
+
+                                  // 토큰화 정규식
+                                  const tokenRegex =
+                                    /(\/\/.*$|'[^']*'|"[^"]*"|`[^`]*`|\b(?:const|let|var|function|return|if|else|async|await|import|export|from|default|class|extends|new|this|try|catch|throw|finally|for|while|do|switch|case|break|continue|typeof|instanceof|in|of|true|false|null|undefined|void)\b|<\/?[A-Z][a-zA-Z0-9]*|<\/?[a-z][a-zA-Z0-9-]*|\b(?:use[A-Z][a-zA-Z]*|set[A-Z][a-zA-Z]*|get[A-Z][a-zA-Z]*)\b|\b[A-Z][a-zA-Z0-9]*(?=\s*[(:])|\b[a-z][a-zA-Z0-9]*(?=\s*\()|\{|\}|\(|\)|=>|\.\.\.|\?\.)/gm;
+
+                                  const parts = [];
+                                  let lastIndex = 0;
+                                  let match;
+
+                                  while (
+                                    (match = tokenRegex.exec(code)) !== null
+                                  ) {
+                                    // 앞의 텍스트
+                                    if (match.index > lastIndex) {
+                                      parts.push(
+                                        <span key={`t-${lastIndex}`}>
+                                          {code.slice(lastIndex, match.index)}
+                                        </span>
+                                      );
+                                    }
+
+                                    const token = match[0];
+                                    let color = "#e2e8f0"; // 기본
+                                    let fontWeight = "normal";
+
+                                    // 색상 결정
+                                    if (
+                                      token.startsWith("//") ||
+                                      token.startsWith("#")
+                                    ) {
+                                      color = "#6b7280"; // 주석
+                                    } else if (
+                                      token.startsWith("'") ||
+                                      token.startsWith('"') ||
+                                      token.startsWith("`")
+                                    ) {
+                                      color = "#a5d6a7"; // 문자열 (연두색)
+                                    } else if (
+                                      [
+                                        "const",
+                                        "let",
+                                        "var",
+                                        "function",
+                                        "class",
+                                        "extends",
+                                        "new",
+                                        "import",
+                                        "export",
+                                        "from",
+                                        "default",
+                                      ].includes(token)
+                                    ) {
+                                      color = "#c084fc"; // 키워드 (보라색)
+                                      fontWeight = "500";
+                                    } else if (
+                                      [
+                                        "return",
+                                        "if",
+                                        "else",
+                                        "for",
+                                        "while",
+                                        "do",
+                                        "switch",
+                                        "case",
+                                        "break",
+                                        "continue",
+                                        "try",
+                                        "catch",
+                                        "throw",
+                                        "finally",
+                                      ].includes(token)
+                                    ) {
+                                      color = "#f472b6"; // 제어문 (분홍색)
+                                    } else if (
+                                      ["async", "await"].includes(token)
+                                    ) {
+                                      color = "#fb923c"; // 비동기 (오렌지)
+                                      fontWeight = "600";
+                                    } else if (
+                                      [
+                                        "true",
+                                        "false",
+                                        "null",
+                                        "undefined",
+                                        "void",
+                                        "this",
+                                      ].includes(token)
+                                    ) {
+                                      color = "#fbbf24"; // 리터럴 (노랑)
+                                    } else if (
+                                      token.startsWith("<") &&
+                                      token.length > 1
+                                    ) {
+                                      color = "#60a5fa"; // JSX 태그 (파랑)
+                                    } else if (
+                                      token.startsWith("use") ||
+                                      token.startsWith("set") ||
+                                      token.startsWith("get")
+                                    ) {
+                                      color = "#22d3ee"; // React Hooks (시안)
+                                    } else if (/^[A-Z]/.test(token)) {
+                                      color = "#4ade80"; // 컴포넌트/클래스 (초록)
+                                    } else if (/^[a-z].*\(/.test(token + "(")) {
+                                      color = "#93c5fd"; // 함수 호출 (연파랑)
+                                    } else if (
+                                      ["=>", "...", "?."].includes(token)
+                                    ) {
+                                      color = "#f472b6"; // 연산자 (분홍)
+                                    } else if (
+                                      ["{", "}", "(", ")"].includes(token)
+                                    ) {
+                                      color = "#fcd34d"; // 괄호 (노랑)
+                                    }
+
+                                    parts.push(
+                                      <span
+                                        key={`m-${match.index}`}
+                                        style={{ color, fontWeight }}
+                                      >
+                                        {token}
+                                      </span>
+                                    );
+
+                                    lastIndex = match.index + token.length;
+                                  }
+
+                                  // 남은 텍스트
+                                  if (lastIndex < code.length) {
+                                    parts.push(
+                                      <span key={`e-${lastIndex}`}>
+                                        {code.slice(lastIndex)}
+                                      </span>
+                                    );
+                                  }
+
+                                  return parts.length > 0 ? parts : code;
+                                };
+
+                                return (
+                                  <div
+                                    key={lineIdx}
+                                    className="hover:bg-white/5 px-1 -mx-1 rounded"
                                   >
-                                    {lineIdx + 1}
-                                  </span>
-                                  {line.startsWith("#") ||
-                                  line.startsWith("//") ? (
-                                    <span style={{ color: "#6b7280" }}>
-                                      {line}
+                                    <span
+                                      className="select-none opacity-40 mr-3 inline-block w-4 text-right"
+                                      style={{ color: "#64748b" }}
+                                    >
+                                      {lineIdx + 1}
                                     </span>
-                                  ) : line.includes("def ") ||
-                                    line.includes("async ") ||
-                                    line.includes("await ") ? (
-                                    <span>
-                                      {line
-                                        .split(
-                                          /(\bdef\b|\basync\b|\bawait\b|\bclass\b|\breturn\b)/
-                                        )
-                                        .map((part, i) =>
-                                          [
-                                            "def",
-                                            "async",
-                                            "await",
-                                            "class",
-                                            "return",
-                                          ].includes(part) ? (
-                                            <span
-                                              key={i}
-                                              style={{ color: "#c084fc" }}
-                                            >
-                                              {part}
-                                            </span>
-                                          ) : (
-                                            <span key={i}>{part}</span>
-                                          )
-                                        )}
-                                    </span>
-                                  ) : (
-                                    line
-                                  )}
-                                </div>
-                              ))}
+                                    {highlightCode(line)}
+                                  </div>
+                                );
+                              })}
                           </code>
                         </pre>
                       </div>

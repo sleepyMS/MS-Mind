@@ -8,7 +8,8 @@
         "project-chatbot",
         "project-portfolio",
         "project-processing",
-        "project-cortex"
+        "project-cortex",
+        "project-cortex-fe"
       ],
       "details": {
         "description": "Creative Developer passionate about building immersive web experiences with cutting-edge technologies.",
@@ -346,7 +347,8 @@
         "skill-redis",
         "skill-timescaledb",
         "skill-docker",
-        "skill-postgresql"
+        "skill-postgresql",
+        "project-cortex-fe"
       ],
       "details": {
         "description": "개인 투자자를 위한 데이터 기반 퀀트 투자 및 자동매매 플랫폼입니다. 사용자가 코딩 없이 UI로 투자 전략을 수립하면, 시스템이 과거 데이터를 기반으로 수익률을 검증(백테스팅)하고, 실제 거래소와 연동하여 24시간 자동매매를 수행합니다.",
@@ -658,6 +660,276 @@
         "description": "관계형 데이터베이스로, 사용자/전략/백테스트 데이터 저장 및 Optuna Study 공유 저장소로 활용됩니다."
       },
       "color": "#336791"
+    },
+    {
+      "id": "project-cortex-fe",
+      "type": "project",
+      "label": "Cortex-Frontend",
+      "connections": [
+        "me",
+        "project-cortex",
+        "skill-nextjs",
+        "skill-typescript",
+        "skill-tailwind",
+        "skill-zustand",
+        "skill-react-query",
+        "skill-recharts",
+        "skill-websocket"
+      ],
+      "details": {
+        "description": "개인 투자자가 코딩 없이 투자 전략을 설계하고, 백테스팅 검증 후 자동매매까지 연결하는 올인원 퀀트 플랫폼의 프론트엔드입니다. 복잡한 알고리즘 투자를 직관적인 UI로 풀어내는 것을 목표로, 아토믹 디자인 패턴 기반의 컴포넌트 시스템과 대용량 금융 데이터 시각화, 실시간 웹소켓 처리를 구현했습니다.",
+        "technologies": [
+          "Next.js 14 (App Router)",
+          "TypeScript 5",
+          "Tailwind CSS",
+          "Zustand + Immer",
+          "TanStack Query v5",
+          "React Hook Form + Zod",
+          "Lightweight Charts",
+          "Recharts",
+          "WebSocket"
+        ],
+        "coreFeatures": [
+          "� No-Code 전략 빌더 (재귀적 AND/OR 로직 시각화)",
+          "� 인터랙티브 백테스팅 결과 시각화",
+          "⚡ 실시간 최적화 모니터링 대시보드",
+          "🔐 Silent Auth Refresh (무중단 인증)",
+          "� Dark Mode First 디자인 시스템"
+        ],
+        "techStackDocs": [
+          {
+            "name": "Next.js 14 (App Router)",
+            "description": "SEO 최적화 및 React Server Components를 활용한 초기 로딩 속도 개선. DDD 구조로 기능별 폴더를 격리하고 (authenticated) 라우트 그룹으로 유지보수성 향상."
+          },
+          {
+            "name": "TypeScript",
+            "description": "엄격한 타입 지정으로 런타임 에러 방지. 백엔드 API 응답값을 schema.d.ts로 정의하여 프론트-백엔드 간 의사소통 비용 절감."
+          },
+          {
+            "name": "Zustand + Immer",
+            "description": "전략 빌더의 깊은 중첩 객체 상태를 불변성 유지하며 업데이트. Redux 대비 코드량 70% 감축."
+          },
+          {
+            "name": "TanStack Query",
+            "description": "서버 데이터 캐싱 및 중복 호출 방지. staleTime, cacheTime 조절로 불필요한 API 호출 최소화."
+          },
+          {
+            "name": "React Hook Form + Zod",
+            "description": "복잡한 전략 설정 폼의 렌더링 최적화 및 스키마 기반 유효성 검사."
+          },
+          {
+            "name": "Lightweight Charts",
+            "description": "TradingView 기반의 고성능 캔버스 차트로 수만 개의 캔들 데이터 렌더링 최적화."
+          }
+        ],
+        "codeExamples": [
+          {
+            "title": "재귀 컴포넌트 패턴 (Recursive Component)",
+            "category": "architecture",
+            "description": "개발자만 알던 if-else 로직을 사용자가 이해할 수 있는 시각적 블록으로 변환. Atomic Updates로 트리 전체가 아닌 타겟 노드만 정밀 업데이트.",
+            "filePath": "frontend/src/components/domain/strategy/StrategyBuilderCanvas.tsx",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/components/domain/strategy/StrategyBuilderCanvas.tsx",
+            "snippet": "function RecursiveRuleRenderer({ items }) {\n  return (\n    <div className=\"space-y-4\">\n      {items.map((item) => (\n        <div key={item.id} className=\"relative\">\n          <RuleBlock item={item} />\n          {item.children && (\n             // 자식 조건이 있을 경우 자기 자신을 다시 렌더링\n             <div className=\"pl-8 border-l-2\">\n               <RecursiveRuleRenderer items={item.children} />\n             </div>\n          )}\n        </div>\n      ))}\n    </div>\n  );\n}"
+          },
+          {
+            "title": "무중단 토큰 갱신 (Silent Refresh)",
+            "category": "auth",
+            "description": "401 발생 시 Lock & Queue 시스템으로 토큰 갱신 트래픽을 1/N로 감소. 사용자는 토큰 만료를 인지하지 못하고 끊김 없는 서비스 이용.",
+            "filePath": "frontend/src/lib/apiClient.ts",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/lib/apiClient.ts",
+            "snippet": "apiClient.interceptors.response.use(\n  (response) => response,\n  async (error) => {\n    const originalRequest = error.config;\n    if (error.response?.status === 401 && !originalRequest._retry) {\n      originalRequest._retry = true;\n      // Lock: 첫 번째 401만 갱신 시도\n      if (!isRefreshing) {\n        isRefreshing = true;\n        const newToken = await refreshToken();\n        // Queue에 대기 중인 요청들 일괄 재시도\n        processQueue(newToken);\n      }\n      // 현재 요청을 Queue에 추가\n      return new Promise((resolve) => {\n        failedQueue.push({ resolve, config: originalRequest });\n      });\n    }\n    return Promise.reject(error);\n  }\n);"
+          },
+          {
+            "title": "명령형 차트 업데이트 (Imperative Update)",
+            "category": "performance",
+            "description": "차트 데이터를 React State가 아닌 useRef로 관리. 리렌더링 없이 series.setData 직접 호출로 차트 로딩 시간 50% 단축.",
+            "filePath": "frontend/src/hooks/useChartIndicatorManager.ts",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/hooks/useChartIndicatorManager.ts",
+            "snippet": "// useChartIndicatorManager.ts\nconst chartRef = useRef<IChartApi | null>(null);\nconst seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);\n\nuseEffect(() => {\n  if (data && seriesRef.current) {\n    // React State 없이 차트 인스턴스 직접 업데이트\n    seriesRef.current.setData(data);\n  }\n}, [data]);\n\n// Cleanup: 메모리 누수 방지\nuseEffect(() => {\n  return () => chartRef.current?.remove();\n}, []);"
+          },
+          {
+            "title": "WebSocket 캐시 동기화 (Query Cache Sync)",
+            "category": "realtime",
+            "description": "소켓 메시지 Payload로 캐시를 직접 수정(Mutable-like)하여 API 요청 없이 UI 즉시 갱신. 네트워크 트래픽 획기적 감소.",
+            "filePath": "frontend/src/components/domain/backtesting/BacktestContent.tsx",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/components/domain/backtesting/BacktestContent.tsx",
+            "snippet": "ws.onmessage = (event) => {\n  const message = JSON.parse(event.data);\n  // API 재호출 없이 캐시 직접 수정\n  queryClient.setQueryData(['backtestCore', id], (old) => ({\n    ...old,\n    progress: message.progress,\n    status: message.status,\n  }));\n  // 완료 시에만 전체 데이터 리페칭\n  if (message.status === 'completed') {\n    queryClient.invalidateQueries(['backtestCore', id]);\n  }\n};"
+          }
+        ],
+        "link": "https://github.com/sleepyMS/Cortex",
+        "features": [
+          {
+            "title": "인터랙티브 백테스팅 결과 시각화",
+            "items": [
+              "수년치 OHLCV 데이터와 백테스팅 매매 시점, 보조지표를 캔들스틱 차트에 렌더링",
+              "DynamicStrategyChart 컴포넌트로 매수/매도 마커 시각화",
+              "WebSocket을 통한 실시간 진행률 표시"
+            ]
+          },
+          {
+            "title": "노코드(No-Code) 전략 빌더",
+            "items": [
+              "드래그 앤 드롭이나 UI 조작만으로 복잡한 매매 로직(AND/OR 조건, 지표 크로스) 생성",
+              "OptimizationParameterTreeView로 중첩 JSON 구조를 직관적인 Tree UI로 변환",
+              "Zustand의 findAndModify 유틸리티로 타겟 노드만 정밀 업데이트"
+            ]
+          },
+          {
+            "title": "실시간 최적화 모니터링 대시보드",
+            "items": [
+              "대규모 연산이 필요한 전략 최적화 과정의 진행 상황과 중간 결과를 실시간 확인",
+              "ParallelCoordinatesChart로 수천 번의 Trial 결과를 다차원 시각화",
+              "ParameterImportanceChart로 파라미터 간 상관관계 분석"
+            ]
+          },
+          {
+            "title": "하이브리드 차트 시스템",
+            "items": [
+              "메인 시세 차트는 Canvas(Lightweight-charts), 포트폴리오 분석은 SVG(Recharts)로 이원화",
+              "next/dynamic으로 차트 라이브러리(~150kb) 지연 로딩하여 초기 번들 사이즈(FCP) 최적화",
+              "useChartIndicatorManager 훅으로 차트 인스턴스 생성/업데이트/메모리 해제 캡슐화"
+            ]
+          },
+          {
+            "title": "아토믹 디자인 기반 컴포넌트 아키텍처",
+            "items": [
+              "src/components/ui/ - 버튼, 인풋 등 가장 작은 단위(Design System)",
+              "src/components/layout/ - 헤더, 사이드바 등 페이지 골격",
+              "src/components/domain/ - 비즈니스 로직 포함 복합 컴포넌트(StrategyBuilder 등)",
+              "src/providers/ - QueryClient, Theme 등 전역 설정 주입"
+            ]
+          },
+          {
+            "title": "서버 상태와 클라이언트 상태의 분리",
+            "items": [
+              "데이터의 출처와 성격에 따라 상태 관리 도구를 이원화하여 복잡도를 낮웄",
+              "Server State (TanStack Query): API 데이터(백테스트 결과, 유저 정보). staleTime, cacheTime 조절로 불필요한 API 호출 최소화",
+              "Client State (Zustand): UI 상태(다크모드 토글, 사이드바 열림/닫힘)"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "대용량 차트 데이터 렌더링 최적화",
+            "items": [
+              "Imperative Update: 차트 데이터를 React State가 아닌 useRef로 관리하여 불필요한 리렌더링 방지",
+              "series.setData 직접 호출로 DOM 업데이트 최소화",
+              "성과: 차트 로딩 시간 50% 단축, 스크롤 시 FPS 60 유지"
+            ]
+          },
+          {
+            "title": "중첩 폼 성능 개선",
+            "items": [
+              "React Hook Form의 useFieldArray로 동적 필드 추가/삭제 로직 최적화",
+              "Component Isolation: 입력 컴포넌트 분리 후 React.memo 적용으로 변경된 필드만 리렌더링",
+              "성과: 조건 블록 50개 이상에서도 타이핑 지연 없음"
+            ]
+          },
+          {
+            "title": "병렬 데이터 페칭",
+            "items": [
+              "백테스팅 상세 페이지에서 [핵심 정보], [차트 데이터], [거래 로그] 3개 API 동시 호출",
+              "각 로딩 상태 분리로 차트 로딩 중에도 핵심 정보 즉시 표시 (Blocking 방지)"
+            ]
+          },
+          {
+            "title": "Skeleton UI & Suspense 적용",
+            "items": [
+              "데이터 의존성이 높은 대시보드 특성상 로딩 중 레이아웃 무너짐 방지",
+              "컴포넌트 단위의 스켈레톤 UI로 사용자 체감 성능 향상",
+              "Optimistic Update로 서버 응답 전 UI 선반영"
+            ]
+          },
+          {
+            "title": "Dark Mode First 디자인",
+            "items": [
+              "장시간 차트를 보는 트레이더의 눈 피로도를 고려하여 다크 모드 기본 설계",
+              "Tailwind CSS의 dark: 클래스를 활용한 테마 스위칭 구현"
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "대용량 차트 데이터 렌더링 시 UI 프리징",
+            "problem": "수만 개의 캔들 데이터와 지표를 React State로 관리하니 브라우저 메모리 급증 및 UI 버벅거림. 차트 라이브러리 객체가 React 라이프사이클과 맞지 않게 재생성됨.",
+            "solution": "Imperative Update 패턴 도입. 차트 데이터는 useRef로 관리하고 series.setData 직접 호출. useChartIndicatorManager 훅으로 생성/업데이트/cleanup 로직 캡슐화."
+          },
+          {
+            "title": "JWT 토큰 만료 시 경쟁 상태 (Race Condition)",
+            "problem": "대시보드 진입 시 5개 API 동시 호출 중 토큰 만료 시 5번의 401 에러와 5번의 Refresh 요청 발생. 서버가 토큰 탈취로 간주하여 로그아웃 처리.",
+            "solution": "Axios Interceptor에 Lock & Queue 시스템 도입. 첫 401에서 isRefreshing 플래그 설정, 이후 요청은 failedQueue에 대기. 토큰 갱신 후 일괄 재시도하여 트래픽 1/N 감소."
+          },
+          {
+            "title": "복잡한 중첩 폼의 성능 저하",
+            "problem": "전략 빌더에서 조건 블록이 많아질수록 텍스트 입력 시 전체 폼 리렌더링으로 타이핑 딜레이 발생.",
+            "solution": "useFieldArray로 동적 필드 최적화. 입력 컴포넌트 분리 후 memo 적용으로 변경 필드만 리렌더링. 50개 이상 블록에서도 지연 없음."
+          },
+          {
+            "title": "폼 상태와 전역 상태의 비동기화",
+            "problem": "React Hook Form의 빠른 타이핑을 Zustand가 따라가지 못해 저장 시 구버전 데이터 전송. Two Sources of Truth 문제.",
+            "solution": "역할 분리(Separation of Concerns). 입력은 로컬 상태(useForm)에 위임하고, 저장 시점에만 handleSubmit으로 Zustand에 업데이트하는 단방향 데이터 흐름으로 구조 변경."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "TypeScript의 가치",
+            "content": "백엔드 API 응답값을 schema.d.ts로 정의하고 공유함으로써, 프론트-백엔드 간 의사소통 비용을 줄이고 undefined 참조 오류를 사전에 방지할 수 있었습니다."
+          },
+          {
+            "title": "DOM 조작 라이브러리와 React의 공존",
+            "content": "Lightweight Charts처럼 DOM을 직접 조작하는 라이브러리와 Virtual DOM 기반의 React 사이 괴리를 useRef와 useEffect 생명주기 관리로 해결하며 렌더링 성능 최적화 노하우를 쌓았습니다."
+          },
+          {
+            "title": "UX 중심 설계의 중요성",
+            "content": "단순 기능 구현에 그치지 않고, 복잡한 퀀트 데이터를 사용자가 쉽게 이해할 수 있도록 Skeleton UI와 Optimistic Update를 적용하여 체감 성능 2배 이상 향상을 달성했습니다."
+          },
+          {
+            "title": "추상화의 역설",
+            "content": "모든 로직을 커스텀 훅으로 분리하려다 오히려 코드 추적이 어려워지는 경험을 했습니다. '재사용성'보다 '응집도(Cohesion)'를 우선하여 도메인 종속 로직은 컴포넌트 내부에 배치하는 실용적 설계를 배웠습니다."
+          }
+        ]
+      },
+      "color": "#3b82f6"
+    },
+    {
+      "id": "skill-nextjs",
+      "type": "skill",
+      "label": "Next.js",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "React 기반의 풀스택 프레임워크로, App Router와 서버 컴포넌트를 활용한 최적화된 웹 애플리케이션 개발에 사용됩니다."
+      },
+      "color": "#000000"
+    },
+    {
+      "id": "skill-react-query",
+      "type": "skill",
+      "label": "TanStack Query",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "서버 상태 관리 라이브러리로, 비동기 데이터 페칭, 캐싱, 동기화를 효율적으로 처리합니다."
+      },
+      "color": "#ff4154"
+    },
+    {
+      "id": "skill-recharts",
+      "type": "skill",
+      "label": "Recharts",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "React 기반 차트 라이브러리로, 재사용 가능한 차트 컴포넌트를 제공합니다."
+      },
+      "color": "#22b5bf"
+    },
+    {
+      "id": "skill-websocket",
+      "type": "skill",
+      "label": "WebSocket",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "양방향 실시간 통신 프로토콜로, 백테스팅 진행률 등 실시간 UI 업데이트에 활용됩니다."
+      },
+      "color": "#010101"
     }
   ]
 }
