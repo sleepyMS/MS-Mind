@@ -4,7 +4,6 @@ import type { ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { NeuralNode } from "../../types";
-import React from "react";
 import { useAppStore } from "../../stores/useAppStore";
 import { getThemeColor } from "../../utils/themeUtils";
 
@@ -53,7 +52,7 @@ export function Node({ node, position }: NodeProps) {
     updateNodePosition,
   } = useAppStore();
 
-  const { camera, raycaster, pointer: r3fPointer, gl } = useThree();
+  const { camera, raycaster, pointer } = useThree();
 
   // 드래그 상태 관리
   const dragRef = useRef({
@@ -194,35 +193,15 @@ export function Node({ node, position }: NodeProps) {
     }, 1000);
   };
 
-  // 이벤트 핸들러용 포인터 정규화 함수
-  const getNormalizedPointer = (
-    e: ThreeEvent<PointerEvent> | React.PointerEvent
-  ) => {
-    // R3F 이벤트인 경우 (point 속성 등으로 구분 가능하거나, 타입 가드로 확인)
-    if ("eventObject" in e) {
-      return r3fPointer;
-    }
-    // React DOM 이벤트인 경우: 직접 계산
-    const rect = gl.domElement.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    return new THREE.Vector2(x, y);
-  };
-
-  const handlePointerDown = (
-    e: ThreeEvent<PointerEvent> | React.PointerEvent
-  ) => {
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
 
     if (!meshRef.current || !meshRef.current.parent?.parent) return;
 
-    // 현재 포인터 위치 가져오기
-    const currentPointer = getNormalizedPointer(e);
-
     // 드래그 시작 정보 저장
     dragRef.current.active = true;
     dragRef.current.dragging = false;
-    dragRef.current.startPointer.copy(currentPointer);
+    dragRef.current.startPointer.copy(pointer);
 
     // 노드의 월드 좌표 구하기
     const worldPos = new THREE.Vector3();
@@ -235,7 +214,7 @@ export function Node({ node, position }: NodeProps) {
 
     // 교차점 계산 (월드 좌표)
     const intersectPoint = new THREE.Vector3();
-    raycaster.setFromCamera(currentPointer, camera);
+    raycaster.setFromCamera(pointer, camera);
     raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
     if (intersectPoint) {
@@ -251,54 +230,40 @@ export function Node({ node, position }: NodeProps) {
       );
     }
 
-    // 포인터 캡처
-    if ("eventObject" in e) {
-      // R3F Event: 캔버스에 캡처
-      (gl.domElement as HTMLElement).setPointerCapture(e.pointerId);
-    } else {
-      // DOM Event: 타겟 요소에 캡처
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    }
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const handlePointerUp = (
-    e: ThreeEvent<PointerEvent> | React.PointerEvent
-  ) => {
+  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
 
     if (dragRef.current.active) {
       dragRef.current.active = false;
 
       if (dragRef.current.dragging) {
+        // 드래그가 발생했던 경우에만 isDragging 상태 해제 딜레이
         dragRef.current.dragging = false;
         setTimeout(() => setIsDragging(false), 50);
+      } else {
+        // 드래그 없이 클릭만 한 경우 즉시 상태 정리 (사실 여기서 isDragging은 false 상태임)
       }
 
-      if ("eventObject" in e) {
-        (gl.domElement as HTMLElement).releasePointerCapture(e.pointerId);
-      } else {
-        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-      }
+      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
     }
   };
 
-  const handlePointerMove = (
-    e: ThreeEvent<PointerEvent> | React.PointerEvent
-  ) => {
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
     if (!dragRef.current.active) return;
     e.stopPropagation();
 
-    // 현재 포인터 위치
-    const currentPointer = getNormalizedPointer(e);
-
-    // 드래그 시작 여부 판단
+    // 드래그 시작 여부 판단 (Threshold 체크)
     if (!dragRef.current.dragging) {
-      const dist = currentPointer.distanceTo(dragRef.current.startPointer);
+      const dist = pointer.distanceTo(dragRef.current.startPointer);
       if (dist > 0.01) {
+        // Threshold: 0.01 (화면 비율 기준, 적절히 조정 가능)
         dragRef.current.dragging = true;
-        setIsDragging(true);
+        setIsDragging(true); // 이 시점에서 글로벌 드래그 상태 활성화
       } else {
-        return;
+        return; // Threshold를 넘지 않으면 이동 처리 안 함
       }
     }
 
@@ -306,7 +271,7 @@ export function Node({ node, position }: NodeProps) {
 
     // 현재 포인터 위치에서 평면 교차점 다시 계산
     const intersectPoint = new THREE.Vector3();
-    raycaster.setFromCamera(currentPointer, camera);
+    raycaster.setFromCamera(pointer, camera);
     raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
     if (intersectPoint) {
@@ -352,7 +317,7 @@ export function Node({ node, position }: NodeProps) {
           center
           zIndexRange={[10, 0]}
           style={{
-            pointerEvents: "auto", // 라벨 상호작용 활성화
+            pointerEvents: "none",
             userSelect: "none",
           }}
         >
@@ -364,7 +329,6 @@ export function Node({ node, position }: NodeProps) {
               text-sm font-medium
               whitespace-nowrap
               transition-all duration-300
-              cursor-pointer
               ${isHovered ? "scale-110" : ""}
             `}
             style={{
@@ -372,12 +336,6 @@ export function Node({ node, position }: NodeProps) {
               color: "#ffffff",
               textShadow: `0 0 10px ${color}`,
             }}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-            onPointerMove={handlePointerMove}
-            onPointerOver={handlePointerOver}
-            onPointerOut={handlePointerOut}
-            onClick={handleClick}
           >
             {node.label}
           </div>
