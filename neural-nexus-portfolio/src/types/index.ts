@@ -1,6 +1,7 @@
 // 신경망 시각화를 위한 노드 타입 정의
 export type NodeType = "main" | "project" | "skill" | "lesson";
 export type ThemeType = "dark" | "light";
+export type ProjectCategory = "frontend" | "backend" | "ai-ml" | "creative";
 
 /**
  * 노드 상세 정보 인터페이스
@@ -51,6 +52,7 @@ export interface NodeDetails {
 export interface NeuralNode {
   id: string; // 고유 ID
   type: NodeType; // 노드 타입
+  category?: ProjectCategory; // 프로젝트 카테고리 (project 타입에만 사용)
   label: string; // 표시 이름
   connections: string[]; // 연결된 노드 ID 배열
   position?: [number, number, number]; // 초기 위치 (선택적)

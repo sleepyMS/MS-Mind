@@ -22,6 +22,7 @@
     {
       "id": "project-chatbot",
       "type": "project",
+      "category": "frontend",
       "label": "GangNaengBot-Frontend",
       "connections": [
         "me",
@@ -188,11 +189,12 @@
           }
         ]
       },
-      "color": "#ff00ff"
+      "color": "#c026d3"
     },
     {
       "id": "project-portfolio",
       "type": "project",
+      "category": "frontend",
       "label": "Neural Portfolio",
       "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
       "details": {
@@ -202,11 +204,12 @@
         "lesson": "WebGL 성능 최적화와 커스텀 셰이더의 강력함에 대해 깊이 이해하게 되었습니다.",
         "technologies": ["React", "Three.js", "GSAP", "TypeScript"]
       },
-      "color": "#ff00ff"
+      "color": "#c026d3"
     },
     {
       "id": "project-processing",
       "type": "project",
+      "category": "creative",
       "label": "Processing Games",
       "connections": ["me", "skill-processing", "skill-arduino"],
       "details": {
@@ -216,7 +219,7 @@
         "lesson": "하드웨어-소프트웨어 통합에는 타이밍과 상태 관리에 대한 세심한 고려가 필요합니다.",
         "technologies": ["Processing", "Arduino", "Java"]
       },
-      "color": "#ff00ff"
+      "color": "#10b981"
     },
     {
       "id": "skill-react",
@@ -351,6 +354,7 @@
     {
       "id": "project-cortex",
       "type": "project",
+      "category": "backend",
       "label": "Cortex-Backend",
       "connections": [
         "me",
@@ -621,7 +625,7 @@
           }
         ]
       },
-      "color": "#ff6b35"
+      "color": "#f97316"
     },
     {
       "id": "skill-celery",
@@ -676,6 +680,7 @@
     {
       "id": "project-cortex-fe",
       "type": "project",
+      "category": "frontend",
       "label": "Cortex-Frontend",
       "connections": [
         "me",
@@ -901,7 +906,7 @@
           }
         ]
       },
-      "color": "#3b82f6"
+      "color": "#c026d3"
     },
     {
       "id": "skill-nextjs",
@@ -946,6 +951,7 @@
     {
       "id": "project-paper-lstm",
       "type": "project",
+      "category": "ai-ml",
       "label": "LSTM_암호화폐_논문-AI",
       "connections": ["me", "skill-python", "skill-lstm", "skill-tensorflow"],
       "details": {
@@ -1275,11 +1281,12 @@
           }
         ]
       },
-      "color": "#10b981"
+      "color": "#8b5cf6"
     },
     {
       "id": "project-paper-tft",
       "type": "project",
+      "category": "ai-ml",
       "label": "Dual-Stream_TFT_논문-AI",
       "connections": [
         "me",

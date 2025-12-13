@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
-import type { NeuralData, NodeType } from "../../types";
+import type { NeuralData, NodeType, ProjectCategory } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
 const typeConfig: Record<
@@ -13,6 +13,37 @@ const typeConfig: Record<
   project: { icon: "🚀", darkColor: "#ff00ff", lightColor: "#c026d3" },
   skill: { icon: "⚡", darkColor: "#88ce02", lightColor: "#65a30d" },
   lesson: { icon: "💡", darkColor: "#f59e0b", lightColor: "#d97706" },
+};
+
+// 프로젝트 카테고리 설정
+const categoryConfig: Record<
+  ProjectCategory,
+  { icon: string; label: string; darkColor: string; lightColor: string }
+> = {
+  frontend: {
+    icon: "🎨",
+    label: "프론트엔드",
+    darkColor: "#c026d3",
+    lightColor: "#a21caf",
+  },
+  backend: {
+    icon: "⚙️",
+    label: "백엔드",
+    darkColor: "#f97316",
+    lightColor: "#ea580c",
+  },
+  "ai-ml": {
+    icon: "🤖",
+    label: "AI / ML",
+    darkColor: "#8b5cf6",
+    lightColor: "#7c3aed",
+  },
+  creative: {
+    icon: "🎮",
+    label: "크리에이티브",
+    darkColor: "#10b981",
+    lightColor: "#059669",
+  },
 };
 
 /**
@@ -81,6 +112,30 @@ export function SidePanel() {
     acc[type].push(node);
     return acc;
   }, {} as Record<NodeType, typeof data.nodes>);
+
+  // 프로젝트를 카테고리별로 그룹화
+  const projectsByCategory = (groupedNodes.project || []).reduce(
+    (acc, node) => {
+      const category = (node.category || "frontend") as ProjectCategory;
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(node);
+      return acc;
+    },
+    {} as Record<ProjectCategory, typeof data.nodes>
+  );
+
+  // 카테고리 확장 상태
+  const [expandedCategories, setExpandedCategories] = useState<
+    ProjectCategory[]
+  >(["frontend", "backend", "ai-ml", "creative"]);
+
+  const toggleCategory = (category: ProjectCategory) => {
+    setExpandedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
 
   const toggleType = (type: NodeType) => {
     setExpandedTypes((prev) =>
@@ -313,87 +368,209 @@ export function SidePanel() {
                 {/* 노드 항목들 */}
                 {isExpanded && (
                   <div className="mt-2 ml-1 space-y-1">
-                    {nodes.map((node) => {
-                      const isHovered = hoveredNodeId === node.id;
-                      const rawNodeColor = node.color || color;
-                      const nodeColor = getThemeColor(rawNodeColor, theme);
+                    {/* 프로젝트 타입이면 카테고리별로 서브그룹 렌더링 */}
+                    {type === "project"
+                      ? // 카테고리 순서 정의
+                        (
+                          [
+                            "frontend",
+                            "backend",
+                            "ai-ml",
+                            "creative",
+                          ] as ProjectCategory[]
+                        ).map((category) => {
+                          const categoryNodes =
+                            projectsByCategory[category] || [];
+                          if (categoryNodes.length === 0) return null;
 
-                      return (
-                        <button
-                          key={node.id}
-                          onClick={() => handleNodeClick(node.id)}
-                          onMouseEnter={() => handleNodeHover(node.id)}
-                          onMouseLeave={() => handleNodeHover(null)}
-                          className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-300"
-                          style={{
-                            background: isHovered
-                              ? `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`
-                              : "transparent",
-                            border: isHovered
-                              ? `1px solid ${nodeColor}40`
-                              : "1px solid transparent",
-                            transform: isHovered
-                              ? "translateX(4px)"
-                              : "translateX(0)",
-                            boxShadow: isHovered
-                              ? `0 4px 16px ${nodeColor}25, 0 2px 8px ${nodeColor}15`
-                              : "none",
-                          }}
-                        >
-                          <div
-                            className="relative w-3 h-3 rounded-full shrink-0 transition-all duration-200"
-                            style={{
-                              backgroundColor: nodeColor,
-                              boxShadow: isHovered
-                                ? `0 0 12px ${nodeColor}`
-                                : "none",
-                            }}
-                          >
-                            {isHovered && (
+                          const catConfig = categoryConfig[category];
+                          const catColor = isDark
+                            ? catConfig.darkColor
+                            : catConfig.lightColor;
+                          const isCatExpanded =
+                            expandedCategories.includes(category);
+
+                          return (
+                            <div key={category} className="mb-2">
+                              {/* 카테고리 헤더 */}
+                              <button
+                                onClick={() => toggleCategory(category)}
+                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200"
+                                style={{
+                                  background: isCatExpanded
+                                    ? `${catColor}15`
+                                    : "transparent",
+                                }}
+                              >
+                                <span>{catConfig.icon}</span>
+                                <span style={{ color: catColor }}>
+                                  {catConfig.label}
+                                </span>
+                                <span
+                                  className="px-1 py-0.5 rounded text-xs"
+                                  style={{
+                                    background: `${catColor}20`,
+                                    color: catColor,
+                                  }}
+                                >
+                                  {categoryNodes.length}
+                                </span>
+                                <svg
+                                  className={`w-3 h-3 ml-auto transition-transform ${
+                                    isCatExpanded ? "rotate-180" : ""
+                                  }`}
+                                  style={{ color: catColor }}
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+
+                              {/* 카테고리 내 노드들 */}
+                              {isCatExpanded && (
+                                <div className="mt-1 ml-3 space-y-1">
+                                  {categoryNodes.map((node) => {
+                                    const isHovered = hoveredNodeId === node.id;
+                                    const nodeColor = getThemeColor(
+                                      node.color || catColor,
+                                      theme
+                                    );
+                                    return (
+                                      <button
+                                        key={node.id}
+                                        onClick={() => handleNodeClick(node.id)}
+                                        onMouseEnter={() =>
+                                          handleNodeHover(node.id)
+                                        }
+                                        onMouseLeave={() =>
+                                          handleNodeHover(null)
+                                        }
+                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300"
+                                        style={{
+                                          background: isHovered
+                                            ? `${nodeColor}15`
+                                            : "transparent",
+                                          border: isHovered
+                                            ? `1px solid ${nodeColor}30`
+                                            : "1px solid transparent",
+                                          transform: isHovered
+                                            ? "translateX(4px)"
+                                            : "translateX(0)",
+                                        }}
+                                      >
+                                        <div
+                                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                                          style={{ backgroundColor: nodeColor }}
+                                        />
+                                        <span
+                                          className="truncate"
+                                          style={{
+                                            color: isHovered
+                                              ? nodeColor
+                                              : isDark
+                                              ? "rgba(255,255,255,0.7)"
+                                              : "rgba(0,0,0,0.6)",
+                                          }}
+                                        >
+                                          {node.label}
+                                        </span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      : // 다른 타입은 기존 방식으로 렌더링
+                        nodes.map((node) => {
+                          const isHovered = hoveredNodeId === node.id;
+                          const rawNodeColor = node.color || color;
+                          const nodeColor = getThemeColor(rawNodeColor, theme);
+
+                          return (
+                            <button
+                              key={node.id}
+                              onClick={() => handleNodeClick(node.id)}
+                              onMouseEnter={() => handleNodeHover(node.id)}
+                              onMouseLeave={() => handleNodeHover(null)}
+                              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-300"
+                              style={{
+                                background: isHovered
+                                  ? `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`
+                                  : "transparent",
+                                border: isHovered
+                                  ? `1px solid ${nodeColor}40`
+                                  : "1px solid transparent",
+                                transform: isHovered
+                                  ? "translateX(4px)"
+                                  : "translateX(0)",
+                                boxShadow: isHovered
+                                  ? `0 4px 16px ${nodeColor}25, 0 2px 8px ${nodeColor}15`
+                                  : "none",
+                              }}
+                            >
                               <div
-                                className="absolute inset-0 rounded-full animate-ping"
+                                className="relative w-3 h-3 rounded-full shrink-0 transition-all duration-200"
                                 style={{
                                   backgroundColor: nodeColor,
-                                  opacity: 0.5,
+                                  boxShadow: isHovered
+                                    ? `0 0 12px ${nodeColor}`
+                                    : "none",
                                 }}
-                              />
-                            )}
-                          </div>
+                              >
+                                {isHovered && (
+                                  <div
+                                    className="absolute inset-0 rounded-full animate-ping"
+                                    style={{
+                                      backgroundColor: nodeColor,
+                                      opacity: 0.5,
+                                    }}
+                                  />
+                                )}
+                              </div>
 
-                          <span
-                            className="truncate transition-colors duration-200"
-                            style={{
-                              color: isHovered
-                                ? nodeColor
-                                : isDark
-                                ? "rgba(255,255,255,0.7)"
-                                : "rgba(0,0,0,0.6)",
-                            }}
-                          >
-                            {node.label}
-                          </span>
+                              <span
+                                className="truncate transition-colors duration-200"
+                                style={{
+                                  color: isHovered
+                                    ? nodeColor
+                                    : isDark
+                                    ? "rgba(255,255,255,0.7)"
+                                    : "rgba(0,0,0,0.6)",
+                                }}
+                              >
+                                {node.label}
+                              </span>
 
-                          <svg
-                            className={`w-4 h-4 ml-auto transition-all duration-200 ${
-                              isHovered
-                                ? "opacity-100 translate-x-0"
-                                : "opacity-0 -translate-x-2"
-                            }`}
-                            style={{ color: nodeColor }}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </button>
-                      );
-                    })}
+                              <svg
+                                className={`w-4 h-4 ml-auto transition-all duration-200 ${
+                                  isHovered
+                                    ? "opacity-100 translate-x-0"
+                                    : "opacity-0 -translate-x-2"
+                                }`}
+                                style={{ color: nodeColor }}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </button>
+                          );
+                        })}
                   </div>
                 )}
               </div>
