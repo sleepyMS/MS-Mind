@@ -10,7 +10,9 @@ type TabType =
   | "optimizations"
   | "trouble"
   | "lesson"
-  | "code";
+  | "code"
+  | "references"
+  | "results";
 
 /**
  * 고급 글래스모피즘 모달 컴포넌트
@@ -119,6 +121,8 @@ export function Modal() {
       "optimizations",
       "trouble",
       "code",
+      "results",
+      "references",
       "lesson",
     ];
     const currentIndex = tabOrder.indexOf(activeTab);
@@ -189,6 +193,20 @@ export function Modal() {
       available: Boolean(
         details?.codeExamples && details.codeExamples.length > 0
       ),
+    },
+    {
+      id: "results",
+      label: "실험 결과",
+      icon: "📊",
+      available: Boolean(
+        details?.performance && details.performance.length > 0
+      ),
+    },
+    {
+      id: "references",
+      label: "참고문헌",
+      icon: "📚",
+      available: Boolean(details?.references && details.references.length > 0),
     },
     {
       id: "lesson",
@@ -981,7 +999,7 @@ export function Modal() {
                 )}
 
                 {/* 외부 링크 및 배포 링크 */}
-                {(details?.link || details?.deployLink) && (
+                {(details?.link || details?.deployLink || details?.pdfLink) && (
                   <div className="flex flex-wrap gap-3 pt-2">
                     {details?.link && (
                       <a
@@ -1055,6 +1073,49 @@ export function Modal() {
                           />
                         </svg>
                         <span className="font-bold">배포 사이트</span>
+                      </a>
+                    )}
+
+                    {details?.pdfLink && (
+                      <a
+                        href={details.pdfLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                        style={{
+                          background: isDark
+                            ? "rgba(239, 68, 68, 0.1)"
+                            : "rgba(239, 68, 68, 0.05)",
+                          border: isDark
+                            ? "1px solid rgba(239, 68, 68, 0.2)"
+                            : "1px solid rgba(239, 68, 68, 0.2)",
+                          color: isDark ? "#fca5a5" : "#dc2626",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = isDark
+                            ? "rgba(239, 68, 68, 0.2)"
+                            : "rgba(239, 68, 68, 0.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = isDark
+                            ? "rgba(239, 68, 68, 0.1)"
+                            : "rgba(239, 68, 68, 0.05)";
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <span className="font-medium">논문 PDF</span>
                       </a>
                     )}
                   </div>
@@ -1427,6 +1488,167 @@ export function Modal() {
                     </div>
                   )
                 )}
+              </div>
+            )}
+
+            {/* References Tab (논문 참고문헌 전용) */}
+            {activeTab === "references" && details?.references && (
+              <div className="space-y-4">
+                <p
+                  className="text-sm mb-4"
+                  style={{
+                    color: isDark ? "rgba(255,255,255,0.6)" : "#6b7280",
+                  }}
+                >
+                  본 연구에서 참고한 학술 자료입니다.
+                </p>
+                <div
+                  className="space-y-3 p-4 rounded-xl"
+                  style={{
+                    background: isDark
+                      ? "rgba(59, 130, 246, 0.08)"
+                      : "rgba(59, 130, 246, 0.05)",
+                    border: isDark
+                      ? "1px solid rgba(59, 130, 246, 0.2)"
+                      : "1px solid rgba(59, 130, 246, 0.15)",
+                  }}
+                >
+                  {details.references.map((ref) => (
+                    <div
+                      key={ref.id}
+                      className="text-sm leading-relaxed pb-2"
+                      style={{
+                        color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
+                        borderBottom: isDark
+                          ? "1px solid rgba(255,255,255,0.05)"
+                          : "1px solid rgba(0,0,0,0.05)",
+                      }}
+                    >
+                      <span
+                        className="font-semibold mr-2"
+                        style={{ color: isDark ? "#93c5fd" : "#2563eb" }}
+                      >
+                        [{ref.id}]
+                      </span>
+                      {ref.authors} ({ref.year}).{" "}
+                      <span className="italic">{ref.title}</span>.{" "}
+                      <span
+                        style={{
+                          color: isDark ? "rgba(255,255,255,0.5)" : "#9ca3af",
+                        }}
+                      >
+                        {ref.source}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {activeTab === "results" && details?.performance && (
+              <div className="space-y-8">
+                {details.performance.map((perf, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <h3
+                      className="text-lg font-bold"
+                      style={{ color: isDark ? "#93c5fd" : "#1d4ed8" }}
+                    >
+                      {perf.title}
+                    </h3>
+
+                    {perf.description && (
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{
+                          color: isDark ? "rgba(255,255,255,0.7)" : "#4b5563",
+                        }}
+                      >
+                        {perf.description}
+                      </p>
+                    )}
+
+                    {perf.image && (
+                      <div
+                        className="rounded-xl overflow-hidden border"
+                        style={{
+                          borderColor: isDark
+                            ? "rgba(255,255,255,0.1)"
+                            : "rgba(0,0,0,0.1)",
+                        }}
+                      >
+                        <img
+                          src={perf.image}
+                          alt={perf.title}
+                          className="w-full h-auto object-contain bg-white/5"
+                        />
+                      </div>
+                    )}
+
+                    {perf.headers && perf.rows && (
+                      <div
+                        className="overflow-x-auto rounded-xl border"
+                        style={{
+                          borderColor: isDark
+                            ? "rgba(255,255,255,0.1)"
+                            : "rgba(0,0,0,0.1)",
+                        }}
+                      >
+                        <table className="w-full text-sm text-center">
+                          <thead>
+                            <tr
+                              style={{
+                                background: isDark
+                                  ? "rgba(255,255,255,0.05)"
+                                  : "rgba(0,0,0,0.02)",
+                                color: isDark
+                                  ? "rgba(255,255,255,0.9)"
+                                  : "#1f2937",
+                              }}
+                            >
+                              {perf.headers.map((header, hIdx) => (
+                                <th
+                                  key={hIdx}
+                                  className="px-4 py-3 font-semibold border-b"
+                                  style={{
+                                    borderColor: isDark
+                                      ? "rgba(255,255,255,0.05)"
+                                      : "rgba(0,0,0,0.05)",
+                                  }}
+                                >
+                                  {header}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody
+                            style={{
+                              color: isDark
+                                ? "rgba(255,255,255,0.8)"
+                                : "#374151",
+                            }}
+                          >
+                            {perf.rows.map((row, rIdx) => (
+                              <tr
+                                key={rIdx}
+                                className="border-b last:border-0"
+                                style={{
+                                  borderColor: isDark
+                                    ? "rgba(255,255,255,0.05)"
+                                    : "rgba(0,0,0,0.05)",
+                                }}
+                              >
+                                {row.map((cell, cIdx) => (
+                                  <td key={cIdx} className="px-4 py-3">
+                                    {cell}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
 

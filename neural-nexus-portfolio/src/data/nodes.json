@@ -9,7 +9,9 @@
         "project-portfolio",
         "project-processing",
         "project-cortex",
-        "project-cortex-fe"
+        "project-cortex-fe",
+        "project-paper-lstm",
+        "project-paper-tft"
       ],
       "details": {
         "description": "Creative Developer passionate about building immersive web experiences with cutting-edge technologies.",
@@ -20,7 +22,7 @@
     {
       "id": "project-chatbot",
       "type": "project",
-      "label": "GangNaengBot-FE",
+      "label": "GangNaengBot-Frontend",
       "connections": [
         "me",
         "skill-react",
@@ -259,12 +261,22 @@
     {
       "id": "skill-python",
       "type": "skill",
-      "label": "Python / FastAPI",
-      "connections": ["project-cortex"],
+      "label": "Python",
+      "connections": ["project-cortex", "project-paper-lstm"],
       "details": {
-        "description": "Backend development with FastAPI, async programming, and AI integrations."
+        "description": "데이터 분석, 머신러닝, 백엔드 개발 등 다양한 분야에서 활용되는 범용 프로그래밍 언어입니다."
       },
       "color": "#3776ab"
+    },
+    {
+      "id": "skill-fastapi",
+      "type": "skill",
+      "label": "FastAPI",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "Python 기반의 고성능 비동기 웹 프레임워크로, 자동 API 문서화와 타입 힌트 지원을 제공합니다."
+      },
+      "color": "#009688"
     },
     {
       "id": "skill-processing",
@@ -930,6 +942,599 @@
         "description": "양방향 실시간 통신 프로토콜로, 백테스팅 진행률 등 실시간 UI 업데이트에 활용됩니다."
       },
       "color": "#010101"
+    },
+    {
+      "id": "project-paper-lstm",
+      "type": "project",
+      "label": "LSTM_암호화폐_논문-AI",
+      "connections": ["me", "skill-python", "skill-lstm", "skill-tensorflow"],
+      "details": {
+        "description": "KCI 등재 학술논문으로, LSTM 기반 고가·저가 예측 모델을 활용한 암호화폐 선물거래 시스템을 연구했습니다. 기존 종가 기반 예측 모델 대신 고가/저가 데이터를 활용하여 선물거래에서 실질적인 수익률 개선을 달성했습니다.",
+        "technologies": [
+          "Python",
+          "TensorFlow/Keras",
+          "LSTM",
+          "Pandas",
+          "NumPy",
+          "Matplotlib"
+        ],
+        "coreFeatures": [
+          "📊 고가·저가 기반 LSTM 예측 모델",
+          "💹 암호화폐 선물거래 시스템 (롱/숏 포지션)",
+          "� 평균 +28.3% 수익률 개선 (ETH/XRP/DOGE)",
+          "🎯 DOGE 최대 +45.96% 수익률 향상"
+        ],
+        "techStackDocs": [
+          {
+            "name": "LSTM (Long Short-Term Memory)",
+            "description": "RNN의 장기 의존성 문제를 해결하고, 노이즈가 많은 금융 시계열 데이터에서도 안정적이고 일관된 예측 성능을 보이는 딥러닝 모델."
+          },
+          {
+            "name": "TensorFlow 2.15 / Keras 2.15",
+            "description": "Google Colab 환경에서 LSTM 모델 구현 및 학습에 사용. Adam 옵티마이저(lr=0.001)와 MSE 손실 함수 적용."
+          },
+          {
+            "name": "MinMaxScaler",
+            "description": "시계열 데이터 정규화를 위한 스케일링 처리. 타임스탬프 길이 14로 데이터 전처리."
+          }
+        ],
+        "link": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003239433",
+        "features": [
+          {
+            "title": "데이터 수집 및 전처리",
+            "items": [
+              "바이낸스 거래소 데이터 (TradingView 추출)",
+              "대상: ETH, XRP, DOGE (BTC 추종 주요 알트코인)",
+              "기간: 2022.02.01 ~ 2023.12.31 (약 2년)",
+              "타임스탬프 길이 14, MinMaxScaler 정규화",
+              "데이터 분할: 훈련 60% / 검증 20% / 테스트 20%"
+            ]
+          },
+          {
+            "title": "LSTM 모델 아키텍처",
+            "items": [
+              "환경: Google Colab + Python 3.10 + TensorFlow 2.15",
+              "LSTM 레이어 2개 (256 → 128 유닛) + Dense 2개 (64 → 1 유닛)",
+              "Dropout 0.05 적용, Adam 옵티마이저 (lr=0.001)",
+              "손실 함수: MSE, 배치 크기 32, 에포크 100"
+            ]
+          },
+          {
+            "title": "선물거래 수익률 계산 시스템",
+            "items": [
+              "롱 포지션: 예측가 < 당일 고가 → 예측가에서 청산",
+              "숏 포지션: 예측가 > 당일 저가 → 예측가에서 청산",
+              "일별 Stop-Loss: 예측가 미도달 시 당일 종가로 청산",
+              "매일 새 포지션 설정으로 시장 상황 대응"
+            ]
+          },
+          {
+            "title": "정량적 성과 비교",
+            "items": [
+              "ETH: Pearson 0.973→0.946, 승률 80.1%→77.9%, 수익률 +6.27%",
+              "XRP: Pearson 0.962→0.914, 승률 72.2%→69.5%, 수익률 +32.71%",
+              "DOGE: Pearson 0.969→0.930, 승률 75.1%→73.6%, 수익률 +45.96%",
+              "특이점: DOGE 종가 모델 -13.19% → 고가/저가 모델 +32.77%"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "선물거래 특화 타겟 설계",
+            "items": [
+              "가격 상승일: 고가(High)를 예측 타겟으로 설정",
+              "가격 하락일: 저가(Low)를 예측 타겟으로 설정",
+              "기존 종가 예측과 달리 변동 범위를 예측하여 수익 극대화"
+            ]
+          },
+          {
+            "title": "과적합 방지 기법",
+            "items": [
+              "EarlyStopping: 검증 손실 10에포크 미개선 시 훈련 중단",
+              "최적 가중치 자동 복원 (restore_best_weights)",
+              "Dropout 0.05로 LSTM 레이어 정규화"
+            ]
+          },
+          {
+            "title": "24시간 시장 특성 반영",
+            "items": [
+              "암호화폐 시장 연중무휴 특성 고려",
+              "일별 단위 포지션으로 빠른 변동성 대응",
+              "급격한 가격 변동을 고가/저가 피쳐로 포착"
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Transformer vs LSTM 모델 선택",
+            "problem": "TFT, FEDformer 등 최신 Transformer 모델이 다중 피쳐 통합에 강점을 보이지만, 결과의 변동성이 크고 노이즈에 취약함. 암호화폐처럼 피쳐가 단순(OHLC)하고 노이즈가 극단적인 환경에서 적합한지 의문.",
+            "solution": "Bilokon & Qiu (2023) 연구를 참고하여, 단순 피쳐 + 고변동성 환경에서는 LSTM의 반복적 기억 구조가 과적합 없이 더 안정적으로 작동함을 확인. 복잡성 최소화와 안정성을 동시에 추구."
+          },
+          {
+            "title": "예측 정확도 vs 실제 수익률 괴리",
+            "problem": "고가/저가 기반 모델은 Pearson 상관계수와 승률이 종가 기반 모델보다 낮음 (예: ETH 0.973→0.946). 전통적인 예측 성능 지표로는 모델의 실효성을 판단하기 어려움.",
+            "solution": "선물거래의 본질인 '수익률'을 핵심 평가 지표로 설정. 상관계수/승률이 낮더라도 실제 수익률이 높으면 유효한 모델로 판단. DOGE에서 종가 모델 -13.19% vs 고가/저가 모델 +32.77%로 검증."
+          },
+          {
+            "title": "데이터 복잡성과 모델 성능 트레이드오프",
+            "problem": "고가/저가를 동시에 예측하면 데이터 복잡성이 증가하여 예측 정확도가 일부 하락함.",
+            "solution": "선물거래에서는 정확한 방향 예측보다 가격 범위 예측이 더 중요함을 실험으로 입증. 수익률 관점에서 복잡성 증가가 오히려 이점으로 작용."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "왜 Transformer가 아닌 LSTM인가",
+            "content": "Bilokon & Qiu (2023)의 'Transformers versus LSTMs for electronic trading' 연구에 따르면, 단순한 OHLC 피쳐와 높은 변동성 환경에서는 Transformer의 복잡한 Attention보다 LSTM의 반복적 기억 구조가 과적합 없이 더 견고하게 작동합니다."
+          },
+          {
+            "title": "예측 성능 ≠ 수익 성능",
+            "content": "Pearson 상관계수와 승률이 높다고 실제 수익률이 높은 것은 아닙니다. 선물거래의 특성(롱/숏 레버리지)을 반영한 수익률 지표로 모델을 평가해야 실질적인 성과를 측정할 수 있습니다."
+          },
+          {
+            "title": "도메인 지식이 피쳐 설계를 결정",
+            "content": "선물거래에서 롱/숏 포지션의 수익 구조를 이해하고, 이에 맞게 고가/저가 데이터를 예측 타겟으로 설정한 것이 기존 종가 예측 연구와의 핵심 차별점입니다."
+          },
+          {
+            "title": "변동성이 클수록 효과가 큼",
+            "content": "상대적으로 변동성이 낮은 ETH는 +6.27%, 중간인 XRP는 +32.71%, 고변동성인 DOGE는 +45.96%의 수익률 개선을 보였습니다. 고가/저가 접근법은 특히 고변동성 자산에서 효과적입니다."
+          },
+          {
+            "title": "향후 연구 방향",
+            "content": "TFT, FEDformer, PatchTST, TimesNet 등 최신 시계열 알고리즘 비교, SHAP 분석과 Attention 가중치 시각화를 통한 피쳐 중요도 분석, 뉴스/소셜미디어 감성 분석 통합 등으로 확장 가능합니다."
+          }
+        ],
+        "references": [
+          {
+            "id": 1,
+            "title": "Crypto-assets: Economic Nature, Classification and Regulation of Turnover",
+            "authors": "D. Kochergin",
+            "year": "2022",
+            "source": "Int. Organ. Res. J., Vol. 17, No. 3, pp. 75-113"
+          },
+          {
+            "id": 2,
+            "title": "The Cross-section of Crypto-currencies as Financial Assets: An Overview",
+            "authors": "H. Elendner, S. Trimborn, B. Ong, T. M. Lee",
+            "year": "2016",
+            "source": "SFB 649 Discussion Paper"
+          },
+          {
+            "id": 3,
+            "title": "Automation and Machine Learning in Transforming the Financial Industry",
+            "authors": "P. K. Donepudi",
+            "year": "2019",
+            "source": "Asian Business Review, Vol. 9, No. 3, pp. 129-138"
+          },
+          {
+            "id": 4,
+            "title": "Artificial Intelligence Driven Crypto Currencies",
+            "authors": "A. Ganapathy, M. Redwanuzzaman, M. M. Rahaman, W. Khan",
+            "year": "2020",
+            "source": "Global Disclosure of Economics and Business, Vol. 9, No. 2, pp. 107-118"
+          },
+          {
+            "id": 5,
+            "title": "A Deep Reinforcement Learning Approach for Automated Cryptocurrency Trading",
+            "authors": "G. Lucarelli and M. Borrotti",
+            "year": "2019",
+            "source": "Proc. of AIAI 2019, pp. 247-258"
+          },
+          {
+            "id": 6,
+            "title": "Understanding LSTM—A Tutorial into Long Short-term Memory Recurrent Neural Networks",
+            "authors": "R. C. Staudemeyer and E. R. Morris",
+            "year": "2019",
+            "source": "arXiv:1909.09586"
+          },
+          {
+            "id": 7,
+            "title": "Time Series Analysis of Cryptocurrency Prices Using Long Short-term Memory",
+            "authors": "J. P. Fleischer, G. von Laszewski, C. Theran, Y. J. Parra Bautista",
+            "year": "2022",
+            "source": "Algorithms, Vol. 15, No. 7, p. 230"
+          },
+          {
+            "id": 8,
+            "title": "Transformers versus LSTMs for electronic trading",
+            "authors": "P. Bilokon and Y. Qiu",
+            "year": "2023",
+            "source": "arXiv:2309.11400"
+          },
+          {
+            "id": 9,
+            "title": "Forecasting Cryptocurrency Prices Using LSTM, GRU, and Bi-directional LSTM: A Deep Learning Approach",
+            "authors": "P. L. Seabe, C. R. B. Moutsinga, E. Pindza",
+            "year": "2023",
+            "source": "Fractal and Fractional, Vol. 7, No. 2, p. 203"
+          },
+          {
+            "id": 10,
+            "title": "A Novel Cryptocurrency Price Prediction Model Using GRU, LSTM and Bi-LSTM Machine Learning Algorithms",
+            "authors": "M. J. Hamayel and A. Y. Owda",
+            "year": "2021",
+            "source": "AI, Vol. 2, No. 4, pp. 477-496"
+          },
+          {
+            "id": 11,
+            "title": "Enhancing Price Prediction in Cryptocurrency Using Transformer Neural Network and Technical Indicators",
+            "authors": "M. A. L. Khaniki and M. Manthouri",
+            "year": "2024",
+            "source": "arXiv:2403.03606"
+          },
+          {
+            "id": 12,
+            "title": "LSTM Based Sentiment Analysis for Cryptocurrency Prediction",
+            "authors": "X. Huang et al.",
+            "year": "2021",
+            "source": "Proc. of DASFAA 2021, pp. 617-621"
+          },
+          {
+            "id": 13,
+            "title": "Forecasting Directional Bitcoin Price Returns Using Aspect-based Sentiment Analysis on Online Text Data",
+            "authors": "E. Loginova et al.",
+            "year": "2024",
+            "source": "Machine Learning, Vol. 113, No. 7, pp. 4761-4784"
+          },
+          {
+            "id": 14,
+            "title": "Sentiment-driven Price Prediction of the Bitcoin Based on Statistical and Deep Learning Approaches",
+            "authors": "G. Serafini et al.",
+            "year": "2020",
+            "source": "Proc. of IJCNN 2020, pp. 1-8"
+          },
+          {
+            "id": 15,
+            "title": "Algorithmic Trading of Cryptocurrency Based on Twitter Sentiment Analysis",
+            "authors": "S. Colianni, S. Rosales, M. Signorotti",
+            "year": "2015",
+            "source": "CS229 Project, Vol. 1, No. 5, pp. 1-4"
+          },
+          {
+            "id": 16,
+            "title": "Price Movement Prediction of Cryptocurrencies Using Sentiment Analysis and Machine Learning",
+            "authors": "F. Valencia, A. Gómez-Espinosa, B. Valdés-Aguirre",
+            "year": "2019",
+            "source": "Entropy, Vol. 21, No. 6, p. 589"
+          },
+          {
+            "id": 17,
+            "title": "Sentiment Analysis of News for Effective Cryptocurrency Price Prediction",
+            "authors": "A.-D. Vo, Q.-P. Nguyen, C.-Y. Ock",
+            "year": "2019",
+            "source": "Int. J. Knowl. Eng., Vol. 5, No. 2, pp. 47-52"
+          },
+          {
+            "id": 18,
+            "title": "Breaking News Headlines: Impact on Trading Activity in the Cryptocurrency Market",
+            "authors": "A. K. Kulbhaskar and S. Subramaniam",
+            "year": "2023",
+            "source": "Econ. Model., Vol. 126, p. 106397"
+          },
+          {
+            "id": 19,
+            "title": "Investigating the Informativeness of Technical Indicators and News Sentiment in Financial Market Price Prediction",
+            "authors": "S. A. Farimani et al.",
+            "year": "2022",
+            "source": "Knowl.-Based Syst., Vol. 247, p. 108742"
+          },
+          {
+            "id": 20,
+            "title": "Bitcoin Futures—What Use Are They?",
+            "authors": "S. Corbet, B. Lucey, M. Peat, S. Vigne",
+            "year": "2018",
+            "source": "Econ. Lett., Vol. 172, pp. 23-27"
+          },
+          {
+            "id": 21,
+            "title": "The Impacts of Futures Trading on Volatility and Volatility Asymmetry of Bitcoin Returns",
+            "authors": "C. Zhang, H. Ma, G. B. Arkorful, Z. Peng",
+            "year": "2023",
+            "source": "Int. Rev. Financ. Anal., Vol. 86, p. 102497"
+          }
+        ],
+        "pdfLink": "/pdf/LSTM_Cryptocurrency_Future_Prediction_Model.pdf",
+        "image": "/images/lstm/Deep_learning_architecture_flow_chart.png",
+        "performance": [
+          {
+            "title": "알트코인 데이터 유형별 예측 성능 비교",
+            "description": "기존 종가 기반 모델(Basic)과 제안된 고가/저가 기반 모델(Improved)의 예측 성능 비교입니다. 고가/저가 모델은 변동성 예측에 집중하여 상관계수와 승률은 소폭 낮지만, 실제 수익률 개선에 기여합니다.",
+            "headers": ["Altcoin", "Model", "Pearson Correlation", "Win Rate"],
+            "rows": [
+              ["ETH", "Basic Data", "0.973", "80.1%"],
+              ["ETH", "Improved Data", "0.946", "77.9%"],
+              ["XRP", "Basic Data", "0.962", "72.2%"],
+              ["XRP", "Improved Data", "0.914", "69.5%"],
+              ["DOGE", "Basic Data", "0.969", "75.1%"],
+              ["DOGE", "Improved Data", "0.930", "73.6%"]
+            ]
+          },
+          {
+            "title": "알트코인 데이터 유형별 수익률 비교",
+            "description": "제안된 고가/저가 모델(Improved Data)이 기존 모델 대비 모든 코인에서 더 높은 수익률을 기록했습니다. 특히 변동성이 큰 DOGE, XRP에서 큰 폭의 개선을 보였습니다.",
+            "headers": [
+              "Altcoin",
+              "Basic Data Profit",
+              "Improved Data Profit",
+              "Gain"
+            ],
+            "rows": [
+              ["ETH", "30.78%", "37.05%", "+6.27%"],
+              ["XRP", "64.78%", "97.49%", "+32.71%"],
+              ["DOGE", "-13.19%", "32.77%", "+45.96%"]
+            ]
+          },
+          {
+            "title": "DOGE 가격 예측 결과 분석",
+            "description": "종가 데이터 기반(a)은 실제와 유사하지만, 고가/저가 데이터 기반(b)이 변동성을 더 잘 반영하여 수익률이 높음.",
+            "image": "/images/lstm/DOGE_Price_Prediction_Results.png"
+          },
+          {
+            "title": "데이터 전처리 과정",
+            "description": "MinMaxScaler 스케일링 및 60:20:20 데이터 분할 전략.",
+            "image": "/images/lstm/Data_preprocessing.png"
+          }
+        ]
+      },
+      "color": "#10b981"
+    },
+    {
+      "id": "project-paper-tft",
+      "type": "project",
+      "label": "Dual-Stream_TFT_논문-AI",
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-transformer",
+        "skill-pytorch"
+      ],
+      "details": {
+        "description": "일본 오사카 리츠메이칸 대학교 컨퍼런스에서 발표한 논문으로, Dual-Stream Temporal Fusion Transformer를 활용한 암호화폐 가격 예측 시스템을 연구했습니다. 가격 지표와 감성 데이터를 분리된 스트림으로 처리하고 동적 게이팅 메커니즘으로 융합하여 일반화 성능과 모델 해석력을 동시에 개선했습니다.",
+        "technologies": [
+          "Python 3.10",
+          "PyTorch 2.1.0",
+          "Lightning 2.5.1",
+          "Temporal Fusion Transformer",
+          "Optuna",
+          "CUDA 11.8"
+        ],
+        "coreFeatures": [
+          "🔀 Dual-Stream 아키텍처 설계",
+          "📊 가격 + 감성 데이터 독립 처리",
+          "🎯 MAE 2.31% 개선 / RMSE 2.28% 개선 / Vol 1.31% 개선",
+          "🔍 Attention 기반 해석 가능성"
+        ],
+        "techStackDocs": [
+          {
+            "name": "Temporal Fusion Transformer (TFT)",
+            "description": "Variable Selection Network와 Gating 메커니즘을 통해 불필요한 피쳐를 억제하고 중요 변수를 강조하는 해석 가능한 시계열 예측 모델."
+          },
+          {
+            "name": "PyTorch + Lightning",
+            "description": "PyTorch 2.1.0과 Lightning 2.5.1을 사용한 딥러닝 모델 구현. CUDA 11.8 GPU 가속 활용."
+          },
+          {
+            "name": "Optuna",
+            "description": "자동화된 하이퍼파라미터 탐색을 위한 프레임워크. 배치 크기, hidden size, dropout, learning rate 최적화."
+          }
+        ],
+        "features": [
+          {
+            "title": "데이터 수집 및 전처리",
+            "items": [
+              "BTC OHLCV 데이터: Binance API (시간 단위)",
+              "소셜 감성 점수: Santiment API (sentiment_balance_total, soc_sr)",
+              "뉴스 감성 점수: Alpha Vantage API (ticker_sentiment_score, news_sr)",
+              "기술 지표: MA, RSI 계산",
+              "뉴스 감성에 4시간 반감기 지수 감쇠 적용",
+              "데이터 분할: 훈련 70% / 검증 15% / 테스트 15%"
+            ]
+          },
+          {
+            "title": "Dual-Stream TFT 아키텍처",
+            "items": [
+              "Price Stream: BTC 가격 데이터 + 기술 지표 (MA, RSI)",
+              "Sentiment Stream: 소셜 감성 + 뉴스 감성 + 변화율",
+              "각 스트림별 독립 TFT 인코더",
+              "Gated Fusion: α = σ(gate([yp, ys])), ŷ = α·yp + (1-α)·ys"
+            ]
+          },
+          {
+            "title": "정량적 성과 비교",
+            "items": [
+              "Validation: MAE 320.78 (+0.47%), RMSE 484.13 (-0.24%)",
+              "Test: MAE 350.01 (-2.31%), RMSE 555.69 (-2.28%)",
+              "예측 변동성 1.31% 감소로 안정성 향상",
+              "Single-stream 대비 일반화 성능 개선 확인"
+            ]
+          },
+          {
+            "title": "Attention 분석 결과",
+            "items": [
+              "Price Stream: 후반 타임스텝(15-23)으로 점진적 집중",
+              "Sentiment Stream: 10, 17, 21 타임스텝에서 sharp peak",
+              "두 스트림 간 차별화된 시간적 패턴 확인",
+              "모델 해석 가능성 향상"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "동적 게이팅 메커니즘",
+            "items": [
+              "가격/감성 스트림 출력을 concat 후 gating layer 적용",
+              "각 타임스텝별 스트림 기여도 가중치 학습",
+              "해석 가능성: 게이트 가중치로 스트림 중요도 시각화"
+            ]
+          },
+          {
+            "title": "하이퍼파라미터 최적화",
+            "items": [
+              "Optuna 기반 자동 탐색",
+              "배치 크기, hidden size, dropout, learning rate 최적화",
+              "시나리오별 독립적 최적화 수행"
+            ]
+          },
+          {
+            "title": "감성 데이터 전처리",
+            "items": [
+              "뉴스 감성에 반감기 지수 감쇠 적용 (4시간)",
+              "감성 부재 구간 명시적 0값 유지",
+              "1차 변화율(sr) 계산으로 스케일 정규화"
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "이종 데이터 소스 융합",
+            "problem": "기존 Single-stream 방식은 가격/감성 데이터를 단일 입력으로 병합하여 각 모달리티의 고유 특성이 희석되고, cross-modal 상호작용 해석이 제한됨.",
+            "solution": "Dual-Stream 아키텍처로 각 스트림이 모달리티 특화 시간적 표현을 학습하도록 분리. 동적 게이팅으로 융합하여 일반화 성능과 해석 가능성 동시 확보."
+          },
+          {
+            "title": "Validation vs Test 성능 괴리",
+            "problem": "Dual-Stream 모델의 Validation MAE가 Single-stream 대비 0.47% 높았으나, Test에서는 2.31% 더 낮은 성능을 보임.",
+            "solution": "이종 데이터 동적 융합이 과적합을 방지하고 일반화를 강화함을 입증. Single-stream의 mid-sequence 과집중 문제를 해결."
+          },
+          {
+            "title": "시간적 중요도 해석",
+            "problem": "Single-stream 모델에서 attention이 분산되어 일관된 시간적 패턴 해석이 어려움.",
+            "solution": "Dual-Stream에서 Price stream은 후반 집중, Sentiment stream은 특정 시점 peak로 명확히 분리되어 해석 가능성 향상."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "모달리티 분리의 중요성",
+            "content": "가격 데이터와 감성 데이터는 본질적으로 다른 시간적 패턴을 가집니다. 이를 분리하여 처리하면 각 모달리티의 고유 특성을 보존하면서 더 정교한 융합이 가능합니다."
+          },
+          {
+            "title": "Validation ↗ but Test ↘ 가 의미하는 것",
+            "content": "Validation 성능이 약간 떨어져도 Test 성능이 개선되면 일반화 능력이 향상된 것입니다. 과적합 방지와 모델의 견고성이 실전에서 더 중요합니다."
+          },
+          {
+            "title": "Attention 시각화로 해석 가능성 확보",
+            "content": "TFT의 attention 가중치를 시각화하면 모델이 언제 어떤 정보에 집중하는지 알 수 있습니다. Price stream의 recent bias와 Sentiment stream의 event-driven peak가 명확히 구분됩니다."
+          },
+          {
+            "title": "향후 연구 방향",
+            "content": "동적 융합 메커니즘 고도화, 외생 변수(거시경제 지표 등) 추가 스트림 통합, 다중 모달 예측 프레임워크의 확장성 및 견고성 검증이 가능합니다."
+          }
+        ],
+        "references": [
+          {
+            "id": 1,
+            "title": "Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting",
+            "authors": "B. Lim, S. Ö. Arik, N. Loeff, T. Pfister",
+            "year": "2019",
+            "source": "arXiv:1912.09363"
+          },
+          {
+            "id": 2,
+            "title": "Cryptocurrency Price Prediction using Twitter Sentiment Analysis",
+            "authors": "G. B. Haritha and N. B. Sahana",
+            "year": "2023",
+            "source": "arXiv:2303.09397"
+          },
+          {
+            "id": 3,
+            "title": "Price Prediction of Cryptocurrency Using User Sentiments and Quantitative Data",
+            "authors": "D. Perera, J. Lim, S. Gunraku, W. H. Lim",
+            "year": "2024",
+            "source": "Proc. 2024 Int. Conf. Data Sci. Adv. Analytics"
+          }
+        ],
+        "performance": [
+          {
+            "title": "시나리오별 성능 비교",
+            "description": "Validation Set에서는 미세한 차이를 보였으나, Test Set에서는 Scenario 2(Dual-Stream)가 모든 지표에서 우수한 성능을 기록하여 일반화 능력이 입증되었습니다.",
+            "headers": [
+              "Scenario",
+              "Val_MAE",
+              "Val_RMSE",
+              "Val_Vol",
+              "Test_MAE",
+              "Test_RMSE",
+              "Test_Vol"
+            ],
+            "rows": [
+              [
+                "Scenario 1",
+                "319.2764",
+                "485.3020",
+                "483.9223",
+                "358.3081",
+                "568.6622",
+                "562.9303"
+              ],
+              [
+                "Scenario 2",
+                "320.7794",
+                "484.1341",
+                "483.5529",
+                "350.0146",
+                "555.6910",
+                "555.5461"
+              ]
+            ]
+          },
+          {
+            "title": "제안된 시스템 아키텍처",
+            "description": "Price Stream과 Sentiment Stream을 분리하여 처리하고 Gated Fusion을 통해 결합하는 Dual-Stream 구조입니다.",
+            "image": "/images/tft/Proposed Model System Architecture.svg"
+          },
+          {
+            "title": "Attention 분포 분석 (Scenario 1 vs 2)",
+            "description": "Scenario 1(위)은 Attention이 분산되어 패턴 해석이 어려운 반면, Scenario 2(아래)는 Price Stream이 후반부에 집중하고 Sentiment Stream이 특정 이벤트에 반응하는 명확한 패턴을 보입니다.",
+            "image": "/images/tft/Encoder attention distribution in Scenario 2 (a price stream, b sentiment stream).svg"
+          },
+          {
+            "title": "Scenario 1 Attention 분포 (참고)",
+            "description": "Single-Stream 모델인 Scenario 1의 Attention 분포입니다. 특정 패턴 없이 분산된 형태를 보여줍니다.",
+            "image": "/images/tft/Encoder attention distribution in Scenario 1.png"
+          }
+        ],
+        "pdfLink": "/pdf/Conference_Paper_Dual-Stream-TFT.pdf",
+        "image": "/images/tft/Proposed Model System Architecture.svg"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-lstm",
+      "type": "skill",
+      "label": "LSTM",
+      "connections": ["project-paper-lstm"],
+      "details": {
+        "description": "Long Short-Term Memory 네트워크로, 시계열 데이터의 장기 의존성을 학습할 수 있는 RNN 아키텍처입니다."
+      },
+      "color": "#ff6b6b"
+    },
+    {
+      "id": "skill-tensorflow",
+      "type": "skill",
+      "label": "TensorFlow",
+      "connections": ["project-paper-lstm"],
+      "details": {
+        "description": "Google에서 개발한 오픈소스 딥러닝 프레임워크로, 신경망 모델 구축 및 학습에 사용됩니다."
+      },
+      "color": "#ff6f00"
+    },
+    {
+      "id": "skill-transformer",
+      "type": "skill",
+      "label": "Transformer",
+      "connections": ["project-paper-tft"],
+      "details": {
+        "description": "Self-Attention 메커니즘을 기반으로 한 딥러닝 아키텍처로, 시계열 예측과 NLP에서 뛰어난 성능을 보입니다."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-pytorch",
+      "type": "skill",
+      "label": "PyTorch",
+      "connections": ["project-paper-tft"],
+      "details": {
+        "description": "Facebook에서 개발한 오픈소스 딥러닝 프레임워크로, 동적 계산 그래프와 직관적인 API를 제공합니다."
+      },
+      "color": "#ee4c2c"
     }
   ]
 }

@@ -1,0 +1,373 @@
+LSTM 기반 고가·저가 예측 모델을 활용한
+
+암호화폐 선물거래 시스템
+
+1최민석,
+2주해종,
+3 최웅
+
+Cryptocurrency Futures Trading System Utilizing an
+LSTM-based High and Low Price Prediction Model
+
+1Minseok Choi,
+
+2Haejong Joo and 3*Woong Choi
+요 약
+
+최근 인공지능을 활용하여 뉴스 기사나 경제지표 등 다양한 부가지표를 바탕으로
+암호화폐 가격을 예측하는 연구들이 발표되고 있다. 본 연구는 암호화폐의 가격 예측에서
+목표 자산의 가격지표만을 활용하여 선물거래 시 수익률을 개선하는 시스템을 설계하였으며,
+선물거래의 특성을 반영하여 단순한 종가 데이터 대신 고가 및 저가 데이터를 학습에
+활용함으로써 선물거래 트레이딩에 있어서 실질적인 이점을 추구했다. 이를 위해 RNN의 장기
+의존성 문제를 해결하고 복잡한 시계열 데이터를 처리할 수 있는 LSTM 네트워크를 사용하여
+추세를 예측하였고, 제안된 시스템은 종가 기반 예측 모델과 비교했을 때, 피어슨
+상관계수와 승률 측면에서 소폭의 하락을 보였으나, 수익률 측면에서는 상당한 개선을
+이뤄냈다. 구체적으로, ETH에서 6.27%, XRP에서 32.71%, DOGE에서 45.96%의 수익률 증가를
+기록하였으며, 이를 통해 암호화폐 선물 거래에서 실질적인 가격 추세 예측이 가능할 것으로
+기대된다.
+
+Abstract
+
+Recent studies have utilized artificial intelligence to predict cryptocurrency prices based on various
+supplementary indicators such as news articles and economic indicators. This study, however, designs
+a system that enhances profitability in futures trading by using only price indicators of the target asset.
+By reflecting the characteristics of futures trading, the system utilizes high and low price data instead
+of simple closing price data for model training, aiming to achieve practical advantages in futures
+trading. To this end, an LSTM network, capable of addressing the long-term dependency issue of RNNs
+and processing complex time series data, was employed for trend prediction. Compared to closing
+price-based models, the proposed system showed a slight decrease in Pearson correlation coefficient
+and win rate; however, it demonstrated significant improvements in profitability. Specifically, the
+system recorded a 6.27% increase in profitability for ETH, 32.71% for XRP, and 45.96% for DOGE.
+These results suggest that the proposed system can effectively predict price trends in cryptocurrency
+futures trading.
+Keywords: Cryptocurrency, LSTM, Artificial Intelligence, Data Analysis, Futures Trading
+
+1강남대학교 소프트웨어응용학부 학부생 (minseok011017@gmail.com)
+2 강남대학교 인공지능융합공학부 교수 (hjjoo@kangnam.ac.kr)
+3*Corresponding Author강남대학교 컴퓨터공학부 부교수 (wchoi@kangnam.ac.kr)
+Received: Mar. 29, 2025, Revised: May. 21, 2025, Accepted: May. 27, 2025
+
+32 JOURNAL OF PLATFORM TECHNOLOGY VOL. 13, NO. 4, AUGUST 2025
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+I. 서론
+2009 년 비트코인(Bitcoin)의 등장 이후 암호화폐는 금융 시장에 새로운 패러다임을
+제시하였다. 블록체인(Blockchain) 기술을 기반으로 한 암호화폐는 중앙 기관의 통제를 받지
+않으며, 거래 과정에서 프라이버시와 자유를 보장한다. 이러한 특성은 암호화폐를 개인 금융
+거래에서 보안성을 강화한 수단으로 자리 잡게 하였으며, 동시에 새로운 투자 수단으로서
+주목받고 있다. 그러나 암호화폐 시장은 그 변동성이 매우 크고, 규제가 없을 경우 범죄에
+악용될 가능성이 있다는 점에서 규제의 필요성이 제기되기도 한다[1]. 그럼에도 불구하고
+암호화폐 시장은 전통적인 금융 시장과 달리 24 시간 연중무휴로 운영되며, 높은 변동성으로
+인해 투자자들에게 수많은 투자 기회를 제공하며 잠재적으로 큰 수익을 기대할 수 있다. 이에
+따라 금융 자산으로서 암호화폐에 대해 연구가 이뤄지며[2], 투자자들은 실시간으로 변화하는
+시장 데이터를 분석하고 최적의 거래 전략을 수립하기 위해 인공지능(Artificial Intelligence,
+AI)을 점점 더 많이 활용하고 있다[3][4].
+최근 인공지능 기술의 발달로 암호화폐 시장에서도 다양한 알고리즘이 적용되고 있으며,
+특히 머신러닝(Machine Learning)과 딥러닝(Deep Learning) 기술을 기반으로 한 자동 거래
+시스템(Automated Trading System)이 주목받고 있다[5]. 이러한 시스템은 대규모 거래 데이터를
+실시간으로 분석하고, 시장의 트렌드를 예측하며, 인간의 감정적 개입을 최소화하여 효율적인
+거래를 가능하게 한다. 인공지능 자동 거래 시스템은 특히 암호화폐의 변동성을 탐지하여
+최적의 거래 시점을 찾아내는 데 유용하며, 이를 통해 수학적·통계적 모델과 알고리즘에
+기반한 퀀트 트레이딩(Quantitative Trading)을 실행한다. 이는 일관된 전략을 유지하며, 철저히
+데이터에 기반한 매매 신호를 포착함으로써 더 일관된 수익 창출을 가능하게 한다.
+LSTM 모델은 순환 신경망(Recurrent Neural Network, RNN)의 일종으로, 시계열 데이터(Time
+Series Data) 예측에 강점을 가진다[6][7]. 특히, 한 연구에 따르면, LSTM 과 GRU 등 순환 신경망
+기반 모델은 Transformer 계열 모델보다 실거래 환경에서 더 낮은 예측 오류와 일관된 성능을
+보이는 것으로 확인되었다[8]. 이는 데이터셋 규모가 크지 않거나 암호화폐 시장처럼 피쳐
+구성이 단순하고 노이즈 및 변동성이 극단적으로 큰 환경에서 LSTM 의 반복적 기억 구조가
+보다 안정적이고 견고하게 작동하기 때문이라는 점이 강조된다.
+따라서 본 연구에서는 TFT(Temporal Fusion Transformer)와 같은 Transformer 기반 최신 모델이
+아닌, 암호화폐의 자체 데이터만을 활용하는 것에 있어서 피쳐 구성의 단순성, 데이터 규모,
+시장의 높은 변동성과 노이즈 수준을 종합적으로 고려하여 복잡성을 최소화하면서도 안정성을
+보장하는 LSTM 을 활용한다.
+이러한 인공지능을 활용한 암호화폐 선물 거래 시스템은 기존의 인간 투자자가 직접
+거래하는 방식과 차별화된다. 인간 투자자는 급변하는 시장 상황에서 감정적으로 대응할
+가능성이 높으며, 이는 부정적인 거래로 이어질 수 있다. 반면, 인공지능 시스템은 사전에
+설정된 규칙에 따라 거래를 자동으로 실행하며, 인간의 실수를 최소화하고 체계적으로 일관된
+전략을 유지할 수 있다. 또한, 방대한 데이터를 신속하고 정확하게 분석할 수 있는 능력을
+갖추고 있어, 투자의사 결정에 중요한 통찰을 제공한다.
+인공지능 기반 암호화폐 거래 시스템이 모든 상황에서 완벽한 성과를 보장하는 것은 아니다.
+암호화폐 시장은 예측 불가능한 요소들이 많고, 기존의 금융 시장과는 다른 특성을 지니고 있어
+인공지능 모델이 모든 상황에 대응하기는 어렵다. 그러나 본 연구는 고가와 저가 데이터를
+활용한 LSTM 모델이 암호화폐 시장에서 선물거래의 특성을 더 잘 반영하여 기존의 종가
+데이터 기반 모델보다 더 나은 예측 성능을 보여줄 수 있다는 가능성을 제시한다.
+결론적으로, 인공지능을 활용한 암호화폐 선물거래 시스템은 인간 투자자의 감정적 요소를
+배제하고 효율적이며 일관된 거래를 가능하게 한다. 또한, 본 연구는 암호화폐 시장의 변동성을
+반영한 가격 데이터와 LSTM 모델을 결합하여 기존 거래 방식보다 더 높은 수익성을 기대할 수
+있음을 보여준다.
+
+M.S.Choi et al: Cryptocurrency Futures Trading System Utilizing an LSTM-based High... 33
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+II. 암호화폐 가격 예측
+2.1 관련 연구
+암호화폐 시장은 다른 자산에 비해 변동성이 매우 크며, 이를 예측하기 위한 정교한 모델의
+개발이 필요하다. 기존 연구들은 주로 시계열 데이터를 기반으로 한 딥러닝 기법을 활용하여
+
+이러한 문제에 접근해왔다. 예시로, LSTM, GRU(Gated Recurrent Unit), 그리고 양방향 LSTM(Bi-
+directional LSTM) 등을 활용한 접근이 있으며, 이러한 모델들은 시계열 데이터의 패턴을
+
+분석하는 데 강점을 보인다[9][10]. 또한, 복잡한 패턴을 더 정확하게 포착하는 Transformer
+모델을 활용하여 기술적 지표, 경제 지표 등 다양한 입력 소스의 추가적인 피쳐를 통합해
+암호화폐 가격 예측에 다중 변수를 통합한 연구가 있다[11].
+기존 연구들에서는 암호화폐 가격 예측에 있어서 단순히 기술적 지표에만 의존하지 않고
+소셜 미디어 플랫폼에서의 텍스트 데이터를 통해 감성 분석(Sentiment Analysis)을 결합한
+연구들과 같은, 외부 요인을 통합하려는 시도도 활발히 이루어져 왔다[12][13][14]. 이와
+관련하여 진행된 연구로서 소셜 미디어 플랫폼인 트위터 감성 분석을 통해 가격 변동성을
+예측한 연구가 있으며[15][16], 뉴스 감성 분석을 통해 가격 변동을 예측하기도 한다[17][18].
+이러한 연구들은 대중의 심리 및 의견이 암호화폐 가격 변동에 미치는 영향을 분석함으로써,
+보다 정교한 예측을 가능하게 한다. 감성 분석을 통해 수집된 데이터는 기존의 기술적 분석
+결과와 결합되어 예측 모델의 다차원적 성격을 강화하고 예측 정확도를 높일 수 있다[19].
+이러한 접근법은 특히 비정형 데이터(unstructured data)의 중요성을 강조하며, 암호화폐 시장의
+높은 변동성에 대응할 수 있는 새로운 방법론을 제시한다.
+하지만, Transformer 와 LSTM 을 금융 시계열 데이터에서 비교한 연구에서는, Transformer
+계열 모델이 다양한 피쳐를 통합하는 등의 특정 조건에서는 강점을 보였지만, 결과의 변동성이
+크고 노이즈 및 시장 변동성에 취약하다는 한계가 지적되었다. 반면, LSTM 은 반복적 기억 구조
+덕분에 노이즈가 많은 시계열 데이터에서도 안정적이며 일관된 방향성 예측 성능을 보였으며,
+실제 트레이딩 환경에서도 과적합 없이 견고하게 적용 가능한 모델로 평가되었다[8]. 이러한
+결과는 지나치게 복잡한 Attention 기반 모델보다는 일정 수준의 단순성과 신뢰성을 갖춘 LSTM
+모델이 금융 시계열 예측 및 실전 전략 수립에 더욱 효과적일 수 있음을 시사한다. 본 연구는
+이러한 선행 연구의 결론을 바탕으로, 단순한 구성의 피쳐 데이터인 암호화폐 가격 데이터를
+활용하여 LSTM 기반 예측 모델을 구축함으로써 선물 거래의 수익률을 개선하는 가능성을
+제시한다.
+2.2 암호화폐 선물거래의 특성과 적용
+본 연구는 암호화폐 자체의 가격 데이터를 기반으로 선물 거래 시스템(Futures Trading
+System)을 개발하는 데 중점을 두고 있으며, 암호화폐 선물 거래는 미래의 특정 시점에 약정된
+가격으로 암호화폐를 매매할 수 있는 금융 계약으로, 투자자는 롱(Long) 포지션을 통해 가격
+상승에 베팅하거나 숏(Short) 포지션을 통해 가격 하락에 베팅할 수 있다. 이러한 선물거래의
+특성에 착안하여 기존 연구들이 주로 예측에 활용하던 종가(Close) 데이터 대신 고가(High)와
+저가(Low) 데이터를 활용하여 LSTM 모델을 기반으로 예측 정확성을 높이고자 한다. 이때, 그림
+1 과 같이 종가는 특정 기간의 마지막 시점에서의 가격을 의미하며, 고가는 특정 기간에서 가장
+가격이 높았던 순간을, 저가는 가장 낮았던 순간을 뜻한다. 이러한 데이터들은 암호화폐의
+변동성 예측에 다양한 정보를 제공하며, 선물거래는 암호화폐 시장의 현물 변동성에 영향을
+주기도 한다[20][21]. 이러한 변동성을 적극적으로 활용하는 선물거래 시장에서는 예측
+정확성에 따라 높은 수익을 거둘 수 있다.
+
+34 JOURNAL OF PLATFORM TECHNOLOGY VOL. 13, NO. 4, AUGUST 2025
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+Figure 1. Candlestick chart: (a) when the closing price is higher than the opening price, (b) when the closing
+
+price is lower than the opening price
+
+그림 1. 캔들 차트: (a) 종가가 시가보다 높을 경우, (b) 종가가 시가보다 낮을 경우
+일반적인 금융 시장과 달리 암호화폐 시장에서는 급격한 가격 변동이 빈번하게 발생하는데,
+이는 단순 종가 데이터만으로는 충분히 반영하기 어려운 특성이다. 따라서 본 연구는 고가와
+저가 데이터를 포함한 분석이 종가를 활용한 예측보다 더 나은 예측 결과를 도출할 수 있을
+것이라는 가설을 세웠다. 또한, 이러한 예측 모델을 활용한 실제 거래 성과를 평가함으로써
+모델의 실효성을 검증할 수 있다. 암호화폐 시장의 변동성을 반영한 새로운 연구들이 계속해서
+등장함에 따라, 앞으로 암호화폐 가격 예측 분야는 더욱 발전할 것으로 기대된다.
+III. 암호화폐 선물거래 시스템 제안
+본 연구는 대규모 거래량과 다양한 암호화폐 페어를 제공하는 주요 거래소인 바이낸스를
+데이터 소스로 선정하였다. 트레이딩뷰(TradingView) 사이트를 통해 바이낸스 거래소에서
+시가총액이 크고 BTC 를 추종하는 주요 알트코인인 ETH, XRP, DOGE 의 일별 데이터를
+추출하였으며, 2022 년 2 월 1 일부터 2023 년 12 월 31 일 까지의 시가(Open), 고가, 저가, 종가
+데이터를 수집하였다. 데이터의 완전성을 확보하기 위해 누락된 데이터나 오류를 확인하는
+과정을 거쳤으며, 제안된 모델의 성능은 고가와 저가 데이터를 정확히 예측하는 능력과 선물
+거래에서의 수익률에 미치는 영향을 통해 평가되었다.
+3.1 암호화폐 데이터 전처리
+시계열 데이터를 모델에 입력하기 위해 타임스탬프 길이를 14 로 설정하여 데이터를
+전처리하였다. 모든 데이터는 MinMaxScaler 를 사용하여 스케일링 처리하였으며, 그림 2 와
+같이 전체 데이터의 60%는 훈련 세트, 20%는 검증 세트, 나머지 20%는 테스트 세트로
+분할하였다. 개선된 모델의 정답 데이터는 암호화폐 가격이 상승한 날은 최고가, 하락한 날은
+최저가를 기입한 시계열 데이터를 사용하여 미래 암호화폐의 저가와 고가를 예측함으로써 선물
+거래에서의 수익률 극대화를 목표로 설정하였다.
+
+Figure 2. Data preprocessing
+그림 2. 데이터 전처리
+
+M.S.Choi et al: Cryptocurrency Futures Trading System Utilizing an LSTM-based High... 35
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+3.2 암호화폐 선물 거래 시스템 구현
+본 연구는 Google Colab 환경에서 Python 3.10, TensorFlow 2.15, 그리고 Keras 2.15 를 사용하여
+딥러닝 모델을 개발하였다. 하드웨어로는 Google Colab 의 무료 GPU 인스턴스를 활용하였다.
+모델 아키텍처는 그림 3 에 나타난 바와 같이 두 개의 LSTM 레이어(각각 256 유닛과 128 유닛)와
+두 개의 Dense 레이어(64 유닛과 1 유닛)로 구성되었으며, 각 LSTM 레이어에는 0.05 의
+드롭아웃(Dropout)을 적용하였다. 모델은 Adam 옵티마이저(learning_rate=0.001)를 사용하여
+컴파일되었으며, 손실 함수로는 평균 제곱 오차(MSE)를 적용하였다. EarlyStopping 콜백을
+사용하여 검증 손실이 10 에포크 동안 개선되지 않을 경우 훈련을 중단하고 최적의 가중치를
+복원하도록 설정하였다. 배치 크기는 32, 에포크 수는 100 으로 설정하였으며, 검증 데이터를
+통해 학습 파라미터를 지속적으로 개선하였다. 이러한 설정을 통해 모델은 효율적이고
+안정적으로 훈련되었으며, 검증 세트에서 우수한 성능을 보였다.
+
+Figure 3. Deep learning architecture flow chart
+그림 3. 딥러닝 아키텍처 흐름도
+
+3.3 시스템 결과 계산
+암호화폐 가격 예측 모델의 실질적인 성능을 평가하기 위해 기존 종가 기반 예측과
+고가·저가 데이터 기반 예측 각각의 피어슨 상관계수(Pearson Correlation Coefficient)와 거래
+승률, 총 수익률을 측정하였다. 피어슨 상관계수는 선형 상관 관계를 계량화한 수치로서, 1 부터
+– 1 사이의 값을 가지며, 1 에 가까울수록 양의 선형 상관 관계가 있음을 뜻하며, 0 은 선형 상관
+관계가 없음, -1 은 음의 선형 상관 관계가 있음을 뜻한다. 실제 암호화폐의 가격과 예측한
+결과값 사이에 선형 상관 관계를 알려준다. 훈련된 모델을 바탕으로 데이터를 원래 스케일로
+되돌린 후, 예측된 가격을 사용하여 실제 거래를 실행함으로써 모델의 수익성을 평가하였다.
+구체적으로, 예측된 가격이 전일 종가보다 높을 경우 매수 포지션을, 낮을 경우 매도 포지션을
+취하는 방식으로 거래가 이루어졌다.
+3.3.1 롱 포지션 수익률 계산
+매수 포지션의 경우, 예측된 가격이 당일 실제 최고가보다 낮으면 해당 가격에서 포지션을
+청산하여 수익을 확보하게 된다. 이때 수익은 아래 그림 4 의 수식 (1)에 따라 계산된다.
+반면, 실제 최고가가 예측 가격보다 낮지만 전일 종가보다 높을 경우, 전일 종가와 실제 종가
+간의 차이를 기준으로 수익이 계산된다. 만약 당일 종가가 전일 종가보다 낮을 경우 손실이
+발생하며, 이는 아래 그림 4 의 수식 (2)를 통해 계산된다.
+
+36 JOURNAL OF PLATFORM TECHNOLOGY VOL. 13, NO. 4, AUGUST 2025
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+
+Figure 4. Long Position Return Calculation Formula
+그림 4. 롱 포지션 수익률 계산 공식
+
+3.3.2 숏 포지션 수익률 계산
+숏 포지션의 경우, 예측된 가격이 당일 실제 최저가보다 높으면 해당 가격에서 포지션을
+청산하여 수익을 확보한다. 이때 수익은 그림 5 의 수식 (1)에 따라 계산된다.
+반면, 최저가가 예측 가격보다 높았지만 당일 종가가 전일 종가보다 낮을 경우 이익이
+발생하며, 이 역시 수익 계산에 반영된다. 반면, 당일 종가가 전일 종가보다 높을 경우 손실이
+발생하며, 이는 그림 5 의 수식 (2)에 따라 계산된다.
+
+Figure 5. Short Position Return Calculation Formula
+그림 5. 숏 포지션 수익률 계산 공식
+
+모든 포지션은 당일의 예측값에 도달하여 미리 종료되지 않는 한, 손익 여부와 관계없이 당일
+종가로 청산되는 손실 정지(stop-loss) 전략을 사용하였다. 이러한 전략을 통해 매일 새로운
+포지션을 설정할 수 있으며, 이는 일일 변동성을 고려하여 시장 상황에 유연하게 대응할 수
+있도록 한다.
+IV. 연구 결과 및 고찰
+본 연구에서는 암호화폐 선물거래 시스템 개발을 위해 종가 데이터와 고가·저가 데이터를
+활용한 두 가지 모델의 예측 성능과 수익률을 비교 분석하였다. 이를 통해 각각의 데이터 유형이
+암호화폐 거래에 미치는 영향을 확인하였다.
+예측 성능의 경우 종가 데이터를 기반으로 한 모델이 고가·저가 데이터를 기반으로 한
+모델보다 높은 성능을 보였다. 표 1 에 나타난 바와 같이, ETH 의 경우 종가 데이터 기반 모델의
+Pearson 상관계수는 0.973, 승률은 80.1%로 나타났다. 반면, 고가·저가 데이터 기반 모델은
+상관계수가 0.946, 승률은 77.9%로 상대적으로 낮았다. XRP 와 DOGE 또한 유사한 경향을
+보이며, 종가 데이터 기반 모델이 더 높은 상관성과 승률을 기록하였다. 이는 고가·저가 데이터
+기반 모델이 더 높은 데이터 복잡성을 갖는 반면, 예측 정확도는 다소 낮아졌음을 시사한다.
+
+Table 1. Comparison of Prediction Performance by Altcoin Data Type
+표 1. 알트코인 데이터 유형별 예측 성능 비교
+Altcoin Prediction Data Pearson Correlation Coefficient Win Rate
+ETH
+
+Basic Data 0.973 80.1%
+Improved Data 0.946 77.9%
+
+XRP
+
+Basic Data 0.962 72.2%
+Improved Data 0.914 69.5%
+
+DOGE
+
+Basic Data 0.969 75.1%
+Improved Data 0.930 73.6%
+
+M.S.Choi et al: Cryptocurrency Futures Trading System Utilizing an LSTM-based High... 37
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+수익률 분석에서는 고가·저가 데이터 기반 모델이 종가 데이터 기반 모델보다 더 높은
+성과를 기록하였다. 표 2 에 따르면, DOGE 는 고가·저가 데이터 모델에서 45.96%의 수익률
+증가를 보였으며, XRP 와 ETH 는 각각 32.71%와 6.27%로 개선되었다. 특히, DOGE 의 경우 종가
+데이터 기반 모델에서는 -13.19%로 음의 수익률을 기록한 반면, 고가·저가 데이터 기반
+모델에서는 32.77%의 양의 수익률을 달성하여 큰 차이를 보였다. 이는 고가·저가 데이터 기반
+접근법이 선물거래에서 중요한 변동성 반영에 효과적임을 보여준다.
+Table 2. Profitability Comparison by Altcoin Data Type
+표 2. 알트코인 데이터 유형별 수익률 비교
+
+Altcoin Basic Data Performance Improved Data Performance Profitability Gain
+ETH 30.78% 37.05% 6.27%
+restriction 64.78% 97.49% 32.71%
+XRP -13.19% 32.77% 45.96%
+그림 6 의 그래프 분석 결과는 모델이 도지코인의 실제 데이터와 예측 데이터를 비교적으로
+잘 반영했음을 나타낸다. 그림 6 (a) 그래프는 종가 데이터를 기반으로 한 예측 결과를 보여주며,
+실제 데이터와 예측 데이터 간 유사도가 높아 모델의 높은 예측 성능을 확인할 수 있었다. 반면,
+그림 6 (b) 그래프는 고가·저가 데이터를 기반으로 한 예측 결과로, 데이터의 변동성을 잘
+반영하고 있으나 실제 데이터와의 일치도가 상대적으로 낮은 경향을 보였다. 이는 데이터
+복잡성과 모델 성능 간의 상충 관계를 고려해야 함을 보여준다.
+
+Figure 6. DOGE Price Prediction Results: (a) Closing Price Data, (b) High and Low Price Data
+그림 6. 도지코인 가격 예측 결과: (a) 종가 데이터 기준, (b) 고가·저가 데이터 기준
+본 연구를 통해 고가·저가 데이터를 활용한 모델은 암호화폐 선물거래에서의 특성을 보다
+잘 반영하며, 변동성이 높은 시장에서 투자 전략의 수익성을 극대화할 가능성을 보여준다.
+이러한 결과는 선물거래 시스템 설계 시 고가·저가 데이터가 실질적으로 중요한 역할을 할 수
+있음을 암시하며, 향후 연구 방향에 중요한 시사점을 제공한다.
+V. 결론
+본 연구는 암호화폐 선물거래 시스템에서 데이터 유형이 예측 성능과 수익률에 미치는
+영향을 분석하였다. 종가 데이터를 기반으로 한 모델은 높은 예측 정확도와 안정적인 성능을
+보였으나, 고가·저가 데이터를 기반으로 한 모델은 변동성이 높은 시장 상황에서 더 높은
+수익률을 기록하며 선물거래의 특성을 효과적으로 반영하였다.
+고가·저가 데이터를 기반으로 한 모델은 예측 성능 측면에서는 종가 데이터 기반 모델에
+비해 다소 낮은 결과를 보였으나, 수익률 측면에서는 더 나은 결과를 보였다. 특히, 상대적으로
+변동성이 낮은 이더리움은 6.27%의 수익률 개선을 보인 반면, 상대적으로 변동성이 큰
+
+38 JOURNAL OF PLATFORM TECHNOLOGY VOL. 13, NO. 4, AUGUST 2025
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+도지코인은 45.96%의 수익률 개선을 이루었으며, 리플은 32.71%의 개선을 보였다.
+결과적으로, 고가·저가 데이터를 활용한 모델은 암호화폐 선물거래에서 변동성을 반영한
+효과적인 전략으로 작용할 수 있으며, 이는 특히 고변동성 자산에서 중요한 시사점을 제공한다.
+다만, 예측 성능 저하와 모델 복잡성 증가라는 한계가 있으므로, 향후 연구에서는 TFT,
+FEDformer, PatchTST, TimesNet 등 다양한 최신 시계열 예측 알고리즘을 비교·분석해 각
+모델의 특성과 시장 조건별 최적의 트레이딩 방식을 도출할 계획이다. 이를 위해 SHAP(Shapley
+Additive Explanations) 분석과 Attention 가중치 시각화 기법을 함께 활용해 각 입력 피쳐의
+중요도를 정량화하고, 변동성 수준 및 시장 상황에 따른 기여도 변화를 체계적으로 평가할
+것이다.
+이러한 접근은 단순히 수익성 개선에 그치지 않고, 모델 해석력과 피쳐 중요도 분석을 바탕으로
+거래 전략 설계 및 실전 적용 가능성을 높이는 방향으로 확장될 수 있다. 또한, 뉴스 감성 분석,
+경제 지표, 소셜 미디어 지표 등 외부 요인을 추가로 통합한 다차원적 예측 모델 개발을 통해
+보다 높은 예측 정확도와 수익성을 동시에 달성하는 암호화폐 선물거래 시스템 구축으로
+발전할 수 있을 것으로 기대된다.
+VI. 참고문헌
+[1] D. Kochergin, “Crypto-assets: Economic Nature, Classification and Regulation of Turnover,” Int.
+Organ. Res. J., Vol. 17, No. 3, pp. 75–113, 2022.
+[2] H. Elendner, S. Trimborn, B. Ong, and T. M. Lee, “The Cross-section of Crypto-currencies as
+Financial Assets: An Overview,” SFB 649 Discussion Paper, 2016.
+[3] P. K. Donepudi, “Automation and Machine Learning in Transforming the Financial Industry,”
+Asian Business Review, Vol. 9, No. 3, pp. 129–138, 2019.
+[4] A. Ganapathy, M. Redwanuzzaman, M. M. Rahaman, and W. Khan, “Artificial Intelligence
+Driven Crypto Currencies,” Global Disclosure of Economics and Business, Vol. 9, No. 2, pp. 107–
+118, 2020.
+[5] G. Lucarelli and M. Borrotti, “A Deep Reinforcement Learning Approach for Automated
+Cryptocurrency Trading,” in Proc. of the 15th IFIP WG 12.5 Int’l Conf., AIAI 2019, Hersonissos,
+Crete, Greece, 2019, pp. 247–258.
+[6] R. C. Staudemeyer and E. R. Morris, “Understanding LSTM—A Tutorial into Long Short-term
+Memory Recurrent Neural Networks,” arXiv Preprint, arXiv:1909.09586, 2019.
+[7] J. P. Fleischer, G. von Laszewski, C. Theran, and Y. J. Parra Bautista, “Time Series Analysis of
+Cryptocurrency Prices Using Long Short-term Memory,” Algorithms, Vol. 15, No. 7, p. 230, 2022.
+[8] P. Bilokon and Y. Qiu, “Transformers versus LSTMs for electronic trading,” arXiv Preprint,
+arXiv:2309.11400, 2023.
+[9] P. L. Seabe, C. R. B. Moutsinga, and E. Pindza, “Forecasting Cryptocurrency Prices Using LSTM,
+GRU, and Bi-directional LSTM: A Deep Learning Approach,” Fractal and Fractional, Vol. 7, No.
+2, p. 203, 2023.
+[10] M. J. Hamayel and A. Y. Owda, “A Novel Cryptocurrency Price Prediction Model Using GRU,
+LSTM and Bi-LSTM Machine Learning Algorithms,” AI, Vol. 2, No. 4, pp. 477–496, 2021.
+[11] M. A. L. Khaniki and M. Manthouri, “Enhancing Price Prediction in Cryptocurrency Using
+Transformer Neural Network and Technical Indicators,” arXiv Preprint, arXiv:2403.03606, 2024.
+[12] X. Huang, W. Zhang, X. Tang, M. Zhang, J. Surbiryala, V. Iosifidis, Z. Liu, and J. Zhang, “LSTM
+Based Sentiment Analysis for Cryptocurrency Prediction,” in Proc. of the 26th Int’l Conf.,
+DASFAA 2021, Taipei, Taiwan, 2021, pp. 617–621.
+[13] E. Loginova, W. K. Tsang, G. van Heijningen, L.-P. Kerkhove, and D. F. Benoit, “Forecasting
+Directional Bitcoin Price Returns Using Aspect-based Sentiment Analysis on Online Text Data,”
+Machine Learning, Vol. 113, No. 7, pp. 4761–4784, 2024.
+[14] G. Serafini, P. Yi, Q. Zhang, M. Brambilla, J. Wang, Y. Hu, and B. Li, “Sentiment-driven Price
+Prediction of the Bitcoin Based on Statistical and Deep Learning Approaches,” in Proc. of the
+2020 Int’l Joint Conf. on Neural Networks (IJCNN), 2020, pp. 1–8.
+[15] S. Colianni, S. Rosales, and M. Signorotti, “Algorithmic Trading of Cryptocurrency Based on
+Twitter Sentiment Analysis,” CS229 Project, Vol. 1, No. 5, pp. 1–4, 2015.
+
+M.S.Choi et al: Cryptocurrency Futures Trading System Utilizing an LSTM-based High... 39
+
+DOI : http://doi.org/10.23023/JPT.2025.13.4.031
+[16] F. Valencia, A. Gómez-Espinosa, and B. Valdés-Aguirre, “Price Movement Prediction of
+Cryptocurrencies Using Sentiment Analysis and Machine Learning,” Entropy, Vol. 21, No. 6, p.
+589, 2019.
+[17] A.-D. Vo, Q.-P. Nguyen, and C.-Y. Ock, “Sentiment Analysis of News for Effective
+Cryptocurrency Price Prediction,” Int. J. Knowl. Eng., Vol. 5, No. 2, pp. 47–52, 2019.
+[18] A. K. Kulbhaskar and S. Subramaniam, “Breaking News Headlines: Impact on Trading Activity in
+the Cryptocurrency Market,” Econ. Model., Vol. 126, p. 106397, 2023.
+[19] S. A. Farimani, M. V. Jahan, A. M. Fard, and S. R. K. Tabbakh, “Investigating the
+Informativeness of Technical Indicators and News Sentiment in Financial Market Price
+Prediction,” Knowl.-Based Syst., Vol. 247, p. 108742, 2022.
+[20] S. Corbet, B. Lucey, M. Peat, and S. Vigne, “Bitcoin Futures—What Use Are They?,” Econ. Lett.,
+Vol. 172, pp. 23–27, 2018.
+[21] C. Zhang, H. Ma, G. B. Arkorful, and Z. Peng, “The Impacts of Futures Trading on Volatility and
+Volatility Asymmetry of Bitcoin Returns,” Int. Rev. Financ. Anal., Vol. 86, p. 102497, 2023.

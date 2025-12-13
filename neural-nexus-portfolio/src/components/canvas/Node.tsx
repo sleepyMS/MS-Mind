@@ -14,8 +14,8 @@ interface NodeProps {
 
 // 노드 타입별 크기 설정
 const NODE_SIZES: Record<string, number> = {
-  main: 2.2, // 메인 노드 (나)
-  project: 1.8, // 프로젝트 노드
+  main: 2.0, // 메인 노드 (나)
+  project: 1.6, // 프로젝트 노드
   skill: 1.2, // 스킬 노드
   lesson: 1.0, // 교훈 노드
 };

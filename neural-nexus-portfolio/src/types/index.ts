@@ -28,6 +28,21 @@ export interface NodeDetails {
     githubLink?: string;
     snippet: string;
   }[]; // 코드 예시
+  references?: {
+    id: number;
+    title: string;
+    authors: string;
+    year: string;
+    source: string;
+  }[]; // 참고문헌 (논문용)
+  performance?: {
+    title: string;
+    description?: string; // 설명 추가
+    image?: string; // 결과 그래프 이미지 추가
+    headers?: string[]; // 헤더 (선택적)
+    rows?: string[][]; // 행 (선택적)
+  }[]; // 성능 지표 (테이블 및 그래프)
+  pdfLink?: string; // 논문 PDF 링크 (직접 열기/다운로드)
 }
 
 /**
