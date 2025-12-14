@@ -250,113 +250,173 @@
       "label": "Neural Portfolio",
       "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
       "details": {
-        "description": "지금 보고 계신 포트폴리오입니다! 사이트맵 대신 프로젝트들을 상호 연결된 뉴런으로 시각화한 3D 신경망 기반 포트폴리오입니다. 정적인 포트폴리오의 틀을 깨고, 사용자가 직접 탐험하며 내용을 발견하는 인터랙티브한 경험을 제공하고자 했습니다.",
+        "description": "지금 보고 계신 포트폴리오입니다! 정적인 사이트맵 대신 프로젝트들을 상호 연결된 뉴런으로 시각화한 3D 신경망 기반 포트폴리오입니다. 단순히 '예쁜 3D'가 아닌, '끊김 없는 60fps 경험'과 '직관적인 탐색 UX'를 핵심 과제로 두고, d3-force 물리 엔진, Custom Easing 애니메이션, Dual Ref 이벤트 처리 등 엔지니어링 깊이를 더했습니다.",
         "link": "https://github.com/sleepyMS/MS-Mind",
         "coreFeatures": [
-          "Physics-Based Layout: 왜 계층(Hierarchy) 대신 네트워크인가? 프로젝트 간의 비선형적인 관계를 표현하고, 사용자가 탐색의 주체가 되는 경험을 주기 위해 d3-force-3d를 도입했습니다.",
-          "Stable Initialization: 왜 초기화가 중요한가? 물리 엔진 특유의 초기 발산(Explosion) 현상은 사용자에게 혼란을 줍니다. 300회의 Pre-tick 연산으로 '완성된 형태'로 렌더링을 시작하여 안정감을 확보했습니다.",
-          "Cinematic Camera: 왜 단순 이동이 아닌가? 시점 이동은 단순한 좌표 변화가 아닙니다. 타겟의 정면을 바라보는 오비탈 계산과 Custom Cubic Easing을 통해 '관람'이 아닌 '몰입'의 경험을 유도했습니다.",
-          "Adaptive Thematic Universe: 왜 듀얼 테마인가? 단순한 색상 반전은 지루합니다. 다크 모드의 우주(달)와 라이트 모드의 하늘(태양)이라는 테마적 서사를 부여하고, Bloom과 조명을 이에 맞춰 유동적으로 재구성했습니다."
+          "⚡ 300-tick Warm-up: 물리 엔진 초기화 시 발산(Explosion) 현상 방지. 렌더링 전 동기 실행으로 '균형 잡힌 신경망' 즉시 표시",
+          "🎥 Custom Cubic Easing Camera: 라이브러리 없이 easeInOutCubic 수학 공식 직접 구현. sceneRotation 역연산으로 항상 노드 정면 응시",
+          "🔄 180° Theme Rotation: 테마 전환 시 전체 씬 180° 회전 애니메이션 + Bloom/Vignette 동적 보간으로 '우주→하늘' 서사 표현",
+          "🖱️ Dual Ref Hover Handling: WebGL Mesh와 DOM Label 이벤트 시차 극복. 10ms 디바운스로 포커스 유실 방지",
+          "📊 Zustand Transient Update: 60fps 루프에서 React 리렌더링 최소화. useRef로 애니메이션 변수 직접 변이하여 프레임 드랍 방지"
         ],
         "techStackDocs": [
           {
             "name": "React Three Fiber (R3F)",
-            "description": "Why R3F over Vanilla Three.js? React의 상태(State)와 3D 씬(Scene)을 동기화하는 복잡성을 해결하기 위함입니다. UI 인터랙션에 따라 실시간으로 변하는 3D 객체를 선언적으로 관리하여 유지보수성을 극대화했습니다."
+            "description": "Why R3F over Vanilla Three.js? React 상태와 3D 씬 동기화의 복잡성을 해결하기 위함입니다. JSX로 씬 그래프를 선언적으로 관리하고, useFrame 훅으로 애니메이션 루프에 쉽게 접근하여 유지보수성을 극대화했습니다."
           },
           {
             "name": "Zustand + Transient Updates",
-            "description": "Why Transient Updates? 3D 캔버스는 60fps로 리렌더링됩니다. 일반적인 State/Context API는 불필요한 리렌더링을 유발하여 프레임 드랍을 일으킵니다. Ref를 통한 구독 기반의 Transient Update 패턴으로 성능 병목을 원천 차단했습니다."
+            "description": "Why Transient? 60fps 렌더링에서 매 프레임 setState를 호출하면 React Reconciler 오버헤드로 프레임 드랍이 발생합니다. 애니메이션 변수(progress, position)는 useRef로 관리하고, UI에 반영할 최종 상태만 set()으로 업데이트하여 성능 병목을 원천 차단했습니다."
           },
           {
             "name": "d3-force-3d",
-            "description": "Why Physics Engine? 정해진 그리드 배치는 쉽지만 지루합니다. 노드 간의 인력/척력을 시뮬레이션하여 데이터가 스스로 균형 잡힌 구조를 찾아가는 '살아있는' 레이아웃을 구현하고자 했습니다."
+            "description": "Why Physics Engine? 수동 배치는 쉽지만 데이터 추가 시 재배치가 필요합니다. 노드 간 인력/척력을 시뮬레이션하여 데이터가 스스로 균형 잡힌 구조를 찾아가는 '살아있는' 레이아웃을 구현했습니다. forceCollide()로 노드 충돌도 방지합니다."
           },
           {
-            "name": "Post-processing",
-            "description": "Why Bloom & Vignette? 단순히 예뻐 보이기 위함이 아닙니다. 빛의 번짐(Bloom)은 핵심 노드에 시선을 집중시키고, 비네팅(Vignette)은 주변부를 어둡게 하여 화면 중앙의 콘텐츠 몰입도를 높이는 시각적 장치로 활용했습니다."
+            "name": "Post-processing (Bloom & Vignette)",
+            "description": "Why Effects? 단순히 예뻐 보이기 위함이 아닙니다. Bloom은 핵심 노드에 시선을 집중시키고, Vignette는 주변부를 어둡게 하여 화면 중앙 몰입도를 높입니다. 테마별로 Intensity를 동적 조절하여 라이트 모드 Whiteout을 방지했습니다."
+          },
+          {
+            "name": "GSAP-free Animation",
+            "description": "Why No GSAP? 번들 크기 절감과 학습 목적입니다. easeInOutCubic 공식(`t < 0.5 ? 4*t³ : 1-((-2t+2)³)/2`)을 직접 구현하고, THREE.Vector3.lerpVectors()로 보간하여 라이브러리 없이도 부드러운 애니메이션을 달성했습니다."
           }
         ],
         "optimizations": [
           {
-            "title": "Simulation Warm-up (Pre-computation)",
+            "title": "300-tick Simulation Warm-up (Pre-computation)",
             "items": [
-              "Why: 물리 엔진이 안정화될 때까지 기다리는 시각적 노이즈(Jittering)는 사용자 경험을 저해하는 요소입니다.",
-              "How: 브라우저 렌더링 시작 전, 메모리 상에서 300회의 시뮬레이션 틱을 동기적으로 선행 처리했습니다.",
-              "Impact: 사용자는 진입 즉시 '요동치는 점들'이 아닌 '균형 잡힌 신경망'을 마주하게 되어 첫인상의 완성도를 높였습니다."
+              "Why: 물리 엔진이 안정화될 때까지 노드들이 요동치는(Jittering) 시각적 노이즈는 사용자 첫인상을 망칩니다.",
+              "How: `for (let i = 0; i < 300; i++) simulation.tick()` 동기 루프로 렌더링 전 300회 선행 연산. useMemo로 메모이제이션하여 재계산 방지.",
+              "Impact: 사용자는 즉시 '안정된 신경망'을 마주하여 첫인상 완성도를 높였습니다."
             ]
           },
           {
-            "title": "Ref-based Animation Loop",
+            "title": "Ref-based Animation Loop (Transient Updates)",
             "items": [
-              "Why: 16ms(60fps)마다 발생하는 상태 업데이트를 React 렌더링 사이클에 맡기면 Garbage Collection 오버헤드가 발생합니다.",
-              "How: 애니메이션 관련 변수(좌표, 진행도)를 `useRef`로 관리하고, `useFrame` 내부에서 직접 변이(Mutation)시켰습니다.",
-              "Impact: React의 Reconciler 개입을 최소화하여 복잡한 씬에서도 끊김 없는 60fps 애니메이션을 보장했습니다."
+              "Why: useFrame 내에서 setState를 호출하면 60fps × React Reconciler = 프레임 드랍.",
+              "How: `animationRef.current.progress += delta`로 ref를 직접 변이. camera.position도 lerpVectors()로 직접 조작. 완료 시에만 setIsAnimating(false) 호출.",
+              "Impact: React 개입 없이 끊김 없는 60fps 애니메이션 보장."
             ]
           },
           {
-            "title": "Dual Ref Event Handling",
+            "title": "Dual Ref Event Handling (10ms Debounce)",
             "items": [
-              "Why: 3D Mesh(WebGL)와 2D Label(DOM)은 서로 다른 이벤트 루프를 타기 때문에, 빠르게 이동 시 호버 상태가 유실(Focus Loss)됩니다.",
-              "How: Mesh와 Label의 이벤트를 각각 별도의 Ref로 추적하고, 10ms의 Debounce 타임을 두어 두 상태를 논리적으로 하나로 묶었습니다.",
-              "Impact: 기술적 한계로 인한 UI 깜빡임을 극복하고, 매끄럽고 일관된 포커싱 경험을 제공했습니다."
+              "Why: WebGL Mesh와 DOM Label은 서로 다른 이벤트 루프를 타서 빠른 마우스 이동 시 hover 상태가 유실됩니다.",
+              "How: meshHoverRef, labelHoverRef를 별도 관리하고, mouseLeave 시 10ms setTimeout 후 둘 다 false면 hover 해제.",
+              "Impact: 기술적 한계로 인한 UI 깜빡임을 극복하고 매끄러운 포커싱 경험 제공."
+            ]
+          },
+          {
+            "title": "Scene Rotation Offset Calculation",
+            "items": [
+              "Why: 씬이 회전한 상태에서 단순 좌표 이동은 카메라가 노드의 측면/후면을 비춥니다.",
+              "How: `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`으로 카메라 오프셋을 씬 회전에 맞춰 역회전.",
+              "Impact: 씬이 어떻게 회전해 있든 카메라는 항상 노드의 '정면'을 응시합니다."
             ]
           }
         ],
         "challenges": [
           {
             "title": "3D 좌표계와 카메라 오리엔테이션 동기화",
-            "problem": "씬(Scene)이 회전한 상태에서, 단순한 좌표 이동은 카메라가 노드의 측면이나 후면을 비추게 만들어 시각적 정보 전달을 방해했습니다.",
-            "solution": "단순 이동 대신 '시선(LookAt)'을 제어했습니다. 씬의 회전각(`sceneRotation`)을 역연산하여 카메라 오프셋을 조정함으로써, 씬이 어떻게 회전해 있든 카메라는 항상 타겟 노드의 정면을 바라보도록 수학적으로 보정했습니다."
+            "problem": "테마 전환 시 씬이 180° 회전한 상태에서, 노드 클릭 시 카메라가 노드의 뒤통수를 비추는 치명적 UX 결함이 발생했습니다.",
+            "solution": "단순 이동 대신 '시선(LookAt)'을 제어했습니다. 현재 sceneRotation을 읽어 카메라 오프셋 벡터를 같은 각도로 회전시켜, 씬의 회전 상태와 무관하게 항상 노드 정면을 바라보도록 수학적으로 보정했습니다."
           },
           {
-            "title": "하이브리드 렌더링(WebGL + DOM)의 이벤트 소실",
-            "problem": "WebGL 캔버스 위의 HTML 라벨은 DOM 요소이므로 WebGL 이벤트 시스템과 미세한 시차가 존재합니다. 이로 인해 마우스를 Mesh에서 Label로 옮기는 순간 호버가 끊기는 UX 결함이 발생했습니다.",
-            "solution": "React 상태 업데이트의 비동기성을 신뢰하는 대신, `useRef`를 활용한 즉시성(Synchronous)과 `setTimeout`을 활용한 지연(Debounce) 전략을 결합했습니다. 'Dual Ref' 패턴을 고안하여 기술적 공백을 로직으로 채웠습니다."
+            "title": "WebGL + DOM 하이브리드 렌더링의 이벤트 소실",
+            "problem": "HTML 라벨은 DOM 요소이므로 WebGL mouseleave 이벤트와 미세한 시차가 존재합니다. Mesh에서 Label로 마우스 이동 시 0.01초 동안 'hover 없음' 상태가 되어 깜빡이는 UX 결함이 발생했습니다.",
+            "solution": "React 비동기 업데이트를 신뢰하는 대신, useRef로 Mesh/Label hover 상태를 즉시(Synchronous) 캡처하고, 10ms setTimeout 후 '둘 다 false면 hover 해제'하는 Dual Ref 패턴을 고안했습니다."
           },
           {
-            "title": "테마별 포스트 프로세싱 밸런싱",
+            "title": "테마별 Post-processing 밸런싱",
             "problem": "다크 모드에서 아름다운 Bloom 효과가 라이트 모드에서는 화면 전체를 하얗게 날려버리는(Whiteout) 시각적 문제를 일으켰습니다.",
-            "solution": "테마 전환은 단순한 색상 변경이 아니라 '빛의 물성'이 바뀌는 것입니다. 테마 상태에 따라 Bloom의 임계값(Threshold)과 강도(Intensity)를 동적으로 보간(Lerp)하여, 어떤 조명 환경에서도 콘텐츠의 가독성과 심미성을 잃지 않도록 밸런싱했습니다."
+            "solution": "테마 전환은 단순 색상 변경이 아니라 '빛의 물리적 특성'이 바뀌는 것입니다. theme 상태에 따라 Bloom의 threshold, intensity를 동적으로 조절하고, THREE.MathUtils.lerp()로 부드럽게 보간하여 어떤 조명 환경에서도 가독성과 심미성을 유지했습니다."
+          },
+          {
+            "title": "물리 엔진 초기 발산(Explosion) 현상",
+            "problem": "d3-force 시뮬레이션 시작 시 노드들이 랜덤 위치에서 폭발적으로 흩어졌다가 서서히 안정화되는데, 이 과정이 사용자에게 노출되면 '불안정한 앱'으로 인식됩니다.",
+            "solution": "렌더링 전에 동기적으로 300회 tick()을 실행하여 시뮬레이션을 '사전에 완료'시킵니다. 사용자는 이미 안정화된 레이아웃만 보게 되어 첫인상의 완성도를 높였습니다."
           }
         ],
         "codeExamples": [
           {
-            "title": "Simulation Warm-up Logic",
-            "category": "Algorithm",
-            "description": "사용자에게 안정적인 초기 화면을 제공하기 위한 시뮬레이션 선행 연산 로직입니다. (src/hooks/useForceGraph.ts)",
+            "title": "300회 동기 Warm-up으로 안정적 초기화",
+            "category": "performance",
+            "description": "Why Warm-up? 물리 엔진이 안정화될 때까지 기다리면 노드들이 요동치는 모습이 노출됩니다. 렌더링 전에 300회 tick()을 동기 실행하여 '이미 완성된 형태'로 시작합니다.",
             "filePath": "src/hooks/useForceGraph.ts",
-            "snippet": "// 시뮬레이션 노드 생성 및 Force 설정\nconst simulation = forceSimulation(simNodes, 3)\n  .force('link', forceLink(links).strength(0.5))\n  .force('charge', forceManyBody().strength(-80))\n  .force('center', forceCenter(0, 0, 0));\n\n// 렌더링 전 300회 동기 실행 (Stable Initialization)\nfor (let i = 0; i < 300; i++) {\n  simulation.tick();\n}\nsimulation.stop(); // 연산 종료 후 위치 고정"
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/hooks/useForceGraph.ts",
+            "snippet": "const simulation = forceSimulation(simNodes, 3)\n  .force('link', forceLink(links).strength(0.5))\n  .force('charge', forceManyBody().strength(-80))\n  .force('center', forceCenter(0, 0, 0))\n  .force('collide', forceCollide().radius(2).strength(0.7));\n\n// 렌더링 전 300회 동기 실행 (Stable Initialization)\nfor (let i = 0; i < 300; i++) {\n  simulation.tick();\n}\nsimulation.stop(); // 연산 종료 후 위치 고정"
           },
           {
-            "title": "Custom Cubic Easing Camera",
-            "category": "Animation",
-            "description": "라이브러리 의존성 없이 수학적 공식을 직접 적용하여 부드러운 가감속을 구현한 카메라 이동 로직입니다. (src/components/canvas/CameraManager.tsx)",
+            "title": "Custom easeInOutCubic 수학 공식 직접 구현",
+            "category": "animation",
+            "description": "Why No GSAP? 번들 크기 절감 + 수학 공식 이해. t < 0.5 구간에서 4t³으로 가속, 이후 1-((-2t+2)³)/2로 감속하는 S-커브를 직접 구현했습니다.",
             "filePath": "src/components/canvas/CameraManager.tsx",
-            "snippet": "useFrame((_, delta) => {\n  if (!anim.isActive) return;\n  \n  // 진행도 업데이트\n  anim.progress += delta / anim.duration;\n  \n  // easeInOutCubic 공식 직접 구현\n  const t = anim.progress;\n  const ease = t < 0.5 \n    ? 4 * t * t * t \n    : 1 - Math.pow(-2 * t + 2, 3) / 2;\n\n  // 현재 위치에서 목표 위치로 선형 보간(Lerp)에 Easing 적용\n  camera.position.lerpVectors(startPos, targetPos, ease);\n  controls.target.lerpVectors(startLookAt, targetLookAt, ease);\n});"
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "useFrame((_, delta) => {\n  anim.progress += delta / anim.duration;\n  \n  // easeInOutCubic 공식 직접 구현\n  const t = anim.progress;\n  const ease = t < 0.5 \n    ? 4 * t * t * t \n    : 1 - Math.pow(-2 * t + 2, 3) / 2;\n\n  // Lerp에 Easing 적용\n  camera.position.lerpVectors(startPos, targetPos, ease);\n  controls.target.lerpVectors(startLookAt, targetLookAt, ease);\n});"
           },
           {
-            "title": "Tidal Locking (조석 고정)",
-            "category": "Visual Effect",
-            "description": "실제 달이 지구에게 항상 같은 면만 보여주듯이, 공전 속도와 자전 속도를 일치시킨 천체 애니메이션 로직입니다. (src/components/canvas/Background.tsx)",
-            "filePath": "src/components/canvas/Background.tsx",
-            "snippet": "const moonOrbitSpeed = delta * 0.015;\n\n// 자전 속도와 공전 속도를 동일하게 설정 (Tidal Locking)\nif (moonRef.current) moonRef.current.rotation.y += moonOrbitSpeed;\nif (moonOrbitRef.current) moonOrbitRef.current.rotation.y += moonOrbitSpeed;"
+            "title": "Scene Rotation 역연산으로 카메라 정면 응시",
+            "category": "3d-math",
+            "description": "Why Offset Rotation? 씬이 회전한 상태에서 고정 오프셋을 더하면 카메라가 노드 측면을 비춥니다. 오프셋 벡터를 씬 회전과 같은 각도로 회전시켜 항상 정면을 바라봅니다.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// 타겟 좌표에 씬 회전 적용\nconst targetLookAt = new THREE.Vector3(...cameraTarget)\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\n// 오프셋도 같은 각도로 회전\nconst baseOffset = new THREE.Vector3(0, 2, 8);\nconst rotatedOffset = baseOffset.clone()\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\nconst targetCameraPosition = targetLookAt.clone().add(rotatedOffset);"
+          },
+          {
+            "title": "테마 토글 시 180° 씬 회전 애니메이션",
+            "category": "ux",
+            "description": "Why 180° Rotation? 단순 색상 전환은 밋밋합니다. 다크(우주/달) → 라이트(하늘/태양) 테마 서사에 맞춰 전체 씬이 반대편을 향하도록 180° 회전시켜 '세계가 바뀌는' 몰입감을 줍니다.",
+            "filePath": "src/stores/useAppStore.ts",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/stores/useAppStore.ts",
+            "snippet": "toggleTheme: () => {\n  set((state) => ({\n    isThemeTransitioning: true,\n    theme: state.theme === 'dark' ? 'light' : 'dark',\n    sceneRotation: state.sceneRotation + Math.PI, // 180도 회전 추가\n  }));\n\n  setTimeout(() => {\n    set({ isThemeTransitioning: false });\n  }, 2000); // 2초 후 전환 완료\n}"
+          },
+          {
+            "title": "Ref 기반 애니메이션으로 React 리렌더링 방지",
+            "category": "performance",
+            "description": "Why Ref? useFrame 내에서 setState를 호출하면 60fps × Reconciler = 프레임 드랍. animationRef.current를 직접 변이하고, 완료 시에만 setIsAnimating(false)를 호출합니다.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// 애니메이션 상태를 ref로 관리 (렌더링 최적화)\nconst animationRef = useRef({\n  isActive: false,\n  progress: 0,\n  startPosition: new THREE.Vector3(),\n  targetPosition: new THREE.Vector3(),\n  duration: 1.5,\n});\n\nuseFrame((_, delta) => {\n  if (!animationRef.current.isActive) return;\n  animationRef.current.progress += delta / anim.duration; // ref 직접 변이\n  // ... camera.position 조작 ...\n});"
+          },
+          {
+            "title": "Distance 기반 동적 Duration 조절",
+            "category": "ux",
+            "description": "Why Dynamic Duration? 가까운 노드로 이동할 때 2초는 너무 길고, 먼 노드로 이동할 때 0.5초는 너무 짧습니다. 이동 거리에 비례하여 duration을 1.0~2.5초 범위로 동적 조절합니다.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// 이동 거리에 따라 duration 조절 (멀면 더 오래)\nconst distance = camera.position.distanceTo(targetCameraPosition);\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.1, 1.0),  // 최소 1초\n  2.5  // 최대 2.5초\n);"
           }
         ],
         "learnings": [
           {
             "title": "라이브러리 그 이상의 엔지니어링",
-            "content": "단순히 d3-force나 R3F 같은 라이브러리를 API대로 사용하는 것을 넘어, 물리 엔진의 초기화 시점(Warm-up)을 직접 제어하거나 수학 공식을 애니메이션 루프에 직접 주입(Custom Easing)하는 등 '블랙박스'를 열고 그 내부를 커스터마이징할 때 비로소 진정한 퀄리티가 나온다는 것을 배웠습니다."
+            "content": "d3-force나 R3F를 API대로 사용하는 것을 넘어, 물리 엔진 초기화 시점(Warm-up)을 직접 제어하고 수학 공식(Cubic Easing)을 애니메이션 루프에 주입하는 등 '블랙박스'를 열고 커스터마이징할 때 비로소 진정한 퀄리티가 나온다는 것을 배웠습니다."
           },
           {
-            "title": "3D 인터페이스의 정보 밀도와 공간 경험",
-            "content": "2D 웹과 달리 3D 공간은 정보가 많아질수록 시각적 노이즈가 기하급수적으로 증가합니다. 이를 해결하기 위해 'Selective Rendering'과 'Smart Indirect Connection'을 고안하며, 사용자에게 필요한 정보만 맥락에 맞게 노출하는 'Subtraction(덜어냄)의 미학'을 깊이 이해하게 되었습니다."
+            "title": "3D 인터페이스의 정보 밀도와 Subtraction의 미학",
+            "content": "2D와 달리 3D 공간은 정보가 많아질수록 시각적 노이즈가 기하급수적으로 증가합니다. 연결선을 hover 시에만 표시하고, 카테고리 필터로 불필요한 노드를 숨기는 등 '덜어냄'이 3D UX의 핵심임을 깨달았습니다."
+          },
+          {
+            "title": "수학은 엔지니어의 무기",
+            "content": "applyAxisAngle(), lerpVectors(), easeInOutCubic 공식 등 벡터 수학과 보간 함수를 직접 다루면서, 라이브러리에 의존하지 않고도 복잡한 애니메이션을 구현할 수 있다는 자신감을 얻었습니다."
+          },
+          {
+            "title": "React와 GPU의 경계에서 균형 잡기",
+            "content": "React의 편의성과 GPU 렌더링의 성능 요구 사이에서 균형을 찾아야 합니다. UI 상태는 Zustand로, 애니메이션 변수는 useRef로 분리하여 '언제 React에게 맡기고, 언제 직접 제어할지'를 판단하는 기준을 세웠습니다."
           },
           {
             "title": "감각으로 전달되는 성능 최적화",
-            "content": "사용자는 코드를 보지 않지만, 10ms의 호버 지연과 60fps의 카메라 움직임에서 '완성도'를 느낍니다. Dual Ref 패턴과 Transient Update 같은 최적화 기법들이 단순한 기술적 과시가 아니라, 사용자에게 '매끄럽고 기분 좋은 경험'을 선사하는 핵심 UX 요소임을 깨달았습니다."
+            "content": "사용자는 코드를 보지 않지만, 10ms의 hover 지연과 60fps의 카메라 움직임에서 '완성도'를 느낍니다. Dual Ref 패턴과 Transient Update 같은 최적화가 단순 기술 과시가 아닌, 사용자에게 '매끄럽고 기분 좋은 경험'을 선사하는 핵심 UX 요소임을 깨달았습니다."
           }
         ],
-        "technologies": ["React", "Three.js", "GSAP", "TypeScript", "Zustand"]
+        "technologies": [
+          "React",
+          "Three.js",
+          "R3F",
+          "TypeScript",
+          "Zustand",
+          "d3-force-3d"
+        ]
       },
       "color": "#c026d3"
     },
