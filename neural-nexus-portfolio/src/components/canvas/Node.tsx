@@ -472,8 +472,11 @@ export function Node({ node, position }: NodeProps) {
         onPointerMove={handlePointerMove}
       />
 
-      {/* 라벨 - 메인/프로젝트 노드 또는 호버 시에만 표시 */}
-      {(node.type === "main" || node.type === "project" || isHovered) && (
+      {/* 라벨 - 메인/프로젝트 노드, 호버 시, 또는 스킬 노드가 하이라이트(연결된 노드 호버)될 때 표시 */}
+      {(node.type === "main" ||
+        node.type === "project" ||
+        isHovered ||
+        (node.type === "skill" && isHighlighted)) && (
         <Html
           position={[0, size + 0.5, 0]}
           center
