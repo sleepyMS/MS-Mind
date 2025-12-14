@@ -114,33 +114,16 @@ export function ThemeSwitcher() {
             opacity: isDark ? 0 : 1,
           }}
         >
-          <div className="relative">
-            {/* 태양 광선 */}
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-3 rounded-full origin-bottom"
-                style={{
-                  background: "linear-gradient(to top, #FFD700, #FFA500)",
-                  left: "50%",
-                  top: "-12px",
-                  marginLeft: "-2px",
-                  transform: `rotate(${i * 45}deg) translateY(-12px)`,
-                  opacity: 0.8,
-                }}
-              />
-            ))}
-            {/* 태양 본체 */}
-            <div
-              className="w-8 h-8 rounded-full"
-              style={{
-                background:
-                  "linear-gradient(135deg, #FFE066 0%, #FFB347 50%, #FF8C00 100%)",
-                boxShadow:
-                  "0 0 30px rgba(255,200,0,0.6), inset 2px 2px 8px rgba(255,255,200,0.5)",
-              }}
-            />
-          </div>
+          {/* 태양 본체 */}
+          <div
+            className="w-8 h-8 rounded-full"
+            style={{
+              background:
+                "linear-gradient(135deg, #FFE066 0%, #FFB347 50%, #FF8C00 100%)",
+              boxShadow:
+                "0 0 30px rgba(255,200,0,0.6), inset 2px 2px 8px rgba(255,255,200,0.5)",
+            }}
+          />
         </div>
 
         {/* 호버 링 */}
