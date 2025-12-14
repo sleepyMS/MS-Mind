@@ -244,10 +244,31 @@ export function Node({ node, position }: NodeProps) {
 
     setActiveNode(node.id);
     setCameraTarget(position);
+
+    // 카메라 목표 위치 계산 (CameraManager와 동일한 로직)
+    const baseOffset = new THREE.Vector3(0, 2, 25);
+    const rotatedOffset = baseOffset
+      .clone()
+      .applyAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        useAppStore.getState().sceneRotation
+      );
+    const targetLookAt = new THREE.Vector3(...position).applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      useAppStore.getState().sceneRotation
+    );
+    const targetCameraPos = targetLookAt.clone().add(rotatedOffset);
+
+    // 거리 계산 및 동적 지연 시간 설정
+    const distance = camera.position.distanceTo(targetCameraPos);
+    // 거리에 비례하여 지연 시간 설정 (15ms/unit), 최대 0.8초
+    // 아주 가까우면(거리 5 이하) 75ms로 거의 즉시 열림
+    const delay = Math.min(distance * 15, 800);
+
     // 카메라 애니메이션 후 모달 열기
     setTimeout(() => {
       setModalOpen(true);
-    }, 1000);
+    }, delay);
   };
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {

@@ -62,8 +62,8 @@ export function CameraManager() {
     // 이동 거리에 따라 duration 조절 (멀면 더 오래)
     const distance = camera.position.distanceTo(targetCameraPosition);
     animationRef.current.duration = Math.min(
-      Math.max(distance * 0.1, 1.0),
-      2.5
+      Math.max(distance * 0.06, 0.6),
+      2.0
     );
 
     setIsAnimating(true);
