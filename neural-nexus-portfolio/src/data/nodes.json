@@ -441,6 +441,22 @@
               "How: `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`으로 카메라 오프셋을 씬 회전에 맞춰 역회전.",
               "Impact: 씬이 어떻게 회전해 있든 카메라는 항상 노드의 '정면'을 응시합니다."
             ]
+          },
+          {
+            "title": "Distance-Aware Modal Activation (Adaptive Latency)",
+            "items": [
+              "Why: 1초 고정 딜레이는 가까운 노드에서는 느리고, 먼 노드에서는 즉시 열려 몰입감을 해칩니다.",
+              "How: `delay = Math.min(distance * 15, 800)` 공식으로 거리에 비례한 지연 시간 적용. 아주 가까우면 75ms 만에 즉시 반응.",
+              "Impact: 근거리 탐색 시 앱이 훨씬 '빠릿하다(Snappy)'고 느끼게 만들었습니다."
+            ]
+          },
+          {
+            "title": "Contextual Label Visibility (Neighbor Highlighting)",
+            "items": [
+              "Why: 복잡한 신경망에서 내가 선택한 노드가 어떤 스킬과 연결되었는지 파악하기 어렵습니다.",
+              "How: `isHighlighted` 상태를 전파하여, 프로젝트 노드 호버 시 연결된 모든 스킬 노드의 라벨을 재귀적으로 노출.",
+              "Impact: 사용자가 노드 간의 관계(Connection)를 직관적으로 파악할 수 있게 되었습니다."
+            ]
           }
         ],
         "challenges": [
@@ -463,6 +479,11 @@
             "title": "물리 엔진 초기 발산(Explosion) 현상",
             "problem": "d3-force 시뮬레이션 시작 시 노드들이 랜덤 위치에서 폭발적으로 흩어졌다가 서서히 안정화되는데, 이 과정이 사용자에게 노출되면 '불안정한 앱'으로 인식됩니다.",
             "solution": "렌더링 전에 동기적으로 300회 tick()을 실행하여 시뮬레이션을 '사전에 완료'시킵니다. 사용자는 이미 안정화된 레이아웃만 보게 되어 첫인상의 완성도를 높였습니다."
+          },
+          {
+            "title": "Inspection Compulsion vs Visual Context",
+            "problem": "초기에는 선택한 노드를 자세히 보여주기 위해 카메라를 아주 가까이(`z=8`) 이동시켰으나, 3D Mesh가 2D Modal 오버레이와 겹쳐 가독성을 해치고 전체 맥락을 잃어버리는 문제가 있었습니다.",
+            "solution": "'Zoom In' 대신 'Scale Up' 전략을 채택했습니다. 카메라는 편안한 거리(`z=25`)를 유지하되, 선택된 노드의 크기만 `2.0배`로 키워 시각적 강조와 맥락 유지를 동시에 달성했습니다."
           }
         ],
         "codeExamples": [
@@ -507,12 +528,12 @@
             "snippet": "// 애니메이션 상태를 ref로 관리 (렌더링 최적화)\nconst animationRef = useRef({\n  isActive: false,\n  progress: 0,\n  startPosition: new THREE.Vector3(),\n  targetPosition: new THREE.Vector3(),\n  duration: 1.5,\n});\n\nuseFrame((_, delta) => {\n  if (!animationRef.current.isActive) return;\n  animationRef.current.progress += delta / anim.duration; // ref 직접 변이\n  // ... camera.position 조작 ...\n});"
           },
           {
-            "title": "Distance 기반 동적 Duration 조절",
-            "category": "ux",
-            "description": "Why Dynamic Duration? 가까운 노드로 이동할 때 2초는 너무 길고, 먼 노드로 이동할 때 0.5초는 너무 짧습니다. 이동 거리에 비례하여 duration을 1.0~2.5초 범위로 동적 조절합니다.",
-            "filePath": "src/components/canvas/CameraManager.tsx",
-            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
-            "snippet": "// 이동 거리에 따라 duration 조절 (멀면 더 오래)\nconst distance = camera.position.distanceTo(targetCameraPosition);\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.1, 1.0),  // 최소 1초\n  2.5  // 최대 2.5초\n);"
+            "title": "Distance-based Event Synchronization",
+            "category": "ux-engineering",
+            "description": "Why Static Timeout Fails? 고정된 지연 시간은 가까운 노드에서는 답답하고, 먼 노드에서는 너무 빠릅니다. 이동 거리를 실시간으로 계산하여 카메라 애니메이션 시간과 모달 오픈 타이밍을 동기화했습니다.",
+            "filePath": "src/components/canvas/Node.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Node.tsx",
+            "snippet": "// Node.tsx: Distance-based Delay\nconst distance = camera.position.distanceTo(targetCameraPos);\n// Close: ~75ms (Instant), Far: 800ms (Capped)\nconst delay = Math.min(distance * 15, 800);\n\nsetTimeout(() => setModalOpen(true), delay);\n\n// CameraManager.tsx: Matching Duration\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.06, 0.6), // Min 0.6s\n  2.0 // Max 2.0s\n);"
           }
         ],
         "learnings": [
