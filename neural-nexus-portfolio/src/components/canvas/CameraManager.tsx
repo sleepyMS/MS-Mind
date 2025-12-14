@@ -17,7 +17,6 @@ export function CameraManager() {
     cameraTarget,
     isAnimating,
     setIsAnimating,
-    isModalOpen,
     sceneRotation,
     isDragging,
   } = useAppStore();
@@ -45,7 +44,7 @@ export function CameraManager() {
 
     // 카메라 위치: 타겟 + 오프셋 (오프셋도 회전 필요할 수 있음, 하지만 현재는 고정 오프셋)
     // 오프셋을 씬 회전에 맞춰 회전시키면 카메라가 항상 "앞"에서 노드를 보게 됨
-    const baseOffset = new THREE.Vector3(0, 2, 8);
+    const baseOffset = new THREE.Vector3(0, 2, 25);
     const rotatedOffset = baseOffset
       .clone()
       .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);
@@ -103,13 +102,6 @@ export function CameraManager() {
     // 컨트롤 업데이트 (damping 비활성화 상태에서)
     controlsRef.current.update();
   });
-
-  // 모달 닫힐 때 처리
-  useEffect(() => {
-    if (!isModalOpen && controlsRef.current) {
-      // 현재 위치 유지
-    }
-  }, [isModalOpen]);
 
   return (
     <OrbitControls

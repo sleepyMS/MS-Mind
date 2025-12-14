@@ -103,7 +103,7 @@ export function Node({ node, position }: NodeProps) {
     if (!meshRef.current || !glowRef.current) return;
 
     // 상태에 따른 목표 크기
-    const targetScale = isHovered || isActive ? size * 1.3 : size;
+    const targetScale = isHovered || isActive ? size * 2.0 : size;
     const targetGlowScale = isHovered || isActive ? size * 2.5 : size * 1.8;
 
     // 부드러운 크기 전환
