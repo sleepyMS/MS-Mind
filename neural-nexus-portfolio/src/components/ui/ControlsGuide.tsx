@@ -11,10 +11,15 @@ export function ControlsGuide() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // 모바일 감지
+  // 모바일 감지 및 데스크톱에서 초기 활성화
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || "ontouchstart" in window);
+      const mobile = window.innerWidth < 768 || "ontouchstart" in window;
+      setIsMobile(mobile);
+      // 데스크톱에서는 최초 활성화
+      if (!mobile) {
+        setIsOpen(true);
+      }
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);

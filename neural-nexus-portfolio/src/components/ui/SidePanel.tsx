@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
@@ -106,6 +106,14 @@ export function SidePanel() {
     theme,
   } = useAppStore();
   const isDark = theme === "dark";
+
+  // 모바일에서는 사이드바 초기 접힘
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      setSidePanelOpen(false);
+    }
+  }, [setSidePanelOpen]);
 
   const [expandedTypes, setExpandedTypes] = useState<NodeType[]>([
     "main",
