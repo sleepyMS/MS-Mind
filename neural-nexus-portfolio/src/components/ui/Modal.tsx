@@ -238,114 +238,124 @@ export function Modal() {
       />
 
       {/* 이전 노드 버튼 (왼쪽) */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          navigateNode(-1);
-        }}
-        className={`
-          absolute left-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:left-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
-          p-3 md:p-4 rounded-full
-          transition-all duration-300
-          hover:scale-110 active:scale-95
-          ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-          }
-        `}
-        style={{
-          background: isDark
-            ? "rgba(255, 255, 255, 0.1)"
-            : "rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(8px)",
-          border: isDark
-            ? "1px solid rgba(255, 255, 255, 0.2)"
-            : "1px solid rgba(0, 0, 0, 0.1)",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = `${nodeColor}40`;
-          e.currentTarget.style.borderColor = nodeColor;
-          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = isDark
-            ? "rgba(255, 255, 255, 0.1)"
-            : "rgba(0, 0, 0, 0.1)";
-          e.currentTarget.style.borderColor = isDark
-            ? "rgba(255, 255, 255, 0.2)"
-            : "rgba(0, 0, 0, 0.1)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-        aria-label="이전 노드"
-      >
-        <svg
-          className="w-5 h-5 md:w-6 md:h-6"
-          style={{ color: isDark ? "white" : "#1f2937" }}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <MiniTooltip content="이전 노드 (←)">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigateNode(-1);
+          }}
+          className={`
+            absolute left-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:left-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
+            p-3 md:p-4 rounded-full
+            transition-all duration-300
+            hover:scale-110 active:scale-95
+            ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-4"
+            }
+          `}
+          style={{
+            background: isDark
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(8px)",
+            border: isDark
+              ? "1px solid rgba(255, 255, 255, 0.2)"
+              : "1px solid rgba(0, 0, 0, 0.1)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = `${nodeColor}40`;
+            e.currentTarget.style.borderColor = nodeColor;
+            e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = isDark
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)";
+            e.currentTarget.style.borderColor = isDark
+              ? "rgba(255, 255, 255, 0.2)"
+              : "rgba(0, 0, 0, 0.1)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+          aria-label="이전 노드"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
+          <svg
+            className="w-5 h-5 md:w-6 md:h-6"
+            style={{ color: isDark ? "white" : "#1f2937" }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+      </MiniTooltip>
 
       {/* 다음 노드 버튼 (오른쪽) */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          navigateNode(1);
-        }}
-        className={`
-          absolute right-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:right-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
-          p-3 md:p-4 rounded-full
-          transition-all duration-300
-          hover:scale-110 active:scale-95
-          ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"}
-        `}
-        style={{
-          background: isDark
-            ? "rgba(255, 255, 255, 0.1)"
-            : "rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(8px)",
-          border: isDark
-            ? "1px solid rgba(255, 255, 255, 0.2)"
-            : "1px solid rgba(0, 0, 0, 0.1)",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = `${nodeColor}40`;
-          e.currentTarget.style.borderColor = nodeColor;
-          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = isDark
-            ? "rgba(255, 255, 255, 0.1)"
-            : "rgba(0, 0, 0, 0.1)";
-          e.currentTarget.style.borderColor = isDark
-            ? "rgba(255, 255, 255, 0.2)"
-            : "rgba(0, 0, 0, 0.1)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-        aria-label="다음 노드"
-      >
-        <svg
-          className="w-5 h-5 md:w-6 md:h-6"
-          style={{ color: isDark ? "white" : "#1f2937" }}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <MiniTooltip content="다음 노드 (→)">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigateNode(1);
+          }}
+          className={`
+            absolute right-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:right-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
+            p-3 md:p-4 rounded-full
+            transition-all duration-300
+            hover:scale-110 active:scale-95
+            ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-4"
+            }
+          `}
+          style={{
+            background: isDark
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(8px)",
+            border: isDark
+              ? "1px solid rgba(255, 255, 255, 0.2)"
+              : "1px solid rgba(0, 0, 0, 0.1)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = `${nodeColor}40`;
+            e.currentTarget.style.borderColor = nodeColor;
+            e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = isDark
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)";
+            e.currentTarget.style.borderColor = isDark
+              ? "rgba(255, 255, 255, 0.2)"
+              : "rgba(0, 0, 0, 0.1)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+          aria-label="다음 노드"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
+          <svg
+            className="w-5 h-5 md:w-6 md:h-6"
+            style={{ color: isDark ? "white" : "#1f2937" }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </MiniTooltip>
 
       {/* 모달 본체 */}
       <div

@@ -85,14 +85,6 @@ export function MiniMap() {
         boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
       }}
     >
-      {/* 타이틀 */}
-      <div
-        className="absolute top-2 left-2 text-[10px] font-medium uppercase tracking-wider"
-        style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)" }}
-      >
-        Map
-      </div>
-
       {/* 노드들 */}
       <svg className="w-full h-full" viewBox="0 0 100 100">
         {/* 연결선 */}
@@ -157,38 +149,6 @@ export function MiniMap() {
           );
         })}
       </svg>
-
-      {/* 범례 */}
-      <div className="absolute bottom-2 left-2 right-2 flex justify-center gap-2">
-        <div className="flex items-center gap-1">
-          <div
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ backgroundColor: getThemeColor("#00ffff", theme) }}
-          />
-          <span
-            className="text-[8px]"
-            style={{
-              color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)",
-            }}
-          >
-            메인
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ backgroundColor: getThemeColor("#ff00ff", theme) }}
-          />
-          <span
-            className="text-[8px]"
-            style={{
-              color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.5)",
-            }}
-          >
-            프로젝트
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

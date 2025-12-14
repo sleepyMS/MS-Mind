@@ -139,7 +139,7 @@ export function NodeFilter() {
       ref={containerRef}
       className={`
         fixed z-30 transition-all duration-300 ease-out
-        right-6 top-24 md:top-6 md:right-24
+        bottom-20 right-6 md:bottom-auto md:top-6 md:right-24
         ${isExpanded ? "w-[auto]" : "w-11 md:w-auto"} 
         flex flex-row-reverse md:flex-row items-start md:items-center
       `}

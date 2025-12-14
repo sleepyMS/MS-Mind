@@ -8,6 +8,7 @@ import { NodeFilter } from "./components/ui/NodeFilter";
 import { SidePanel } from "./components/ui/SidePanel";
 import { MiniMap } from "./components/ui/MiniMap";
 import { ThemeSwitcher } from "./components/ui/ThemeSwitcher";
+import { ControlsGuide } from "./components/ui/ControlsGuide";
 import { useAppStore } from "./stores/useAppStore";
 import "./index.css";
 
@@ -46,58 +47,13 @@ function App() {
       <SidePanel />
       <MiniMap />
 
-      {/* 네비게이션 힌트 */}
-      <div
-        className={`
-          fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none
-          transition-all duration-700 ease-out
-          ${
-            isLoading
-              ? "opacity-0 scale-95 translate-y-4"
-              : "opacity-100 scale-100 translate-y-0"
-          }
-        `}
-      >
-        <p className="text-sm text-[var(--text-tertiary)]">
-          {t("app.title") === "Neural Nexus"
-            ? "Drag to rotate • Scroll to zoom • Click nodes to explore"
-            : "드래그로 회전 • 스크롤로 줌 • 노드 클릭으로 탐색"}
-        </p>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full animate-pulse"
-              style={{ backgroundColor: "var(--color-main)" }}
-            />
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {t("nodeTypes.main")}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-2.5 h-2.5 rounded-full animate-pulse"
-              style={{ backgroundColor: "var(--color-project)" }}
-            />
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {t("nodeTypes.project")}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full animate-pulse"
-              style={{ backgroundColor: "var(--color-skill)" }}
-            />
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {t("nodeTypes.skill")}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* 컨트롤 가이드 */}
+      {!isLoading && <ControlsGuide />}
 
-      {/* 타이틀 */}
+      {/* 타이틀 - 데스크톱에서만 표시 */}
       <div
         className={`
-          fixed top-6 left-6 pointer-events-none
+          hidden md:block fixed top-6 left-6 pointer-events-none
           transition-all duration-700 ease-out delay-100
           ${
             isLoading

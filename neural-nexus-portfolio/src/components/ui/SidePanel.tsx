@@ -793,20 +793,6 @@ export function SidePanel() {
             >
               {t("sidebar.totalNodes", { count: data.nodes.length })}
             </span>
-            <div className="flex gap-1">
-              {(["main", "project", "skill"] as NodeType[]).map((type) => (
-                <div
-                  key={type}
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    backgroundColor: isDark
-                      ? typeConfig[type].darkColor
-                      : typeConfig[type].lightColor,
-                  }}
-                  title={t(`nodeTypes.${type}`)}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </div>
