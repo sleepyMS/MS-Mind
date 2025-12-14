@@ -14,8 +14,136 @@
         "project-paper-tft"
       ],
       "details": {
-        "description": "창의적인 개발자로서, 최신 기술을 활용한 몰입형 웹 경험을 만드는 것에 열정을 가지고 있습니다.",
-        "technologies": ["React", "TypeScript", "Three.js", "Node.js", "Python"]
+        "description": "안녕하세요. 견고한 시스템과 구조설계(Backend) 위에 섬세한 마감을 더해, 사용자가 가장 편안함을 느끼는 공간(Frontend)을 구축하는 '디지털 건축가' 최민석입니다.\n\n보이지 않는 뼈대의 안정성부터 사용자의 손끝이 닿는 1픽셀의 디테일까지, 1mm의 오차도 허용하지 않는 정밀한 시공으로 완벽한 서비스 경험을 설계합니다.",
+        "personalInfo": [
+          { "key": "이름", "value": "최민석" },
+          { "key": "생년월일", "value": "2001.10.17" },
+          { "key": "전공", "value": "소프트웨어전공" },
+          { "key": "연락처", "value": "+82 10 5848 1017" },
+          { "key": "이메일", "value": "minseok011017@gmail.com" }
+        ],
+        "philosophy": {
+          "title": "Deep Dive & Wide View",
+          "content": "하나의 기술을 깊이 파고드는 'Deep Dive'와 전체 시스템을 조망하는 'Wide View'의 균형을 추구합니다. 단순히 코드를 작성하는 것을 넘어, 비즈니스 목표를 이해하고 최적의 아키텍처를 설계하는 제너럴리스트를 지향합니다."
+        },
+        "extendedBio": "위대한 건축물이 튼튼한 지반 위에서 비로소 사람을 품을 수 있듯, 소프트웨어 역시 견고한 백엔드 시스템 위에서 사용자를 위한 배려가 시작된다고 믿습니다.\n\n제가 생각하는 프론트엔드는 단순한 겉모습이 아닌, '섬세한 마감(Finishing)'을 통해 사용자가 머무는 공간의 온도를 결정하는 과정입니다. 이는 사용자가 가장 직관적이고 편안하게 목적을 달성할 수 있도록 돕는 '공간 경험(UX) 설계'의 핵심입니다.\n\n단 1mm의 오차가 건물의 안정성을 위협하듯 코드 한 줄의 안일함을 경계하며, 구조적 안정성과 심미적 편안함이 공존하는 디지털 공간을 '시공'합니다. 그리고 이 공간이 단순한 구조물을 넘어, 사용자의 의도를 먼저 읽고 반응하는 살아있는 유기체가 되도록 AI 기술을 더합니다.",
+        "profile": {
+          "education": [
+            {
+              "period": "2020.03 – 현재",
+              "school": "강남대학교 (Kangnam Univ.)",
+              "major": "소프트웨어응용학부",
+              "status": "재학 중 (4학년)",
+              "gpa": "4.29 / 4.5 (97.6%) - 최근 4학기 학부 수석"
+            },
+            {
+              "period": "2017.03 – 2020.02",
+              "school": "효원고등학교",
+              "major": "인문계",
+              "status": "졸업"
+            }
+          ],
+          "career": [],
+          "skills": [
+            {
+              "category": "Languages",
+              "items": [
+                "Python",
+                "TypeScript",
+                "JavaScript",
+                "Java",
+                "C++",
+                "SQL"
+              ]
+            },
+            {
+              "category": "Frontend",
+              "items": [
+                "React",
+                "Next.js",
+                "Three.js (R3F)",
+                "TailwindCSS",
+                "Zustand",
+                "TanStack Query"
+              ]
+            },
+            {
+              "category": "Backend",
+              "items": ["FastAPI", "NestJS", "Node.js", "Django", "Spring Boot"]
+            },
+            {
+              "category": "Data & ML",
+              "items": [
+                "PostgreSQL",
+                "TimescaleDB",
+                "Redis",
+                "TensorFlow",
+                "PyTorch",
+                "Pandas"
+              ]
+            },
+            {
+              "category": "DevOps & Tools",
+              "items": [
+                "Docker",
+                "Git/GitHub",
+                "AWS (EC2, S3)",
+                "Vercel",
+                "Figma"
+              ]
+            }
+          ]
+        },
+        "keyProjects": [
+          {
+            "id": "project-cortex",
+            "title": "Cortex Trading Platform",
+            "desc": "수백만 건의 시계열 데이터를 처리하는 퀀트 트레이딩 플랫폼",
+            "tech": ["FastAPI", "TimescaleDB", "Celery", "Redis"]
+          },
+          {
+            "id": "project-chatbot",
+            "title": "GangNaengBot",
+            "desc": "낙관적 UI와 i18n을 적용한 교내 AI 챗봇 서비스",
+            "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
+          },
+          {
+            "id": "project-portfolio",
+            "title": "Neural Portfolio",
+            "desc": "d3-force 물리 엔진 기반의 3D 인터랙티브 포트폴리오",
+            "tech": ["R3F", "Three.js", "d3-force", "React"]
+          }
+        ],
+        "researchInterests": [
+          {
+            "category": "Time Series Forecasting",
+            "items": [
+              "Transformer 기반 장기 시계열 예측 (TFT, Informer)",
+              "금융 데이터의 노이즈 제거 및 특성 추출 방법론"
+            ]
+          },
+          {
+            "category": "Human-Computer Interaction",
+            "items": [
+              "생성형 AI의 의도를 시각화하는 인터페이스 연구",
+              "3D 웹 환경에서의 직관적인 사용자 경험(UX) 설계"
+            ]
+          },
+          {
+            "category": "System Architecture",
+            "items": [
+              "MSA(Microservices Architecture) 기반의 확장 가능한 시스템",
+              "고성능 데이터 처리를 위한 분산 컴퓨팅 환경 구축"
+            ]
+          }
+        ],
+        "awards": [
+          {
+            "date": "2024.11",
+            "title": "ACK 2024 학술대회 최우수 논문상",
+            "issuer": "한국정보과학회"
+          }
+        ]
       },
       "color": "#00ffff"
     },

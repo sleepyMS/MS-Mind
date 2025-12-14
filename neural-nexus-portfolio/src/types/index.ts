@@ -50,6 +50,70 @@ export interface NodeDetails {
     rows?: string[][]; // 행 (선택적)
   }[]; // 성능 지표 (테이블 및 그래프)
   pdfLink?: string; // 논문 PDF 링크 (직접 열기/다운로드)
+
+  // -- Extended Persona --
+  personalInfo?: {
+    key: string;
+    value: string;
+  }[];
+  philosophy?: {
+    title: string;
+    content: string;
+  };
+  extendedBio?: string;
+  profile?: {
+    education?: {
+      period: string;
+      school: string;
+      major?: string;
+      status?: string;
+      gpa?: string;
+    }[];
+    career?: {
+      period: string;
+      company: string;
+      role: string;
+      description?: string;
+    }[];
+    skills?: {
+      category: string;
+      items: string[];
+    }[];
+  };
+  keyProjects?: {
+    id: string;
+    title: string;
+    desc: string;
+    tech: string[];
+  }[];
+  researchInterests?: {
+    category: string;
+    items: string[];
+  }[];
+
+  // -- Profile Extension --
+  education?: {
+    period: string;
+    school: string;
+    major?: string;
+    status?: string; // 졸업/재학/수료
+    gpa?: string;
+  }[];
+  career?: {
+    period: string;
+    company: string;
+    role: string;
+    description?: string;
+  }[];
+  awards?: {
+    date: string;
+    title: string;
+    issuer?: string;
+  }[];
+  skills?: {
+    category: string;
+    items: string[];
+  }[];
 }
 
 /**
