@@ -37,6 +37,14 @@ export function Modal() {
   const [isConnectionsOpen, setIsConnectionsOpen] = useState(false);
   const connectionsRef = useRef<HTMLDivElement>(null);
 
+  // 모바일 스와이프 상태
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [swipeOffset, setSwipeOffset] = useState(0); // 실시간 스와이프 이동량
+  const [isAnimating, setIsAnimating] = useState(false); // 스프링 애니메이션 중
+  const minSwipeDistance = 80; // 노드 전환 최소 거리
+  const maxSwipeDistance = 150; // 최대 이동 제한 (저항감)
+
   const data = nodesData as NeuralData;
   const node = data.nodes.find((n) => n.id === activeNode);
 
@@ -132,17 +140,52 @@ export function Modal() {
     setActiveTab(newTab);
   };
 
-  // 노드 순회 함수
+  // 노드 순회 함수 (사이드바 순서: main → project(카테고리별) → skill(카테고리별) → lesson)
   const navigateNode = (direction: -1 | 1) => {
-    const currentIndex = data.nodes.findIndex((n) => n.id === activeNode);
+    // 사이드바와 동일한 순서로 노드 정렬
+    const typeOrder = ["main", "project", "skill", "lesson"];
+    const projectCategoryOrder = ["frontend", "backend", "ai-ml", "creative"];
+    const skillCategoryOrder = [
+      "language",
+      "framework",
+      "library",
+      "tool",
+      "database",
+    ];
+
+    const sortedNodes = [...data.nodes].sort((a, b) => {
+      // 1. 타입별 정렬
+      const aTypeIndex = typeOrder.indexOf(a.type);
+      const bTypeIndex = typeOrder.indexOf(b.type);
+      if (aTypeIndex !== bTypeIndex) return aTypeIndex - bTypeIndex;
+
+      // 2. 프로젝트는 카테고리별 정렬
+      if (a.type === "project" && b.type === "project") {
+        const aCatIndex = projectCategoryOrder.indexOf(a.category || "");
+        const bCatIndex = projectCategoryOrder.indexOf(b.category || "");
+        if (aCatIndex !== bCatIndex) return aCatIndex - bCatIndex;
+      }
+
+      // 3. 스킬은 카테고리별 정렬
+      if (a.type === "skill" && b.type === "skill") {
+        const aCatIndex = skillCategoryOrder.indexOf(a.skillCategory || "");
+        const bCatIndex = skillCategoryOrder.indexOf(b.skillCategory || "");
+        if (aCatIndex !== bCatIndex) return aCatIndex - bCatIndex;
+      }
+
+      // 4. 같은 카테고리 내에서는 알파벳 순
+      return a.label.localeCompare(b.label);
+    });
+
+    const currentIndex = sortedNodes.findIndex((n) => n.id === activeNode);
     if (currentIndex === -1) return;
 
     let newIndex = currentIndex + direction;
     // 순환 처리
-    if (newIndex < 0) newIndex = data.nodes.length - 1;
-    if (newIndex >= data.nodes.length) newIndex = 0;
+    if (newIndex < 0) newIndex = sortedNodes.length - 1;
+    if (newIndex >= sortedNodes.length) newIndex = 0;
 
-    const newNode = data.nodes[newIndex];
+    const newNode = sortedNodes[newIndex];
     const newPosition = nodePositions.get(newNode.id);
 
     setActiveNode(newNode.id);
@@ -150,6 +193,75 @@ export function Modal() {
       setCameraTarget(newPosition);
     }
     setActiveTab("description"); // 탭 초기화
+  };
+
+  // 모바일 스와이프 핸들러 - 쫀득한 애니메이션
+  const onTouchStart = (e: React.TouchEvent) => {
+    setIsAnimating(false); // 애니메이션 해제
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setSwipeOffset(0);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const currentX = e.targetTouches[0].clientX;
+    setTouchEnd(currentX);
+
+    // 저항감 적용 (멀어질수록 느려짐)
+    const rawOffset = currentX - touchStart;
+    const resistance =
+      1 - Math.min(Math.abs(rawOffset) / (maxSwipeDistance * 2), 0.6);
+    const dampedOffset = rawOffset * resistance;
+
+    setSwipeOffset(dampedOffset);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setSwipeOffset(0);
+      return;
+    }
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    // 스프링 애니메이션 시작
+    setIsAnimating(true);
+
+    if (isLeftSwipe) {
+      // 왼쪽으로 날아가는 효과 후 다음 노드
+      setSwipeOffset(-400);
+      setTimeout(() => {
+        navigateNode(1);
+        // 다음 모달은 오른쪽에서 슬라이드인
+        setSwipeOffset(300);
+        requestAnimationFrame(() => {
+          setSwipeOffset(0);
+          setTimeout(() => setIsAnimating(false), 300);
+        });
+      }, 150);
+    } else if (isRightSwipe) {
+      // 오른쪽으로 날아가는 효과 후 이전 노드
+      setSwipeOffset(400);
+      setTimeout(() => {
+        navigateNode(-1);
+        // 다음 모달은 왼쪽에서 슬라이드인
+        setSwipeOffset(-300);
+        requestAnimationFrame(() => {
+          setSwipeOffset(0);
+          setTimeout(() => setIsAnimating(false), 300);
+        });
+      }, 150);
+    } else {
+      // 스냅백 (원위치로 돌아옴)
+      setSwipeOffset(0);
+      setTimeout(() => setIsAnimating(false), 300);
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
   };
 
   if (!isModalOpen || !node) return null;
@@ -237,14 +349,15 @@ export function Modal() {
         }}
       />
 
-      {/* 이전 노드 버튼 (왼쪽) */}
-      <MiniTooltip content="이전 노드 (←)">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateNode(-1);
-          }}
-          className={`
+      {/* 이전 노드 버튼 (왼쪽) - 데스크톱에서만 표시 */}
+      <div className="hidden md:block">
+        <MiniTooltip content="이전 노드 (←)">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateNode(-1);
+            }}
+            className={`
             absolute left-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:left-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
             p-3 md:p-4 rounded-full
             transition-all duration-300
@@ -255,56 +368,58 @@ export function Modal() {
                 : "opacity-0 -translate-x-4"
             }
           `}
-          style={{
-            background: isDark
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(8px)",
-            border: isDark
-              ? "1px solid rgba(255, 255, 255, 0.2)"
-              : "1px solid rgba(0, 0, 0, 0.1)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = `${nodeColor}40`;
-            e.currentTarget.style.borderColor = nodeColor;
-            e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = isDark
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)";
-            e.currentTarget.style.borderColor = isDark
-              ? "rgba(255, 255, 255, 0.2)"
-              : "rgba(0, 0, 0, 0.1)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-          aria-label="이전 노드"
-        >
-          <svg
-            className="w-5 h-5 md:w-6 md:h-6"
-            style={{ color: isDark ? "white" : "#1f2937" }}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            style={{
+              background: isDark
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
+              backdropFilter: "blur(8px)",
+              border: isDark
+                ? "1px solid rgba(255, 255, 255, 0.2)"
+                : "1px solid rgba(0, 0, 0, 0.1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `${nodeColor}40`;
+              e.currentTarget.style.borderColor = nodeColor;
+              e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = isDark
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.borderColor = isDark
+                ? "rgba(255, 255, 255, 0.2)"
+                : "rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+            aria-label="이전 노드"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-      </MiniTooltip>
+            <svg
+              className="w-5 h-5 md:w-6 md:h-6"
+              style={{ color: isDark ? "white" : "#1f2937" }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+        </MiniTooltip>
+      </div>
 
-      {/* 다음 노드 버튼 (오른쪽) */}
-      <MiniTooltip content="다음 노드 (→)">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateNode(1);
-          }}
-          className={`
+      {/* 다음 노드 버튼 (오른쪽) - 데스크톱에서만 표시 */}
+      <div className="hidden md:block">
+        <MiniTooltip content="다음 노드 (→)">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateNode(1);
+            }}
+            className={`
             absolute right-[calc(50%-min(45vw,42.5rem+2rem)-3rem)] md:right-[calc(50%-min(42.5vw,42.5rem+2.5rem)-3.5rem)] top-1/2 -translate-y-1/2 z-10
             p-3 md:p-4 rounded-full
             transition-all duration-300
@@ -315,47 +430,48 @@ export function Modal() {
                 : "opacity-0 translate-x-4"
             }
           `}
-          style={{
-            background: isDark
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(8px)",
-            border: isDark
-              ? "1px solid rgba(255, 255, 255, 0.2)"
-              : "1px solid rgba(0, 0, 0, 0.1)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = `${nodeColor}40`;
-            e.currentTarget.style.borderColor = nodeColor;
-            e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = isDark
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)";
-            e.currentTarget.style.borderColor = isDark
-              ? "rgba(255, 255, 255, 0.2)"
-              : "rgba(0, 0, 0, 0.1)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-          aria-label="다음 노드"
-        >
-          <svg
-            className="w-5 h-5 md:w-6 md:h-6"
-            style={{ color: isDark ? "white" : "#1f2937" }}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            style={{
+              background: isDark
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
+              backdropFilter: "blur(8px)",
+              border: isDark
+                ? "1px solid rgba(255, 255, 255, 0.2)"
+                : "1px solid rgba(0, 0, 0, 0.1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `${nodeColor}40`;
+              e.currentTarget.style.borderColor = nodeColor;
+              e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = isDark
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.borderColor = isDark
+                ? "rgba(255, 255, 255, 0.2)"
+                : "rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+            aria-label="다음 노드"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </MiniTooltip>
+            <svg
+              className="w-5 h-5 md:w-6 md:h-6"
+              style={{ color: isDark ? "white" : "#1f2937" }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </MiniTooltip>
+      </div>
 
       {/* 모달 본체 */}
       <div
@@ -375,6 +491,9 @@ export function Modal() {
           }
         `}
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
         style={{
           background: isDark
             ? `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)`
@@ -386,6 +505,13 @@ export function Modal() {
           boxShadow: isDark
             ? `0 0 60px ${nodeColor}20, 0 25px 50px -12px rgba(0, 0, 0, 0.5)`
             : `0 10px 40px -10px rgba(0,0,0,0.1), 0 0 20px ${nodeColor}10`,
+          // 스와이프 애니메이션
+          transform: `translateX(${swipeOffset}px) rotate(${
+            swipeOffset * 0.02
+          }deg)`,
+          transition: isAnimating
+            ? "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)" // 스프링 효과
+            : "transform 0s", // 즉시 반응 (드래그 중)
         }}
       >
         {/* 상단 글로우 라인 */}
@@ -399,8 +525,8 @@ export function Modal() {
 
         {/* 헤더 */}
         <div className="relative p-6 pb-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-4 flex-1 min-w-0">
               {/* 노드 아이콘 */}
               <div
                 className="relative w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
@@ -420,49 +546,49 @@ export function Modal() {
                 />
               </div>
 
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* 제목 (링크가 있으면 클릭 가능) */}
-                  {details?.link ? (
-                    <MiniTooltip content="GitHub에서 보기">
-                      <a
-                        href={details.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="group/title flex items-center gap-2 transition-all duration-300"
-                        style={{ color: isDark ? "white" : "#1f2937" }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = nodeColor;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = isDark
-                            ? "white"
-                            : "#1f2937";
-                        }}
-                      >
-                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-tight">
-                          {node.label}
-                        </h2>
-                        {/* GitHub 아이콘 */}
-                        <svg
-                          className="w-5 h-5 md:w-6 md:h-6 opacity-50 group-hover/title:opacity-100 transition-all duration-300"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                        </svg>
-                      </a>
-                    </MiniTooltip>
-                  ) : (
-                    <h2
-                      className="text-2xl md:text-3xl font-bold tracking-tight leading-tight transition-colors duration-300"
+              <div className="min-w-0 flex-1">
+                {/* 제목 */}
+                {details?.link ? (
+                  <MiniTooltip content="GitHub에서 보기">
+                    <a
+                      href={details.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="group/title flex items-center gap-2 transition-all duration-300 min-w-0"
                       style={{ color: isDark ? "white" : "#1f2937" }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = nodeColor;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = isDark
+                          ? "white"
+                          : "#1f2937";
+                      }}
                     >
-                      {node.label}
-                    </h2>
-                  )}
-
+                      <h2 className="text-base md:text-2xl font-bold tracking-tight leading-tight truncate overflow-hidden">
+                        {node.label}
+                      </h2>
+                      {/* GitHub 아이콘 - 데스크톱에서만 */}
+                      <svg
+                        className="hidden md:block w-5 h-5 opacity-50 group-hover/title:opacity-100 transition-all duration-300 shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                      </svg>
+                    </a>
+                  </MiniTooltip>
+                ) : (
+                  <h2
+                    className="text-base md:text-2xl font-bold tracking-tight leading-tight transition-colors duration-300 truncate overflow-hidden"
+                    style={{ color: isDark ? "white" : "#1f2937" }}
+                  >
+                    {node.label}
+                  </h2>
+                )}
+                {/* 배포/PDF 링크 아이콘 - 데스크톱에서만 */}
+                <div className="hidden md:flex items-center gap-1 mt-2">
                   {/* 배포 링크 아이콘 */}
                   {details?.deployLink && (
                     <MiniTooltip content="배포된 사이트 보기">
@@ -854,11 +980,14 @@ export function Modal() {
         {/* 탭 네비게이션 */}
         <div className="px-6 pb-4">
           <div
-            className="flex gap-1 p-1 rounded-xl"
+            className="flex gap-1 p-1 rounded-xl overflow-x-auto scrollbar-none"
             style={{
               background: isDark
                 ? "rgba(255, 255, 255, 0.05)"
                 : "rgba(0, 0, 0, 0.03)",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE/Edge
             }}
           >
             {tabs
@@ -870,7 +999,7 @@ export function Modal() {
                     key={tab.id}
                     onClick={() => handleTabChange(tab.id)}
                     className={`
-                      relative flex-1 flex items-center justify-center gap-2
+                      relative shrink-0 flex items-center justify-center gap-2
                       px-4 py-2.5 rounded-lg text-sm font-medium
                       transition-all duration-300
                       ${!isActive ? "hover:bg-white/10 active:scale-95" : ""}
@@ -2108,7 +2237,7 @@ export function Modal() {
           </div>
         </div>
 
-        {/* 하단 키보드 힌트 */}
+        {/* 하단 힌트 */}
         <div
           className="px-6 pb-4 flex justify-end items-center gap-4 pt-3"
           style={{
@@ -2117,8 +2246,19 @@ export function Modal() {
               : "1px solid rgba(0,0,0,0.05)",
           }}
         >
+          {/* 모바일: 스와이프 힌트 */}
           <span
-            className="text-xs flex items-center gap-1.5 transition-colors duration-300"
+            className="text-xs flex items-center gap-1.5 transition-colors duration-300 md:hidden"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
+            }}
+          >
+            👈 스와이프로 순회 👉
+          </span>
+
+          {/* 데스크톱: 키보드 힌트 */}
+          <span
+            className="text-xs hidden md:flex items-center gap-1.5 transition-colors duration-300"
             style={{
               color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
             }}
@@ -2146,7 +2286,7 @@ export function Modal() {
             순회
           </span>
           <span
-            className="text-xs flex items-center gap-1.5 transition-colors duration-300"
+            className="text-xs hidden md:flex items-center gap-1.5 transition-colors duration-300"
             style={{
               color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
             }}
