@@ -211,6 +211,32 @@ export function NodeFilter() {
           boxShadow: "var(--glass-shadow)",
         }}
       >
+        {/* 모바일 접기 버튼 */}
+        <button
+          onClick={() => setIsExpanded(false)}
+          className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg shrink-0 cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
+          style={{
+            background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
+          }}
+        >
+          <svg
+            className="w-4 h-4"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.5)",
+            }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
         {/* 필터 버튼들 */}
         {filterOptions.map((option) => {
           const isActive = visibleNodeTypes.includes(option.type);
