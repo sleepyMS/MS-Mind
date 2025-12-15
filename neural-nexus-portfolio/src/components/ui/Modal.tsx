@@ -1282,11 +1282,12 @@ export function Modal() {
                       }
                     }}
                     onMouseLeave={(e) => {
+                      // 항상 transform 초기화 (active 상태 변경 시에도)
+                      e.currentTarget.style.transform = "translateY(0)";
                       if (!isActive) {
                         e.currentTarget.style.color = isDark
                           ? "rgba(255,255,255,0.5)"
                           : "rgba(0,0,0,0.5)";
-                        e.currentTarget.style.transform = "translateY(0)";
                       }
                     }}
                   >
