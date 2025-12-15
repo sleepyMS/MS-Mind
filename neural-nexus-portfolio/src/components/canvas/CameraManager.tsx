@@ -112,9 +112,9 @@ export function CameraManager() {
       // 애니메이션 중에는 damping 비활성화로 흔들림 방지
       enableDamping={!isAnimating}
       dampingFactor={0.05}
-      zoomSpeed={1.5}
+      zoomSpeed={3}
       minDistance={3}
-      maxDistance={100}
+      maxDistance={300}
       // 애니메이션 중 사용자 입력 비활성화
       enabled={!isAnimating && !isDragging}
     />
