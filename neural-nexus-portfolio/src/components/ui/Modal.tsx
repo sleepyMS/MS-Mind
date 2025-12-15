@@ -47,6 +47,8 @@ export function Modal() {
   // 모바일 스와이프 상태
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchEndY, setTouchEndY] = useState<number | null>(null);
   const [swipeOffset, setSwipeOffset] = useState(0); // 실시간 스와이프 이동량
   const [isAnimating, setIsAnimating] = useState(false); // 스프링 애니메이션 중
   const minSwipeDistance = 80; // 노드 전환 최소 거리
@@ -231,14 +233,26 @@ export function Modal() {
     }
     setIsAnimating(false); // 애니메이션 해제
     setTouchEnd(null);
+    setTouchEndY(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
     setSwipeOffset(0);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (touchStart === null) return;
+    if (touchStart === null || touchStartY === null) return;
     const currentX = e.targetTouches[0].clientX;
+    const currentY = e.targetTouches[0].clientY;
     setTouchEnd(currentX);
+    setTouchEndY(currentY);
+
+    // 수직 이동이 수평보다 크면 스크롤로 판단 (스와이프 무시)
+    const deltaX = Math.abs(currentX - touchStart);
+    const deltaY = Math.abs(currentY - touchStartY);
+    if (deltaY > deltaX) {
+      setSwipeOffset(0);
+      return;
+    }
 
     // 저항감 적용 (멀어질수록 느려짐)
     const rawOffset = currentX - touchStart;
@@ -250,8 +264,20 @@ export function Modal() {
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) {
+    if (!touchStart || !touchEnd || !touchStartY) {
       setSwipeOffset(0);
+      return;
+    }
+
+    // 수직 이동이 수평보다 크면 스크롤로 판단 (스와이프 무시)
+    const deltaX = Math.abs(touchStart - touchEnd);
+    const deltaY = touchEndY ? Math.abs(touchStartY - touchEndY) : 0;
+    if (deltaY > deltaX) {
+      setSwipeOffset(0);
+      setTouchStart(null);
+      setTouchEnd(null);
+      setTouchStartY(null);
+      setTouchEndY(null);
       return;
     }
 
@@ -294,6 +320,8 @@ export function Modal() {
 
     setTouchStart(null);
     setTouchEnd(null);
+    setTouchStartY(null);
+    setTouchEndY(null);
   };
 
   if (!isModalOpen || !node) return null;
