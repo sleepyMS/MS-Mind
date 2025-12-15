@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
@@ -106,6 +106,8 @@ export function SidePanel() {
     theme,
   } = useAppStore();
   const isDark = theme === "dark";
+  const panelRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // 모바일에서는 사이드바 초기 접힘
   useEffect(() => {
@@ -114,6 +116,25 @@ export function SidePanel() {
       setSidePanelOpen(false);
     }
   }, [setSidePanelOpen]);
+
+  // 모바일에서 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const isMobile = window.innerWidth < 768;
+      if (
+        isMobile &&
+        isSidePanelOpen &&
+        panelRef.current &&
+        !panelRef.current.contains(e.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target as Node)
+      ) {
+        setSidePanelOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isSidePanelOpen, setSidePanelOpen]);
 
   const [expandedTypes, setExpandedTypes] = useState<NodeType[]>([
     "main",
@@ -232,6 +253,7 @@ export function SidePanel() {
     <>
       {/* 토글 버튼 */}
       <button
+        ref={buttonRef}
         onClick={() => setSidePanelOpen(!isSidePanelOpen)}
         className={`
           fixed left-4 top-1/2 -translate-y-1/2 z-40
@@ -273,6 +295,7 @@ export function SidePanel() {
 
       {/* 패널 본체 */}
       <div
+        ref={panelRef}
         className={`
           fixed left-0 top-0 bottom-0 z-30
           w-64 md:w-72 flex flex-col

@@ -9,6 +9,7 @@ import { SidePanel } from "./components/ui/SidePanel";
 import { MiniMap } from "./components/ui/MiniMap";
 import { ThemeSwitcher } from "./components/ui/ThemeSwitcher";
 import { ControlsGuide } from "./components/ui/ControlsGuide";
+import { FloatingContactButton } from "./components/ui/FloatingContactButton";
 import { useAppStore } from "./stores/useAppStore";
 import "./index.css";
 
@@ -46,6 +47,7 @@ function App() {
       <NodeFilter />
       <SidePanel />
       <MiniMap />
+      <FloatingContactButton />
 
       {/* 컨트롤 가이드 */}
       {!isLoading && <ControlsGuide />}

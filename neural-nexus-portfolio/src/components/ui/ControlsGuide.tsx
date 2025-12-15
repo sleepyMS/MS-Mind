@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAppStore } from "../../stores/useAppStore";
 
 /**
@@ -10,6 +10,8 @@ export function ControlsGuide() {
   const isDark = theme === "dark";
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // 모바일 감지 및 데스크톱에서 초기 활성화
   useEffect(() => {
@@ -25,6 +27,24 @@ export function ControlsGuide() {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  // 모바일에서 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        isMobile &&
+        isOpen &&
+        panelRef.current &&
+        !panelRef.current.contains(e.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobile, isOpen]);
 
   const desktopControls = [
     { icon: "🖱️", action: "좌클릭 드래그", description: "회전" },
@@ -47,6 +67,7 @@ export function ControlsGuide() {
     <>
       {/* 토글 버튼 */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={`
           fixed bottom-6 right-6 md:bottom-auto md:top-1/2 md:right-4 md:-translate-y-1/2
@@ -86,6 +107,7 @@ export function ControlsGuide() {
 
       {/* 가이드 패널 */}
       <div
+        ref={panelRef}
         className={`
           fixed z-30 transition-all duration-300 ease-out
           bottom-20 right-6 md:bottom-auto md:top-1/2 md:right-16 md:-translate-y-1/2
