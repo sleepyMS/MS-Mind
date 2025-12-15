@@ -9,11 +9,7 @@ interface ContactFormProps {
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 
-export function ContactForm({
-  isDark,
-  nodeColor,
-  isModal = false,
-}: ContactFormProps) {
+export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [formData, setFormData] = useState({
@@ -134,6 +130,7 @@ export function ContactForm({
           메시지 *
         </label>
         <textarea
+          key={`message-${isDark}`}
           id="contact-message"
           name="message"
           value={formData.message}
