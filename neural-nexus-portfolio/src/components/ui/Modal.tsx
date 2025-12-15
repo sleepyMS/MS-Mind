@@ -42,6 +42,7 @@ export function Modal() {
   const [tabDirection, setTabDirection] = useState<"left" | "right">("right");
   const [isConnectionsOpen, setIsConnectionsOpen] = useState(false);
   const connectionsRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
 
   // 모바일 스와이프 상태
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -224,6 +225,10 @@ export function Modal() {
 
   // 모바일 스와이프 핸들러 - 쫀득한 애니메이션
   const onTouchStart = (e: React.TouchEvent) => {
+    // 탭 영역에서 시작된 터치는 노드 순회 스와이프를 무시 (탭 스크롤 우선)
+    if (tabsRef.current && tabsRef.current.contains(e.target as Node)) {
+      return;
+    }
     setIsAnimating(false); // 애니메이션 해제
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -1240,6 +1245,7 @@ export function Modal() {
         {/* 탭 네비게이션 */}
         <div className="px-6 pb-4">
           <div
+            ref={tabsRef}
             className="flex gap-1 p-1 rounded-xl overflow-x-auto scrollbar-none"
             style={{
               background: isDark
