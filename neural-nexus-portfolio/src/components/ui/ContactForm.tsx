@@ -17,8 +17,8 @@ export function ContactForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
+    title: "",
     message: "",
   });
 
@@ -30,7 +30,7 @@ export function ContactForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.email || !formData.title || !formData.message) return;
 
     setStatus("sending");
 
@@ -39,15 +39,14 @@ export function ContactForm({
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
-          from_name: formData.name,
-          from_email: formData.email,
+          email: formData.email,
+          title: formData.title,
           message: formData.message,
-          to_name: "Min Seok",
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
       setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ email: "", title: "", message: "" });
       setTimeout(() => setStatus("idle"), 3000);
     } catch (error) {
       console.error("EmailJS Error:", error);
@@ -71,32 +70,6 @@ export function ContactForm({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* 이름 */}
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="contact-name"
-          className="text-sm font-medium"
-          style={{
-            color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
-          }}
-        >
-          이름 *
-        </label>
-        <input
-          type="text"
-          id="contact-name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="홍길동"
-          required
-          className="px-4 py-3 rounded-xl outline-none transition-all duration-200"
-          style={inputStyle}
-          onFocus={(e) => Object.assign(e.target.style, focusStyle)}
-          onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-        />
-      </div>
-
       {/* 이메일 */}
       <div className="flex flex-col gap-1.5">
         <label
@@ -115,6 +88,32 @@ export function ContactForm({
           value={formData.email}
           onChange={handleChange}
           placeholder="example@email.com"
+          required
+          className="px-4 py-3 rounded-xl outline-none transition-all duration-200"
+          style={inputStyle}
+          onFocus={(e) => Object.assign(e.target.style, focusStyle)}
+          onBlur={(e) => Object.assign(e.target.style, inputStyle)}
+        />
+      </div>
+
+      {/* 제목 */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="contact-title"
+          className="text-sm font-medium"
+          style={{
+            color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+          }}
+        >
+          제목 *
+        </label>
+        <input
+          type="text"
+          id="contact-title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="문의 제목을 입력하세요"
           required
           className="px-4 py-3 rounded-xl outline-none transition-all duration-200"
           style={inputStyle}
