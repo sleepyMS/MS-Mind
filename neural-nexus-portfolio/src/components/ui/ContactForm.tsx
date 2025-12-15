@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import { MiniTooltip } from "./MiniTooltip";
 
 interface ContactFormProps {
   isDark: boolean;
@@ -17,16 +18,65 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
     title: "",
     message: "",
   });
+  const [errors, setErrors] = useState<{
+    email?: string;
+    title?: string;
+    message?: string;
+  }>({});
+
+  // 이메일 유효성 검사
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // 실시간 유효성 검사
+    if (name === "email") {
+      if (value && !validateEmail(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "올바른 이메일 형식이 아닙니다",
+        }));
+      } else {
+        setErrors((prev) => ({ ...prev, email: undefined }));
+      }
+    } else if (name === "title" && errors.title) {
+      setErrors((prev) => ({ ...prev, title: undefined }));
+    } else if (name === "message" && errors.message) {
+      setErrors((prev) => ({ ...prev, message: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.title || !formData.message) return;
+
+    // 모든 필드 유효성 검사
+    const newErrors: { email?: string; title?: string; message?: string } = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "이메일을 입력해주세요";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "올바른 이메일 형식이 아닙니다";
+    }
+
+    if (!formData.title.trim()) {
+      newErrors.title = "제목을 입력해주세요";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "메시지를 입력해주세요";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
     setStatus("sending");
 
@@ -43,6 +93,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
       );
       setStatus("success");
       setFormData({ email: "", title: "", message: "" });
+      setErrors({});
       setTimeout(() => setStatus("idle"), 3000);
     } catch (error) {
       console.error("EmailJS Error:", error);
@@ -77,19 +128,71 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
         >
           이메일 *
         </label>
-        <input
-          type="email"
-          id="contact-email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="example@email.com"
-          required
-          className="px-4 py-3 rounded-xl outline-none transition-all duration-200"
-          style={inputStyle}
-          onFocus={(e) => Object.assign(e.target.style, focusStyle)}
-          onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-        />
+        <MiniTooltip content="답변 받으실 이메일 주소를 입력하세요">
+          <input
+            type="text"
+            id="contact-email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="example@email.com"
+            title=""
+            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
+            style={{
+              ...inputStyle,
+              ...(errors.email
+                ? {
+                    borderColor: "#ef4444",
+                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                  }
+                : {}),
+            }}
+            onFocus={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.email
+                  ? {
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : focusStyle
+              )
+            }
+            onBlur={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.email
+                  ? {
+                      ...inputStyle,
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : inputStyle
+              )
+            }
+          />
+        </MiniTooltip>
+        {errors.email && (
+          <p
+            className="text-xs mt-1 flex items-center gap-1"
+            style={{ color: "#ef4444" }}
+          >
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {errors.email}
+          </p>
+        )}
       </div>
 
       {/* 제목 */}
@@ -103,19 +206,71 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
         >
           제목 *
         </label>
-        <input
-          type="text"
-          id="contact-title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          placeholder="문의 제목을 입력하세요"
-          required
-          className="px-4 py-3 rounded-xl outline-none transition-all duration-200"
-          style={inputStyle}
-          onFocus={(e) => Object.assign(e.target.style, focusStyle)}
-          onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-        />
+        <MiniTooltip content="문의 내용을 요약한 제목을 입력하세요">
+          <input
+            type="text"
+            id="contact-title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="문의 제목을 입력하세요"
+            title=""
+            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
+            style={{
+              ...inputStyle,
+              ...(errors.title
+                ? {
+                    borderColor: "#ef4444",
+                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                  }
+                : {}),
+            }}
+            onFocus={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.title
+                  ? {
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : focusStyle
+              )
+            }
+            onBlur={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.title
+                  ? {
+                      ...inputStyle,
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : inputStyle
+              )
+            }
+          />
+        </MiniTooltip>
+        {errors.title && (
+          <p
+            className="text-xs mt-1 flex items-center gap-1"
+            style={{ color: "#ef4444" }}
+          >
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {errors.title}
+          </p>
+        )}
       </div>
 
       {/* 메시지 */}
@@ -129,20 +284,72 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
         >
           메시지 *
         </label>
-        <textarea
-          key={`message-${isDark}`}
-          id="contact-message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="안녕하세요! 연락드립니다..."
-          required
-          rows={4}
-          className="px-4 py-3 rounded-xl outline-none transition-all duration-200 resize-none"
-          style={inputStyle}
-          onFocus={(e) => Object.assign(e.target.style, focusStyle)}
-          onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-        />
+        <MiniTooltip content="궁금한 점이나 제안을 자유롭게 작성하세요">
+          <textarea
+            key={`message-${isDark}`}
+            id="contact-message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="안녕하세요! 연락드립니다..."
+            title=""
+            rows={4}
+            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200 resize-none"
+            style={{
+              ...inputStyle,
+              ...(errors.message
+                ? {
+                    borderColor: "#ef4444",
+                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                  }
+                : {}),
+            }}
+            onFocus={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.message
+                  ? {
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : focusStyle
+              )
+            }
+            onBlur={(e) =>
+              Object.assign(
+                e.target.style,
+                errors.message
+                  ? {
+                      ...inputStyle,
+                      borderColor: "#ef4444",
+                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
+                    }
+                  : inputStyle
+              )
+            }
+          />
+        </MiniTooltip>
+        {errors.message && (
+          <p
+            className="text-xs mt-1 flex items-center gap-1"
+            style={{ color: "#ef4444" }}
+          >
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {errors.message}
+          </p>
+        )}
       </div>
 
       {/* 전송 버튼 */}
