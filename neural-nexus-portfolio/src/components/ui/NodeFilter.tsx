@@ -94,11 +94,22 @@ export function NodeFilter() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedCategoryCount = visibleCategories.length;
   const allCategoriesSelected = selectedCategoryCount === 4;
+
+  // 모바일 감지 (768px 미만)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -295,7 +306,9 @@ export function NodeFilter() {
               {/* 카테고리 드롭다운 - 사이드바 스타일과 동일 */}
               {isProject && isCategoryDropdownOpen && (
                 <div
-                  className="absolute top-full left-0 mt-2 p-2 rounded-xl z-50 min-w-[180px]"
+                  className={`absolute left-0 p-2 rounded-xl z-50 min-w-[180px] ${
+                    isMobile ? "bottom-full mb-2" : "top-full mt-2"
+                  }`}
                   style={{
                     background: isDark
                       ? "rgba(15, 15, 25, 0.95)"
