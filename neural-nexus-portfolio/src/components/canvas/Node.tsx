@@ -119,10 +119,29 @@ export function Node({ node, position }: NodeProps) {
 
     // 발광 강도 애니메이션
     const material = meshRef.current.material as THREE.MeshStandardMaterial;
-    // 기본 강도 설정
-    const baseIntensity = isDark ? 0.5 : 0.2; // 라이트 모드 발광 약간 증가
-    const hoverIntensity = isDark ? 1.2 : 0.4;
-    const highlightIntensity = isDark ? 0.8 : 0.3;
+    // 기본 강도 설정 (메인노드는 크기가 커서 강도를 낮춤)
+    const isMainNode = node.type === "main";
+    const baseIntensity = isDark
+      ? isMainNode
+        ? 0.5
+        : 0.5
+      : isMainNode
+      ? 0.1
+      : 0.2;
+    const hoverIntensity = isDark
+      ? isMainNode
+        ? 0.4
+        : 1.2
+      : isMainNode
+      ? 0.2
+      : 0.4;
+    const highlightIntensity = isDark
+      ? isMainNode
+        ? 0.4
+        : 0.8
+      : isMainNode
+      ? 0.15
+      : 0.3;
 
     const targetIntensity =
       isHovered || isActive
