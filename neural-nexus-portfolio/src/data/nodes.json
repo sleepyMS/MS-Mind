@@ -385,7 +385,9 @@
           "🎥 Custom Cubic Easing Camera: 라이브러리 없이 easeInOutCubic 수학 공식 직접 구현. sceneRotation 역연산으로 항상 노드 정면 응시",
           "🔄 180° Theme Rotation: 테마 전환 시 전체 씬 180° 회전 애니메이션 + Bloom/Vignette 동적 보간으로 '우주→하늘' 서사 표현",
           "🖱️ Dual Ref Hover Handling: WebGL Mesh와 DOM Label 이벤트 시차 극복. 10ms 디바운스로 포커스 유실 방지",
-          "📊 Zustand Transient Update: 60fps 루프에서 React 리렌더링 최소화. useRef로 애니메이션 변수 직접 변이하여 프레임 드랍 방지"
+          "📊 Zustand Transient Update: 60fps 루프에서 React 리렌더링 최소화. useRef로 애니메이션 변수 직접 변이하여 프레임 드랍 방지",
+          "🔗 BFS 간접 연결 경로 탐색: 필터링된 노드 사이의 숨겨진 연결을 BFS로 탐색하여 점선으로 시각화. 관계 맥락 유지",
+          "📱 스와이프 각도 감지: 수직/수평 이동량 비교로 세로 스크롤과 노드 순회 스와이프를 정확히 구분. 모바일 UX 개선"
         ],
         "techStackDocs": [
           {
@@ -411,15 +413,15 @@
         ],
         "optimizations": [
           {
-            "title": "300-tick Simulation Warm-up (Pre-computation)",
+            "title": "BFS 기반 간접 연결 경로 탐색",
             "items": [
-              "Why: 물리 엔진이 안정화될 때까지 노드들이 요동치는(Jittering) 시각적 노이즈는 사용자 첫인상을 망칩니다.",
-              "How: `for (let i = 0; i < 300; i++) simulation.tick()` 동기 루프로 렌더링 전 300회 선행 연산. useMemo로 메모이제이션하여 재계산 방지.",
-              "Impact: 사용자는 즉시 '안정된 신경망'을 마주하여 첫인상 완성도를 높였습니다."
+              "Why: 카테고리 필터로 중간 노드가 숨겨지면 관련 노드들의 연결 관계가 끊어져 보이는 UX 문제 발생.",
+              "How: `findConnectedVisibleNodes()` 함수에서 BFS 알고리즘으로 숨겨진 노드를 통해 연결된 visible 노드 쌍 탐색. Queue 기반 레벨 순회로 최단 경로 보장.",
+              "Impact: 필터 적용 시에도 노드 간 관계가 점선으로 유지되어 정보 손실 없이 맥락 파악 가능."
             ]
           },
           {
-            "title": "Ref-based Animation Loop (Transient Updates)",
+            "title": "Ref 기반 60fps 애니메이션 루프",
             "items": [
               "Why: useFrame 내에서 setState를 호출하면 60fps × React Reconciler = 프레임 드랍.",
               "How: `animationRef.current.progress += delta`로 ref를 직접 변이. camera.position도 lerpVectors()로 직접 조작. 완료 시에만 setIsAnimating(false) 호출.",
@@ -427,15 +429,15 @@
             ]
           },
           {
-            "title": "Dual Ref Event Handling (10ms Debounce)",
+            "title": "물리 엔진 300회 사전 연산",
             "items": [
-              "Why: WebGL Mesh와 DOM Label은 서로 다른 이벤트 루프를 타서 빠른 마우스 이동 시 hover 상태가 유실됩니다.",
-              "How: meshHoverRef, labelHoverRef를 별도 관리하고, mouseLeave 시 10ms setTimeout 후 둘 다 false면 hover 해제.",
-              "Impact: 기술적 한계로 인한 UI 깜빡임을 극복하고 매끄러운 포커싱 경험 제공."
+              "Why: 물리 엔진이 안정화될 때까지 노드들이 요동치는(Jittering) 시각적 노이즈는 사용자 첫인상을 망칩니다.",
+              "How: `for (let i = 0; i < 300; i++) simulation.tick()` 동기 루프로 렌더링 전 300회 선행 연산. useMemo로 메모이제이션하여 재계산 방지.",
+              "Impact: 사용자는 즉시 '안정된 신경망'을 마주하여 첫인상 완성도를 높였습니다."
             ]
           },
           {
-            "title": "Scene Rotation Offset Calculation",
+            "title": "씬 회전 오프셋 역연산",
             "items": [
               "Why: 씬이 회전한 상태에서 단순 좌표 이동은 카메라가 노드의 측면/후면을 비춥니다.",
               "How: `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`으로 카메라 오프셋을 씬 회전에 맞춰 역회전.",
@@ -443,19 +445,35 @@
             ]
           },
           {
-            "title": "Distance-Aware Modal Activation (Adaptive Latency)",
+            "title": "WebGL-DOM 이중 Ref 이벤트 처리",
             "items": [
-              "Why: 1초 고정 딜레이는 가까운 노드에서는 느리고, 먼 노드에서는 즉시 열려 몰입감을 해칩니다.",
-              "How: `delay = Math.min(distance * 15, 800)` 공식으로 거리에 비례한 지연 시간 적용. 아주 가까우면 75ms 만에 즉시 반응.",
-              "Impact: 근거리 탐색 시 앱이 훨씬 '빠릿하다(Snappy)'고 느끼게 만들었습니다."
+              "Why: WebGL Mesh와 DOM Label은 서로 다른 이벤트 루프를 타서 빠른 마우스 이동 시 hover 상태가 유실됩니다.",
+              "How: meshHoverRef, labelHoverRef를 별도 관리하고, mouseLeave 시 10ms setTimeout 후 둘 다 false면 hover 해제.",
+              "Impact: 기술적 한계로 인한 UI 깜빡임을 극복하고 매끄러운 포커싱 경험 제공."
             ]
           },
           {
-            "title": "Contextual Label Visibility (Neighbor Highlighting)",
+            "title": "모바일 스와이프 각도 감지",
+            "items": [
+              "Why: 세로 스크롤 시도 시 수평 스와이프가 민감하게 발동되어 의도치 않은 노드 전환 발생.",
+              "How: touchStartY, touchEndY 상태 추가. `deltaY > deltaX`면 스크롤로 판단하여 노드 순회 무시. 터치 종료 시에도 최종 방향 재확인.",
+              "Impact: 세로 스크롤과 수평 스와이프가 명확히 구분되어 모바일 터치 UX 대폭 개선."
+            ]
+          },
+          {
+            "title": "거리 기반 적응형 모달 딜레이",
+            "items": [
+              "Why: 1초 고정 딜레이는 가까운 노드에서는 느리고, 먼 노드에서는 즉시 열려 몰입감을 해칩니다.",
+              "How: `delay = Math.min(distance * 15, 800)` 공식으로 거리에 비례한 지연 시간 적용. 아주 가까우면 75ms 만에 즉시 반응.",
+              "Impact: 근거리 탐색 시 앱이 훨씬 '빠릿하다'고 느끼게 만들었습니다."
+            ]
+          },
+          {
+            "title": "연결 노드 라벨 하이라이팅",
             "items": [
               "Why: 복잡한 신경망에서 내가 선택한 노드가 어떤 스킬과 연결되었는지 파악하기 어렵습니다.",
               "How: `isHighlighted` 상태를 전파하여, 프로젝트 노드 호버 시 연결된 모든 스킬 노드의 라벨을 재귀적으로 노출.",
-              "Impact: 사용자가 노드 간의 관계(Connection)를 직관적으로 파악할 수 있게 되었습니다."
+              "Impact: 사용자가 노드 간의 관계를 직관적으로 파악할 수 있게 되었습니다."
             ]
           }
         ],
@@ -481,22 +499,35 @@
             "solution": "렌더링 전에 동기적으로 300회 tick()을 실행하여 시뮬레이션을 '사전에 완료'시킵니다. 사용자는 이미 안정화된 레이아웃만 보게 되어 첫인상의 완성도를 높였습니다."
           },
           {
-            "title": "Inspection Compulsion vs Visual Context",
+            "title": "노드 상세보기 vs 전체 맥락 유지",
             "problem": "초기에는 선택한 노드를 자세히 보여주기 위해 카메라를 아주 가까이(`z=8`) 이동시켰으나, 3D Mesh가 2D Modal 오버레이와 겹쳐 가독성을 해치고 전체 맥락을 잃어버리는 문제가 있었습니다.",
             "solution": "'Zoom In' 대신 'Scale Up' 전략을 채택했습니다. 카메라는 편안한 거리(`z=25`)를 유지하되, 선택된 노드의 크기만 `2.0배`로 키워 시각적 강조와 맥락 유지를 동시에 달성했습니다."
+          },
+          {
+            "title": "모바일 탭 스와이프와 노드 순회 스와이프 충돌",
+            "problem": "모달 내 탭이 많으면 탭 영역을 수평 스크롤해야 하는데, 이때 노드 순회용 스와이프와 동시에 발동되어 두 기능이 충돌했습니다.",
+            "solution": "`tabsRef`로 탭 영역을 참조하고, `onTouchStart`에서 터치 시작 위치가 탭 영역 내인지 판별. 탭 영역 터치 시 즉시 return하여 노드 순회 로직 비활성화. 터치 컨텍스트에 따른 제스처 분리로 UX 충돌 해결."
           }
         ],
         "codeExamples": [
           {
-            "title": "300회 동기 Warm-up으로 안정적 초기화",
-            "category": "performance",
-            "description": "Why Warm-up? 물리 엔진이 안정화될 때까지 기다리면 노드들이 요동치는 모습이 노출됩니다. 렌더링 전에 300회 tick()을 동기 실행하여 '이미 완성된 형태'로 시작합니다.",
-            "filePath": "src/hooks/useForceGraph.ts",
-            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/hooks/useForceGraph.ts",
-            "snippet": "const simulation = forceSimulation(simNodes, 3)\n  .force('link', forceLink(links).strength(0.5))\n  .force('charge', forceManyBody().strength(-80))\n  .force('center', forceCenter(0, 0, 0))\n  .force('collide', forceCollide().radius(2).strength(0.7));\n\n// 렌더링 전 300회 동기 실행 (Stable Initialization)\nfor (let i = 0; i < 300; i++) {\n  simulation.tick();\n}\nsimulation.stop(); // 연산 종료 후 위치 고정"
+            "title": "BFS 간접 연결 경로 탐색 알고리즘",
+            "category": "algorithm",
+            "description": "Why BFS? 필터로 숨겨진 노드 사이의 관계를 유지해야 합니다. DFS는 경로를 찾지만 '최단'을 보장하지 않고, BFS는 레벨 순회로 가장 가까운 visible 노드만 연결합니다.",
+            "filePath": "src/components/canvas/Scene.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Scene.tsx",
+            "snippet": "const findConnectedVisibleNodes = (startId: string, visited: Set<string>): string[] => {\n  const result: string[] = [];\n  const queue = [startId];  // BFS 큐\n  visited.add(startId);\n\n  while (queue.length > 0) {\n    const currentId = queue.shift()!;\n    const currentNode = nodes.find(n => n.id === currentId);\n    \n    for (const neighborId of currentNode.connections) {\n      if (visited.has(neighborId)) continue;\n      visited.add(neighborId);\n      \n      if (visibleNodeIds.has(neighborId)) {\n        result.push(neighborId);  // visible 노드 발견\n      } else {\n        queue.push(neighborId);   // 숨겨진 노드 통해 계속 탐색\n      }\n    }\n  }\n  return result;\n};"
           },
           {
-            "title": "Custom easeInOutCubic 수학 공식 직접 구현",
+            "title": "Ref 기반 60fps 애니메이션 최적화",
+            "category": "performance",
+            "description": "Why Ref? useFrame 내에서 setState를 호출하면 60fps × Reconciler = 프레임 드랍. animationRef.current를 직접 변이하고, 완료 시에만 setIsAnimating(false)를 호출합니다.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// 애니메이션 상태를 ref로 관리 (렌더링 최적화)\nconst animationRef = useRef({\n  isActive: false,\n  progress: 0,\n  startPosition: new THREE.Vector3(),\n  targetPosition: new THREE.Vector3(),\n  duration: 1.5,\n});\n\nuseFrame((_, delta) => {\n  if (!animationRef.current.isActive) return;\n  animationRef.current.progress += delta / anim.duration; // ref 직접 변이\n  // ... camera.position 조작 ...\n});"
+          },
+          {
+            "title": "easeInOutCubic 수학 공식 직접 구현",
             "category": "animation",
             "description": "Why No GSAP? 번들 크기 절감 + 수학 공식 이해. t < 0.5 구간에서 4t³으로 가속, 이후 1-((-2t+2)³)/2로 감속하는 S-커브를 직접 구현했습니다.",
             "filePath": "src/components/canvas/CameraManager.tsx",
@@ -504,12 +535,28 @@
             "snippet": "useFrame((_, delta) => {\n  anim.progress += delta / anim.duration;\n  \n  // easeInOutCubic 공식 직접 구현\n  const t = anim.progress;\n  const ease = t < 0.5 \n    ? 4 * t * t * t \n    : 1 - Math.pow(-2 * t + 2, 3) / 2;\n\n  // Lerp에 Easing 적용\n  camera.position.lerpVectors(startPos, targetPos, ease);\n  controls.target.lerpVectors(startLookAt, targetLookAt, ease);\n});"
           },
           {
-            "title": "Scene Rotation 역연산으로 카메라 정면 응시",
+            "title": "씬 회전 역연산으로 카메라 정면 응시",
             "category": "3d-math",
             "description": "Why Offset Rotation? 씬이 회전한 상태에서 고정 오프셋을 더하면 카메라가 노드 측면을 비춥니다. 오프셋 벡터를 씬 회전과 같은 각도로 회전시켜 항상 정면을 바라봅니다.",
             "filePath": "src/components/canvas/CameraManager.tsx",
             "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
             "snippet": "// 타겟 좌표에 씬 회전 적용\nconst targetLookAt = new THREE.Vector3(...cameraTarget)\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\n// 오프셋도 같은 각도로 회전\nconst baseOffset = new THREE.Vector3(0, 2, 8);\nconst rotatedOffset = baseOffset.clone()\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\nconst targetCameraPosition = targetLookAt.clone().add(rotatedOffset);"
+          },
+          {
+            "title": "물리 엔진 300회 사전 연산",
+            "category": "performance",
+            "description": "Why Warm-up? 물리 엔진이 안정화될 때까지 기다리면 노드들이 요동치는 모습이 노출됩니다. 렌더링 전에 300회 tick()을 동기 실행하여 '이미 완성된 형태'로 시작합니다.",
+            "filePath": "src/hooks/useForceGraph.ts",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/hooks/useForceGraph.ts",
+            "snippet": "const simulation = forceSimulation(simNodes, 3)\n  .force('link', forceLink(links).strength(0.5))\n  .force('charge', forceManyBody().strength(-80))\n  .force('center', forceCenter(0, 0, 0))\n  .force('collide', forceCollide().radius(2).strength(0.7));\n\n// 렌더링 전 300회 동기 실행 (Stable Initialization)\nfor (let i = 0; i < 300; i++) {\n  simulation.tick();\n}\nsimulation.stop(); // 연산 종료 후 위치 고정"
+          },
+          {
+            "title": "거리 기반 이벤트 동기화",
+            "category": "ux-engineering",
+            "description": "Why Static Timeout Fails? 고정된 지연 시간은 가까운 노드에서는 답답하고, 먼 노드에서는 너무 빠릅니다. 이동 거리를 실시간으로 계산하여 카메라 애니메이션 시간과 모달 오픈 타이밍을 동기화했습니다.",
+            "filePath": "src/components/canvas/Node.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Node.tsx",
+            "snippet": "// Node.tsx: Distance-based Delay\nconst distance = camera.position.distanceTo(targetCameraPos);\n// Close: ~75ms (Instant), Far: 800ms (Capped)\nconst delay = Math.min(distance * 15, 800);\n\nsetTimeout(() => setModalOpen(true), delay);\n\n// CameraManager.tsx: Matching Duration\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.06, 0.6), // Min 0.6s\n  2.0 // Max 2.0s\n);"
           },
           {
             "title": "테마 토글 시 180° 씬 회전 애니메이션",
@@ -520,20 +567,12 @@
             "snippet": "toggleTheme: () => {\n  set((state) => ({\n    isThemeTransitioning: true,\n    theme: state.theme === 'dark' ? 'light' : 'dark',\n    sceneRotation: state.sceneRotation + Math.PI, // 180도 회전 추가\n  }));\n\n  setTimeout(() => {\n    set({ isThemeTransitioning: false });\n  }, 2000); // 2초 후 전환 완료\n}"
           },
           {
-            "title": "Ref 기반 애니메이션으로 React 리렌더링 방지",
-            "category": "performance",
-            "description": "Why Ref? useFrame 내에서 setState를 호출하면 60fps × Reconciler = 프레임 드랍. animationRef.current를 직접 변이하고, 완료 시에만 setIsAnimating(false)를 호출합니다.",
-            "filePath": "src/components/canvas/CameraManager.tsx",
-            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
-            "snippet": "// 애니메이션 상태를 ref로 관리 (렌더링 최적화)\nconst animationRef = useRef({\n  isActive: false,\n  progress: 0,\n  startPosition: new THREE.Vector3(),\n  targetPosition: new THREE.Vector3(),\n  duration: 1.5,\n});\n\nuseFrame((_, delta) => {\n  if (!animationRef.current.isActive) return;\n  animationRef.current.progress += delta / anim.duration; // ref 직접 변이\n  // ... camera.position 조작 ...\n});"
-          },
-          {
-            "title": "Distance-based Event Synchronization",
-            "category": "ux-engineering",
-            "description": "Why Static Timeout Fails? 고정된 지연 시간은 가까운 노드에서는 답답하고, 먼 노드에서는 너무 빠릅니다. 이동 거리를 실시간으로 계산하여 카메라 애니메이션 시간과 모달 오픈 타이밍을 동기화했습니다.",
-            "filePath": "src/components/canvas/Node.tsx",
-            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Node.tsx",
-            "snippet": "// Node.tsx: Distance-based Delay\nconst distance = camera.position.distanceTo(targetCameraPos);\n// Close: ~75ms (Instant), Far: 800ms (Capped)\nconst delay = Math.min(distance * 15, 800);\n\nsetTimeout(() => setModalOpen(true), delay);\n\n// CameraManager.tsx: Matching Duration\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.06, 0.6), // Min 0.6s\n  2.0 // Max 2.0s\n);"
+            "title": "모바일 스와이프 각도 감지",
+            "category": "mobile-ux",
+            "description": "Why Angle Detection? 단순 X축 이동만 보면 세로 스크롤 중에도 수평 스와이프가 발동됩니다. Y축 이동량을 함께 추적하여 주된 터치 방향을 판별합니다.",
+            "filePath": "src/components/ui/Modal.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/ui/Modal.tsx",
+            "snippet": "const [touchStartY, setTouchStartY] = useState<number | null>(null);\nconst [touchEndY, setTouchEndY] = useState<number | null>(null);\n\nconst onTouchMove = (e: React.TouchEvent) => {\n  const currentX = e.targetTouches[0].clientX;\n  const currentY = e.targetTouches[0].clientY;\n  \n  // 수직 이동이 수평보다 크면 스크롤로 판단\n  const deltaX = Math.abs(currentX - touchStart);\n  const deltaY = Math.abs(currentY - touchStartY);\n  if (deltaY > deltaX) {\n    setSwipeOffset(0);  // 스와이프 무시\n    return;\n  }\n  // 수평 스와이프 처리...\n};"
           }
         ],
         "learnings": [
@@ -556,6 +595,14 @@
           {
             "title": "감각으로 전달되는 성능 최적화",
             "content": "사용자는 코드를 보지 않지만, 10ms의 hover 지연과 60fps의 카메라 움직임에서 '완성도'를 느낍니다. Dual Ref 패턴과 Transient Update 같은 최적화가 단순 기술 과시가 아닌, 사용자에게 '매끄럽고 기분 좋은 경험'을 선사하는 핵심 UX 요소임을 깨달았습니다."
+          },
+          {
+            "title": "그래프 알고리즘의 실전 적용",
+            "content": "대학에서 배운 BFS 알고리즘이 실제 프로덕트에서 '필터링된 노드 간 관계 유지'라는 UX 문제를 해결하는 핵심 도구가 되었습니다. CS 기초 지식이 단순 면접용을 넘어, 사용자 경험을 개선하는 실질적 무기가 된다는 것을 체감했습니다."
+          },
+          {
+            "title": "터치 제스처의 '의도' 해석",
+            "content": "모바일 터치는 단순 좌표가 아니라 사용자의 '의도'입니다. 수평 스와이프인지 수직 스크롤인지를 각도로 판별하고, 터치 시작 영역(탭/콘텐츠)에 따라 다른 동작을 부여하는 것이 진정한 모바일 UX 설계임을 배웠습니다."
           }
         ],
         "technologies": [
