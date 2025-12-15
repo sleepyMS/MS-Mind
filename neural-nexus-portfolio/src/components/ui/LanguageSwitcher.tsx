@@ -31,6 +31,17 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
   const { theme } = useAppStore();
   const isDark = theme === "dark";
   const [hoveredLang, setHoveredLang] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 모바일 감지 (768px 미만)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const currentLang =
     languages.find((l) => l.code === i18n.language) || languages[0];
@@ -143,7 +154,9 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
       {/* 드롭다운 메뉴 */}
       {isOpen && (
         <div
-          className="absolute top-full right-0 mt-2 py-2 rounded-xl overflow-hidden animate-fadeIn"
+          className={`absolute right-0 py-2 rounded-xl overflow-hidden animate-fadeIn ${
+            isMobile ? "bottom-full mb-2" : "top-full mt-2"
+          }`}
           style={{
             background: isDark
               ? "linear-gradient(180deg, rgba(10,10,30,0.98) 0%, rgba(5,5,20,0.95) 100%)"
