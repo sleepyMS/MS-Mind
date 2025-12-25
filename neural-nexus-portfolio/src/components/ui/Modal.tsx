@@ -4,6 +4,7 @@ import { nodesData } from "../../data";
 import type { NeuralData } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 import { MiniTooltip } from "./MiniTooltip";
+import ReactMarkdown from "react-markdown";
 
 type TabType =
   | "description"
@@ -828,6 +829,44 @@ export function Modal() {
                         </a>
                       </>
                     )}
+                    {/* Blog Link Icon */}
+                    {details?.blogLink && (
+                      <>
+                        <span
+                          className={`mx-0.5 text-xs ${
+                            isDark ? "text-white/20" : "text-black/10"
+                          }`}
+                        >
+                          /
+                        </span>
+                        <a
+                          href={details.blogLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-1 rounded-lg transition-all duration-300"
+                          style={{
+                            color: isDark
+                              ? "rgba(255,255,255,0.5)"
+                              : "rgba(0,0,0,0.4)",
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                        </a>
+                      </>
+                    )}
                   </div>
 
                   {/* 데스크톱: 배포/PDF 링크 아이콘 */}
@@ -927,6 +966,56 @@ export function Modal() {
                                 strokeLinejoin="round"
                                 strokeWidth={2}
                                 d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              />
+                            </svg>
+                          </a>
+                        </MiniTooltip>
+                      </>
+                    )}
+                    {/* Blog Link Icon */}
+                    {details?.blogLink && (
+                      <>
+                        <span
+                          className={`mx-1 ${
+                            isDark ? "text-white/20" : "text-black/10"
+                          }`}
+                        >
+                          /
+                        </span>
+                        <MiniTooltip content="기술 블로그 보기">
+                          <a
+                            href={details.blogLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-1.5 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 block"
+                            style={{
+                              color: isDark
+                                ? "rgba(255,255,255,0.5)"
+                                : "rgba(0,0,0,0.4)",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = nodeColor;
+                              e.currentTarget.style.background = `${nodeColor}20`;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = isDark
+                                ? "rgba(255,255,255,0.5)"
+                                : "rgba(0,0,0,0.4)";
+                              e.currentTarget.style.background = "transparent";
+                            }}
+                          >
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                               />
                             </svg>
                           </a>
@@ -1836,14 +1925,26 @@ export function Modal() {
             {activeTab === "description" && (
               <div className="space-y-5">
                 {/* 설명 */}
-                <p
+                <div
                   className="text-base leading-relaxed transition-colors duration-300"
                   style={{
                     color: isDark ? "rgba(255,255,255,0.85)" : "#374151",
                   }}
                 >
-                  {details?.description || "설명이 없습니다."}
-                </p>
+                  <ReactMarkdown
+                    components={{
+                      strong: ({ ...props }) => (
+                        <strong
+                          style={{ color: nodeColor, fontWeight: 700 }}
+                          {...props}
+                        />
+                      ),
+                      p: ({ ...props }) => <p {...props} />,
+                    }}
+                  >
+                    {details?.description || "설명이 없습니다."}
+                  </ReactMarkdown>
+                </div>
 
                 {/* 핵심 특징 (Core Features) */}
                 {details?.coreFeatures && details.coreFeatures.length > 0 && (
@@ -1874,6 +1975,188 @@ export function Modal() {
                         </li>
                       ))}
                     </ul>
+                  </div>
+                )}
+
+                {/* 외부 링크 및 배포 링크 */}
+                {(details?.link ||
+                  details?.deployLink ||
+                  details?.pdfLink ||
+                  details?.blogLink) && (
+                  <div>
+                    <h3
+                      className="text-sm font-semibold mb-3 uppercase tracking-wider transition-colors duration-300"
+                      style={{
+                        color: isDark
+                          ? "rgba(255,255,255,0.5)"
+                          : "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      Links
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {details?.link && (
+                        <a
+                          href={details.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                          style={{
+                            background: `linear-gradient(135deg, ${nodeColor}25, ${nodeColor}10)`,
+                            border: `1px solid ${nodeColor}40`,
+                            color: nodeColor,
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = `0 0 25px ${nodeColor}40`;
+                            e.currentTarget.style.borderColor = nodeColor;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = "none";
+                            e.currentTarget.style.borderColor = `${nodeColor}40`;
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                          <span className="font-medium">프로젝트 보기</span>
+                        </a>
+                      )}
+
+                      {details?.deployLink && (
+                        <a
+                          href={details.deployLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                          style={{
+                            background: isDark
+                              ? `linear-gradient(135deg, ${nodeColor} 0%, ${nodeColor}cc 100%)`
+                              : `linear-gradient(135deg, ${nodeColor}ee 0%, ${nodeColor} 100%)`,
+                            boxShadow: `0 0 20px ${nodeColor}40`,
+                            color: "white",
+                            border: "none",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = `0 0 35px ${nodeColor}80, 0 5px 20px ${nodeColor}60`;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4 transition-transform duration-300 group-hover:scale-110"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                            />
+                          </svg>
+                          <span className="font-bold">배포 사이트</span>
+                        </a>
+                      )}
+
+                      {details?.pdfLink && (
+                        <a
+                          href={details.pdfLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                          style={{
+                            background: isDark
+                              ? "rgba(239, 68, 68, 0.1)"
+                              : "rgba(239, 68, 68, 0.05)",
+                            border: isDark
+                              ? "1px solid rgba(239, 68, 68, 0.2)"
+                              : "1px solid rgba(239, 68, 68, 0.2)",
+                            color: isDark ? "#fca5a5" : "#dc2626",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = isDark
+                              ? "rgba(239, 68, 68, 0.2)"
+                              : "rgba(239, 68, 68, 0.1)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = isDark
+                              ? "rgba(239, 68, 68, 0.1)"
+                              : "rgba(239, 68, 68, 0.05)";
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                            />
+                          </svg>
+                          <span className="font-medium">논문 PDF</span>
+                        </a>
+                      )}
+
+                      {details?.blogLink && (
+                        <a
+                          href={details.blogLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                          style={{
+                            background: isDark
+                              ? "linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(234, 179, 8, 0.05))"
+                              : "linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(234, 179, 8, 0.03))",
+                            border: isDark
+                              ? "1px solid rgba(234, 179, 8, 0.2)"
+                              : "1px solid rgba(234, 179, 8, 0.15)",
+                            color: isDark ? "#fcd34d" : "#d97706",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = `0 0 25px rgba(234, 179, 8, 0.2)`;
+                            e.currentTarget.style.borderColor =
+                              "rgba(234, 179, 8, 0.4)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = "none";
+                            e.currentTarget.style.borderColor = isDark
+                              ? "rgba(234, 179, 8, 0.2)"
+                              : "rgba(234, 179, 8, 0.15)";
+                          }}
+                        >
+                          <svg
+                            className="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          <span className="font-medium">기술 블로그</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -2032,129 +2315,6 @@ export function Modal() {
                       </div>
                     </div>
                   )
-                )}
-
-                {/* 외부 링크 및 배포 링크 */}
-                {(details?.link || details?.deployLink || details?.pdfLink) && (
-                  <div className="flex flex-wrap gap-3 pt-2">
-                    {details?.link && (
-                      <a
-                        href={details.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-                        style={{
-                          background: `linear-gradient(135deg, ${nodeColor}25, ${nodeColor}10)`,
-                          border: `1px solid ${nodeColor}40`,
-                          color: nodeColor,
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.boxShadow = `0 0 25px ${nodeColor}40`;
-                          e.currentTarget.style.borderColor = nodeColor;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.boxShadow = "none";
-                          e.currentTarget.style.borderColor = `${nodeColor}40`;
-                        }}
-                      >
-                        <svg
-                          className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                        <span className="font-medium">프로젝트 보기</span>
-                      </a>
-                    )}
-
-                    {details?.deployLink && (
-                      <a
-                        href={details.deployLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-                        style={{
-                          background: isDark
-                            ? `linear-gradient(135deg, ${nodeColor} 0%, ${nodeColor}cc 100%)`
-                            : `linear-gradient(135deg, ${nodeColor}ee 0%, ${nodeColor} 100%)`,
-                          boxShadow: `0 0 20px ${nodeColor}40`,
-                          color: "white",
-                          border: "none",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.boxShadow = `0 0 35px ${nodeColor}80, 0 5px 20px ${nodeColor}60`;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.boxShadow = `0 0 20px ${nodeColor}40`;
-                        }}
-                      >
-                        <svg
-                          className="w-4 h-4 transition-transform duration-300 group-hover:scale-110"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                          />
-                        </svg>
-                        <span className="font-bold">배포 사이트</span>
-                      </a>
-                    )}
-
-                    {details?.pdfLink && (
-                      <a
-                        href={details.pdfLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-                        style={{
-                          background: isDark
-                            ? "rgba(239, 68, 68, 0.1)"
-                            : "rgba(239, 68, 68, 0.05)",
-                          border: isDark
-                            ? "1px solid rgba(239, 68, 68, 0.2)"
-                            : "1px solid rgba(239, 68, 68, 0.2)",
-                          color: isDark ? "#fca5a5" : "#dc2626",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = isDark
-                            ? "rgba(239, 68, 68, 0.2)"
-                            : "rgba(239, 68, 68, 0.1)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = isDark
-                            ? "rgba(239, 68, 68, 0.1)"
-                            : "rgba(239, 68, 68, 0.05)";
-                        }}
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span className="font-medium">논문 PDF</span>
-                      </a>
-                    )}
-                  </div>
                 )}
               </div>
             )}
