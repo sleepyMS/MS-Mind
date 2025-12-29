@@ -114,7 +114,7 @@ export function CameraManager() {
       dampingFactor={0.05}
       zoomSpeed={3}
       minDistance={3}
-      maxDistance={300}
+      maxDistance={200}
       // 애니메이션 중 사용자 입력 비활성화
       enabled={!isAnimating && !isDragging}
     />
