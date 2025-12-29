@@ -4,7 +4,7 @@ import type { NeuralNode, NeuralData } from "../types";
  * 노드 데이터를 전처리하여 양방향 연결을 자동 생성합니다.
  *
  * 예: A가 B를 연결하면, B도 자동으로 A를 연결합니다.
- * 이로써 nodes.json에서는 한 방향만 정의해도 됩니다.
+ * 이로써 nodes.ko.json(또는 nodes.en.json)에서는 한 방향만 정의해도 됩니다.
  */
 export function normalizeConnections(data: NeuralData): NeuralData {
   // 노드 ID → 노드 객체 매핑

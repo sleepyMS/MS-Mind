@@ -23,7 +23,9 @@
 ```mermaid
 graph TB
     subgraph Data Layer
-        A[nodes.json]
+        A1[nodes.ko.json]
+        A2[nodes.en.json]
+        A3[index.ts / normalize]
     end
 
     subgraph State Layer
@@ -76,14 +78,17 @@ graph TB
 
 ```mermaid
 sequenceDiagram
-    participant JSON as nodes.json
+    participant JSON as nodes.{lang}.json
+    participant Index as data/index.ts
     participant Scene as Scene.tsx
     participant d3 as d3-force-3d
     participant Store as Zustand Store
     participant Node as Node.tsx
     participant Modal as Modal.tsx
 
-    JSON->>Scene: 노드 데이터 로드
+    JSON->>Index: 언어별 데이터 로드
+    Index->>Index: 양방향 연결 정규화
+    Index->>Scene: 정규화된 데이터 반환
     Scene->>d3: 시뮬레이션 초기화
     d3->>d3: 물리 시뮬레이션 실행
     d3->>Scene: 계산된 위치 반환
@@ -123,24 +128,34 @@ sequenceDiagram
 ### 디렉토리 구조
 
 ```
-src/components/
-├── canvas/                 # 3D 렌더링 컴포넌트
-│   ├── Scene.tsx          # 메인 씬 & d3-force
-│   ├── Node.tsx           # 개별 3D 노드
-│   ├── ConnectionLine.tsx # 연결선
-│   ├── CameraManager.tsx  # 카메라 제어
-│   ├── Background.tsx     # 배경 효과
-│   └── PostProcessing.tsx # 후처리 효과
+src/
+├── data/                   # 데이터 레이어
+│   ├── nodes.ko.json      # 한국어 노드 데이터
+│   ├── nodes.en.json      # 영어 노드 데이터
+│   └── index.ts           # 데이터 로더 및 정규화
 │
-└── ui/                     # 2D UI 컴포넌트
-    ├── Modal.tsx          # 상세 정보 모달
-    ├── SidePanel.tsx      # 노드 탐색 사이드바
-    ├── NodeFilter.tsx     # 필터 바
-    ├── MiniMap.tsx        # 미니맵
-    ├── ThemeSwitcher.tsx  # 테마 전환
-    ├── LanguageSwitcher.tsx # 언어 전환
-    ├── ControlsGuide.tsx  # 조작 가이드
-    └── ContactForm.tsx    # 연락 폼
+├── locales/                # UI 번역 레이어
+│   ├── ko.json            # 한국어 UI 텍스트
+│   └── en.json            # 영어 UI 텍스트
+│
+├── components/
+│   ├── canvas/             # 3D 렌더링 컴포넌트
+│   │   ├── Scene.tsx      # 메인 씬 & d3-force
+│   │   ├── Node.tsx       # 개별 3D 노드
+│   │   ├── ConnectionLine.tsx # 연결선
+│   │   ├── CameraManager.tsx  # 카메라 제어
+│   │   ├── Background.tsx     # 배경 효과
+│   │   └── PostProcessing.tsx # 후처리 효과
+│   │
+│   └── ui/                 # 2D UI 컴포넌트
+│       ├── Modal.tsx          # 상세 정보 모달
+│       ├── SidePanel.tsx      # 노드 탐색 사이드바
+│       ├── NodeFilter.tsx     # 필터 바
+│       ├── MiniMap.tsx        # 미니맵
+│       ├── ThemeSwitcher.tsx  # 테마 전환
+│       ├── LanguageSwitcher.tsx # 언어 전환
+│       ├── ControlsGuide.tsx  # 조작 가이드
+│       └── ContactForm.tsx    # 연락 폼
 ```
 
 ### Canvas 컴포넌트
