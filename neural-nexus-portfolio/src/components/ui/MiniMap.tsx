@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
-import type { NeuralData } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
 /**
@@ -34,7 +33,12 @@ export function MiniMap() {
     let minZ = Infinity,
       maxZ = -Infinity;
 
-    nodePositions.forEach(([x, , z]) => {
+    data.nodes.forEach((node) => {
+      if (node.type === "hidden") return;
+      const pos = nodePositions.get(node.id);
+      if (!pos) return;
+
+      const [x, , z] = pos;
       minX = Math.min(minX, x);
       maxX = Math.max(maxX, x);
       minZ = Math.min(minZ, z);
@@ -47,6 +51,7 @@ export function MiniMap() {
     const size = 100 - padding * 2;
 
     return data.nodes
+      .filter((node) => node.type !== "hidden")
       .map((node) => {
         const pos = nodePositions.get(node.id);
         if (!pos) return null;

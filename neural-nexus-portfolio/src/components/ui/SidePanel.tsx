@@ -2,12 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
-import type {
-  NeuralData,
-  NodeType,
-  ProjectCategory,
-  SkillCategory,
-} from "../../types";
+import type { NodeType, ProjectCategory, SkillCategory } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
 const typeConfig: Record<
@@ -18,6 +13,7 @@ const typeConfig: Record<
   project: { icon: "🚀", darkColor: "#ff00ff", lightColor: "#c026d3" },
   skill: { icon: "⚡", darkColor: "#88ce02", lightColor: "#65a30d" },
   lesson: { icon: "💡", darkColor: "#f59e0b", lightColor: "#d97706" },
+  hidden: { icon: "❓", darkColor: "#9ca3af", lightColor: "#4b5563" },
 };
 
 // 프로젝트 카테고리 설정
@@ -146,35 +142,36 @@ export function SidePanel() {
 
   const filteredNodes = data.nodes.filter(
     (node) =>
-      node.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      node.details?.description
-        ?.toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      node.details?.features?.some(
-        (f) =>
-          f.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          f.items.some((i) =>
-            i.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-      ) ||
-      node.details?.optimizations?.some(
-        (o) =>
-          o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          o.items.some((i) =>
-            i.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-      ) ||
-      node.details?.challenges?.some(
-        (c) =>
-          c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          c.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          c.solution.toLowerCase().includes(searchQuery.toLowerCase())
-      ) ||
-      node.details?.learnings?.some(
-        (l) =>
-          l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          l.content.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      node.type !== "hidden" &&
+      (node.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        node.details?.description
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        node.details?.features?.some(
+          (f) =>
+            f.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            f.items.some((i) =>
+              i.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+        ) ||
+        node.details?.optimizations?.some(
+          (o) =>
+            o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            o.items.some((i) =>
+              i.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+        ) ||
+        node.details?.challenges?.some(
+          (c) =>
+            c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.solution.toLowerCase().includes(searchQuery.toLowerCase())
+        ) ||
+        node.details?.learnings?.some(
+          (l) =>
+            l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            l.content.toLowerCase().includes(searchQuery.toLowerCase())
+        ))
   );
 
   const groupedNodes = filteredNodes.reduce((acc, node) => {
