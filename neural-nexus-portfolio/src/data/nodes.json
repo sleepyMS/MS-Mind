@@ -97,20 +97,26 @@
         "keyProjects": [
           {
             "id": "project-cortex",
-            "title": "Cortex Trading Platform",
-            "desc": "수백만 건의 시계열 데이터를 처리하는 퀀트 트레이딩 플랫폼",
+            "title": "Cortex (Backend)",
+            "desc": "AI를 학습시켜 나만의 투자 전략을 만들고 24시간 자동매매를 실행하는 퀀트 플랫폼",
             "tech": ["FastAPI", "TimescaleDB", "Celery", "Redis"]
           },
           {
+            "id": "project-cortex-fe",
+            "title": "Cortex (Frontend)",
+            "desc": "코딩 없이 AI 모델을 설계하고 백테스팅부터 자동매매까지 연결하는 올인원 투자 플랫폼",
+            "tech": ["Next.js", "TypeScript", "Zustand", "TanStack Query"]
+          },
+          {
             "id": "project-chatbot",
-            "title": "GangNaengBot",
-            "desc": "낙관적 UI와 i18n을 적용한 교내 AI 챗봇 서비스",
+            "title": "GangNaengBot (Frontend)",
+            "desc": "LLM 응답 지연을 극복한 체감 속도 0ms의 교내 AI 챗봇 서비스",
             "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
           },
           {
             "id": "project-portfolio",
-            "title": "Neural Portfolio",
-            "desc": "d3-force 물리 엔진 기반의 3D 인터랙티브 포트폴리오",
+            "title": "Neural Portfolio (Frontend)",
+            "desc": "뉴런처럼 연결된 프로젝트들을 탐색하는 3D 인터랙티브 포트폴리오",
             "tech": ["R3F", "Three.js", "d3-force", "React"]
           }
         ],
