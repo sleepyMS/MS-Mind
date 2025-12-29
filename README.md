@@ -222,6 +222,19 @@ npm run preview
 
 ---
 
+## 📚 Documentation
+
+프로젝트를 더 깊이 이해하고 커스터마이징하려면 아래 문서들을 참고하세요:
+
+| 문서                                              | 설명                                                        |
+| ------------------------------------------------- | ----------------------------------------------------------- |
+| [📖 Customization Guide](./docs/CUSTOMIZATION.md) | 포트폴리오 데이터 수정, 테마 커스터마이징, 다국어 추가 방법 |
+| [🏗️ Architecture](./docs/ARCHITECTURE.md)         | 시스템 아키텍처, 데이터 흐름, 상태 관리 구조                |
+| [🧩 Components](./docs/COMPONENTS.md)             | Canvas/UI 컴포넌트 상세 레퍼런스                            |
+| [🤝 Contributing](./CONTRIBUTING.md)              | 기여 가이드, 커밋 컨벤션, PR 프로세스                       |
+
+---
+
 ## 📄 License
 
 MIT License
