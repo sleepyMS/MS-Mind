@@ -2049,6 +2049,27 @@
         "description": "Open-source deep learning framework developed by Facebook, providing dynamic calculation graphs and an intuitive API."
       },
       "color": "#8b5cf6"
+    },
+    {
+      "id": "hidden-moon",
+      "type": "hidden",
+      "label": "???",
+      "connections": [],
+      "details": {
+        "description": "A mysterious moon floating in the night sky. It's implemented with actual 'Tidal Locking' where the orbital and rotational periods match. Sadly, it seems there are no rabbits living on this moon!",
+        "coreFeatures": [
+          "🌕 Earth's only natural satellite",
+          "🎨 Responsible for the project's atmosphere",
+          "🤫 Hidden bonus node"
+        ],
+        "techStackDocs": [
+          {
+            "name": "Three.js Texture",
+            "description": "Rendered as a sphere using real lunar surface textures, not just a disc."
+          }
+        ]
+      },
+      "color": "#ffff00"
     }
   ]
 }

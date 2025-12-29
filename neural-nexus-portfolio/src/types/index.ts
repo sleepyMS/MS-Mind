@@ -1,5 +1,5 @@
 // 신경망 시각화를 위한 노드 타입 정의
-export type NodeType = "main" | "project" | "skill" | "lesson";
+export type NodeType = "main" | "project" | "skill" | "lesson" | "hidden";
 export type ThemeType = "dark" | "light";
 export type ProjectCategory = "frontend" | "backend" | "ai-ml" | "creative";
 export type SkillCategory =

@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { Stars, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useAppStore } from "../../stores/useAppStore";
+import { MoonNode } from "./MoonNode";
 
 /**
  * 배경 컴포넌트
@@ -134,6 +135,8 @@ export function Background() {
                   metalness={0}
                 />
               </mesh>
+              {/* 이스터에그 노드 */}
+              <MoonNode />
             </group>
           </group>
         </>
