@@ -31,6 +31,9 @@
       "creative": "Creative"
     },
     "skill": {
+      "language": "Language",
+      "framework": "Framework",
+      "library": "Library",
       "tool": "Tool",
       "database": "Database"
     },

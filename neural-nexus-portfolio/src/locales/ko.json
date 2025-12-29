@@ -31,6 +31,9 @@
       "creative": "크리에이티브"
     },
     "skill": {
+      "language": "언어",
+      "framework": "프레임워크",
+      "library": "라이브러리",
       "tool": "도구",
       "database": "데이터베이스"
     },
