@@ -1266,6 +1266,7 @@
           }
         ],
         "link": "https://github.com/sleepyMS/Cortex",
+        "deployLink": "https://cortex-five-eosin.vercel.app/",
         "features": [
           {
             "title": "Lock & Queue 기반 무중단 인증 시스템",
