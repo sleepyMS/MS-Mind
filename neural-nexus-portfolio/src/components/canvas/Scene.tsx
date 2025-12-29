@@ -10,7 +10,6 @@ import { PostProcessing } from "./PostProcessing";
 import { useForceGraph } from "../../hooks/useForceGraph";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
-import type { NeuralData } from "../../types";
 import * as THREE from "three";
 
 interface ConnectionData {

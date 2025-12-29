@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
-import type { NeuralData } from "../../types";
 
 /**
  * 3D 노드 호버 시 표시되는 툴팁 컴포넌트
