@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import emailjs from "@emailjs/browser";
 import { MiniTooltip } from "./MiniTooltip";
 
@@ -11,6 +12,7 @@ interface ContactFormProps {
 type FormStatus = "idle" | "sending" | "success" | "error";
 
 export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [formData, setFormData] = useState({
@@ -41,7 +43,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
       if (value && !validateEmail(value)) {
         setErrors((prev) => ({
           ...prev,
-          email: "올바른 이메일 형식이 아닙니다",
+          email: t("contact.validation.emailInvalid"),
         }));
       } else {
         setErrors((prev) => ({ ...prev, email: undefined }));
@@ -60,17 +62,17 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
     const newErrors: { email?: string; title?: string; message?: string } = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "이메일을 입력해주세요";
+      newErrors.email = t("contact.validation.emailRequired");
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = "올바른 이메일 형식이 아닙니다";
+      newErrors.email = t("contact.validation.emailInvalid");
     }
 
     if (!formData.title.trim()) {
-      newErrors.title = "제목을 입력해주세요";
+      newErrors.title = t("contact.validation.subjectRequired");
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = "메시지를 입력해주세요";
+      newErrors.message = t("contact.validation.messageRequired");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -126,16 +128,16 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
             color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
           }}
         >
-          이메일 *
+          {t("contact.form.email")}
         </label>
-        <MiniTooltip content="답변 받으실 이메일 주소를 입력하세요">
+        <MiniTooltip content={t("contact.tooltip.email")}>
           <input
             type="text"
             id="contact-email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="example@email.com"
+            placeholder={t("contact.placeholder.email")}
             title=""
             className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
             style={{
@@ -204,16 +206,16 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
             color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
           }}
         >
-          제목 *
+          {t("contact.form.subject")}
         </label>
-        <MiniTooltip content="문의 내용을 요약한 제목을 입력하세요">
+        <MiniTooltip content={t("contact.tooltip.subject")}>
           <input
             type="text"
             id="contact-title"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder="문의 제목을 입력하세요"
+            placeholder={t("contact.placeholder.subject")}
             title=""
             className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
             style={{
@@ -282,16 +284,16 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
             color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
           }}
         >
-          메시지 *
+          {t("contact.form.message")}
         </label>
-        <MiniTooltip content="궁금한 점이나 제안을 자유롭게 작성하세요">
+        <MiniTooltip content={t("contact.tooltip.message")}>
           <textarea
             key={`message-${isDark}`}
             id="contact-message"
             name="message"
             value={formData.message}
             onChange={handleChange}
-            placeholder="안녕하세요! 연락드립니다..."
+            placeholder={t("contact.placeholder.message")}
             title=""
             rows={4}
             className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200 resize-none"
@@ -385,7 +387,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            메시지 보내기
+            {t("contact.form.send")}
           </>
         )}
         {status === "sending" && (
@@ -409,7 +411,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            전송 중...
+            {t("contact.form.sending")}
           </>
         )}
         {status === "success" && (
@@ -427,7 +429,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            전송 완료!
+            {t("contact.form.success")}
           </>
         )}
         {status === "error" && (
@@ -445,19 +447,19 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            전송 실패
+            {t("contact.form.error")}
           </>
         )}
       </button>
 
       {status === "success" && (
         <p className="text-center text-sm" style={{ color: "#10b981" }}>
-          메시지가 성공적으로 전송되었습니다! 빠른 시일 내에 답변 드리겠습니다.
+          {t("contact.success")}
         </p>
       )}
       {status === "error" && (
         <p className="text-center text-sm" style={{ color: "#ef4444" }}>
-          전송에 실패했습니다. 잠시 후 다시 시도해주세요.
+          {t("contact.error")}
         </p>
       )}
     </form>

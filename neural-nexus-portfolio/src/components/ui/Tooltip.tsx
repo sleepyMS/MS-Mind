@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
 import type { NeuralData } from "../../types";
@@ -11,6 +12,7 @@ import { getThemeColor } from "../../utils/themeUtils";
 
 export function Tooltip() {
   const { hoveredNode, theme } = useAppStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
@@ -142,10 +144,10 @@ export function Tooltip() {
               });
 
               const typeLabels: Record<string, string> = {
-                main: "메인",
-                project: "프로젝트",
-                skill: "스킬",
-                lesson: "교훈",
+                main: t("nodeTypes.main"),
+                project: t("nodeTypes.project"),
+                skill: t("nodeTypes.skill"),
+                lesson: t("nodeTypes.lesson"),
               };
 
               // 타입 순서 정의: main → project → skill → lesson
@@ -155,11 +157,15 @@ export function Tooltip() {
                 .filter((type) => connectionsByType[type])
                 .map(
                   (type) =>
-                    `${typeLabels[type] || type} ${connectionsByType[type]}개`
+                    `${typeLabels[type] || type} ${t("modal.connectionCount", {
+                      count: connectionsByType[type],
+                    })}`
                 )
                 .join(", ");
 
-              return parts ? `${parts} 연결` : "연결 없음";
+              return parts
+                ? `${parts} ${t("modal.connectionsSuffix")}`
+                : t("modal.noConnections");
             })()}
           </span>
         </div>
@@ -190,7 +196,7 @@ export function Tooltip() {
               color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)",
             }}
           >
-            클릭하여 상세 보기
+            {t("tooltip.clickToView")}
           </span>
         </div>
       </div>

@@ -271,7 +271,9 @@ export function SidePanel() {
           border: "1px solid var(--glass-border)",
           boxShadow: "var(--glass-shadow)",
         }}
-        aria-label={isSidePanelOpen ? "Close panel" : "Open panel"}
+        aria-label={
+          isSidePanelOpen ? t("sidebar.aria.close") : t("sidebar.aria.open")
+        }
       >
         <svg
           className={`w-5 h-5 transition-transform duration-300 ${
@@ -498,7 +500,7 @@ export function SidePanel() {
                               >
                                 <span>{catConfig.icon}</span>
                                 <span style={{ color: catColor }}>
-                                  {catConfig.label}
+                                  {t(`categories.project.${category}`)}
                                 </span>
                                 <span
                                   className="px-1 py-0.5 rounded text-xs"
@@ -619,7 +621,7 @@ export function SidePanel() {
                               >
                                 <span>{catConfig.icon}</span>
                                 <span style={{ color: catColor }}>
-                                  {catConfig.label}
+                                  {t(`categories.skill.${category}`)}
                                 </span>
                                 <span
                                   className="px-1 py-0.5 rounded text-xs"

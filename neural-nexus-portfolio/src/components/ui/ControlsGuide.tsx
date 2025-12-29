@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 
 /**
@@ -7,6 +8,7 @@ import { useAppStore } from "../../stores/useAppStore";
  */
 export function ControlsGuide() {
   const { theme } = useAppStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -47,18 +49,54 @@ export function ControlsGuide() {
   }, [isMobile, isOpen]);
 
   const desktopControls = [
-    { icon: "🖱️", action: "좌클릭 드래그", description: "회전" },
-    { icon: "🖱️", action: "우클릭 드래그", description: "이동" },
-    { icon: "🔄", action: "스크롤 휠", description: "줌 인/아웃" },
-    { icon: "⚡", action: "휠 버튼 드래그", description: "빠른 줌" },
-    { icon: "👆", action: "노드 클릭", description: "상세 보기" },
+    {
+      icon: "🖱️",
+      action: t("controls.desktop.leftDrag"),
+      description: t("controls.desktop.rotate"),
+    },
+    {
+      icon: "🖱️",
+      action: t("controls.desktop.rightDrag"),
+      description: t("controls.desktop.pan"),
+    },
+    {
+      icon: "🔄",
+      action: t("controls.desktop.scroll"),
+      description: t("controls.desktop.zoom"),
+    },
+    {
+      icon: "⚡",
+      action: t("controls.desktop.wheelDrag"),
+      description: t("controls.desktop.fastZoom"),
+    },
+    {
+      icon: "👆",
+      action: t("controls.desktop.click"),
+      description: t("controls.desktop.details"),
+    },
   ];
 
   const mobileControls = [
-    { icon: "☝️", action: "한 손가락 드래그", description: "회전" },
-    { icon: "✌️", action: "두 손가락 드래그", description: "이동" },
-    { icon: "🤏", action: "핀치 인/아웃", description: "줌" },
-    { icon: "👆", action: "노드 탭", description: "상세 보기" },
+    {
+      icon: "☝️",
+      action: t("controls.mobile.oneFinger"),
+      description: t("controls.mobile.rotate"),
+    },
+    {
+      icon: "✌️",
+      action: t("controls.mobile.twoFinger"),
+      description: t("controls.mobile.pan"),
+    },
+    {
+      icon: "🤏",
+      action: t("controls.mobile.pinch"),
+      description: t("controls.mobile.zoom"),
+    },
+    {
+      icon: "👆",
+      action: t("controls.mobile.tap"),
+      description: t("controls.mobile.details"),
+    },
   ];
 
   const controls = isMobile ? mobileControls : desktopControls;
@@ -87,7 +125,7 @@ export function ControlsGuide() {
             ? "0 4px 20px rgba(0,0,0,0.3)"
             : "0 4px 20px rgba(0,0,0,0.1)",
         }}
-        aria-label="컨트롤 가이드"
+        aria-label={t("controls.aria.guide")}
       >
         <svg
           className="w-5 h-5"
@@ -147,7 +185,9 @@ export function ControlsGuide() {
               className="text-sm font-semibold"
               style={{ color: isDark ? "white" : "#1f2937" }}
             >
-              {isMobile ? "터치 조작법" : "마우스 조작법"}
+              {isMobile
+                ? t("controls.title.mobile")
+                : t("controls.title.desktop")}
             </span>
           </div>
 

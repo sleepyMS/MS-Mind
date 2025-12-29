@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 
 /**
@@ -5,14 +6,15 @@ import { useAppStore } from "../../stores/useAppStore";
  */
 export function ThemeSwitcher() {
   const { theme, toggleTheme } = useAppStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
 
   return (
     <button
       onClick={toggleTheme}
       className="fixed top-6 right-6 z-30 group cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200"
-      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      aria-label="Toggle theme"
+      title={isDark ? t("theme.switchTo.light") : t("theme.switchTo.dark")}
+      aria-label={isDark ? t("theme.switchTo.light") : t("theme.switchTo.dark")}
     >
       <div
         className="relative w-14 h-14 rounded-full flex items-center justify-center overflow-hidden transition-all duration-500"
@@ -148,7 +150,7 @@ export function ThemeSwitcher() {
             : "1px solid rgba(0,0,0,0.1)",
         }}
       >
-        {isDark ? "Light Mode" : "Dark Mode"}
+        {isDark ? t("theme.label.light") : t("theme.label.dark")}
       </div>
     </button>
   );

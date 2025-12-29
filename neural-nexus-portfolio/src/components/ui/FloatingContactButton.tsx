@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { ContactForm } from "./ContactForm";
 
@@ -8,6 +9,7 @@ import { ContactForm } from "./ContactForm";
  */
 export function FloatingContactButton() {
   const { theme, isModalOpen } = useAppStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -77,7 +79,9 @@ export function FloatingContactButton() {
             : "0 4px 25px rgba(168, 85, 247, 0.5), 0 0 40px rgba(236, 72, 153, 0.3)",
           border: "1px solid rgba(255,255,255,0.2)",
         }}
-        aria-label={isOpen ? "닫기" : "연락하기"}
+        aria-label={
+          isOpen ? t("contact.button.close") : t("contact.button.open")
+        }
       >
         <svg
           className="w-6 h-6 text-white transition-transform duration-300"
@@ -146,7 +150,7 @@ export function FloatingContactButton() {
         >
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
+              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
                 background: "linear-gradient(135deg, #a855f7, #ec4899)",
                 boxShadow: "0 4px 15px rgba(168, 85, 247, 0.4)",
@@ -173,7 +177,7 @@ export function FloatingContactButton() {
                   color: isDark ? "rgba(255,255,255,0.95)" : "rgba(0,0,0,0.9)",
                 }}
               >
-                연락하기
+                {t("contact.header.title")}
               </h3>
               <p
                 className="text-xs"
@@ -181,7 +185,7 @@ export function FloatingContactButton() {
                   color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.45)",
                 }}
               >
-                궁금한 점이나 제안이 있으시면 메시지를 남겨주세요!
+                {t("contact.header.subtitle")}
               </p>
             </div>
           </div>
@@ -224,7 +228,7 @@ export function FloatingContactButton() {
               color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)",
             }}
           >
-            이메일은 안전하게 보호됩니다
+            {t("contact.footer.privacy")}
           </span>
         </div>
       </div>

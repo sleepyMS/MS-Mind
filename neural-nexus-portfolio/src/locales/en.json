@@ -8,7 +8,14 @@
     "title": "Node Explorer",
     "searchPlaceholder": "Search...",
     "noResults": "No results found",
-    "totalNodes": "Total {{count}} nodes"
+    "totalNodes": "Total {{count}} nodes",
+    "aria": {
+      "open": "Open panel",
+      "close": "Close panel"
+    }
+  },
+  "tooltip": {
+    "clickToView": "Click to view details"
   },
   "nodeTypes": {
     "main": "Main",
@@ -16,22 +23,67 @@
     "skill": "Skill",
     "lesson": "Lesson"
   },
+  "categories": {
+    "project": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "ai-ml": "AI / ML",
+      "creative": "Creative"
+    },
+    "skill": {
+      "language": "Language",
+      "framework": "Framework",
+      "library": "Library",
+      "tool": "Tool",
+      "database": "Database"
+    }
+  },
   "modal": {
     "tabs": {
+      "profile": "Profile",
+      "projects": "Key Projects",
+      "research": "Research & Interests",
       "description": "Overview",
-      "trouble": "Problem Solving",
-      "lesson": "Lessons Learned"
+      "features": "Features",
+      "optimizations": "Optimizations",
+      "trouble": "Troubleshooting",
+      "code": "Code",
+      "results": "Results",
+      "references": "References",
+      "lesson": "Lessons Learned",
+      "career": "Career",
+      "education": "Education",
+      "skills": "Skills"
     },
     "techStack": "Tech Stack",
     "viewProject": "View Project",
     "connections": "{{count}} connections",
+    "connectionCount": "{{count}}",
+    "connectionsSuffix": "Connected",
+    "noConnections": "No connections",
+    "openProject": "OPEN ↗",
     "trouble": "Challenges",
     "solution": "Solution",
     "keyLesson": "Key Lesson",
-    "closeHint": "Press ESC to close"
-  },
-  "tooltip": {
-    "clickToView": "Click to view details"
+    "closeHint": "Press ESC to close",
+    "navigation": {
+      "prevNode": "Previous Node (←)",
+      "nextNode": "Next Node (→)"
+    },
+    "links": {
+      "github": "View on GitHub",
+      "deploy": "View Deployed Site",
+      "pdf": "View PDF",
+      "blog": "View Tech Blog"
+    },
+    "aria": {
+      "prevNode": "Previous node",
+      "nextNode": "Next node",
+      "close": "Close (ESC)"
+    },
+    "contact": {
+      "label": "Contact"
+    }
   },
   "filter": {
     "show": "Show",
@@ -39,5 +91,90 @@
   },
   "language": {
     "toggle": "한국어"
+  },
+  "contact": {
+    "button": {
+      "open": "Contact",
+      "close": "Close"
+    },
+    "header": {
+      "title": "Contact",
+      "subtitle": "Feel free to leave a message if you have any questions or suggestions!"
+    },
+    "footer": {
+      "privacy": "Your email is securely protected"
+    },
+    "form": {
+      "email": "Email *",
+      "subject": "Subject *",
+      "message": "Message *",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Sent!",
+      "error": "Failed"
+    },
+    "tooltip": {
+      "email": "Enter your email address for reply",
+      "subject": "Enter a brief subject for your inquiry",
+      "message": "Feel free to write your questions or suggestions"
+    },
+    "placeholder": {
+      "email": "example@email.com",
+      "subject": "Enter subject",
+      "message": "Hello! I'm reaching out..."
+    },
+    "validation": {
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Invalid email format",
+      "subjectRequired": "Please enter a subject",
+      "messageRequired": "Please enter a message"
+    },
+    "success": "Message sent successfully! We'll get back to you soon.",
+    "error": "Failed to send. Please try again later."
+  },
+  "controls": {
+    "aria": {
+      "guide": "Controls guide"
+    },
+    "title": {
+      "desktop": "Mouse Controls",
+      "mobile": "Touch Controls"
+    },
+    "desktop": {
+      "leftDrag": "Left-click drag",
+      "rightDrag": "Right-click drag",
+      "scroll": "Scroll wheel",
+      "wheelDrag": "Wheel button drag",
+      "click": "Node click",
+      "rotate": "Rotate",
+      "pan": "Pan",
+      "zoom": "Zoom in/out",
+      "fastZoom": "Fast zoom",
+      "details": "View details"
+    },
+    "mobile": {
+      "oneFinger": "One finger drag",
+      "twoFinger": "Two finger drag",
+      "pinch": "Pinch in/out",
+      "tap": "Node tap",
+      "rotate": "Rotate",
+      "pan": "Pan",
+      "zoom": "Zoom",
+      "details": "View details"
+    },
+    "mode": {
+      "desktop": "🖥️ Desktop mode",
+      "mobile": "📱 Mobile mode"
+    }
+  },
+  "theme": {
+    "switchTo": {
+      "light": "Switch to Light Mode",
+      "dark": "Switch to Dark Mode"
+    },
+    "label": {
+      "light": "Light Mode",
+      "dark": "Dark Mode"
+    }
   }
 }

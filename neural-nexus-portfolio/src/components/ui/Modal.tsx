@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { nodesData } from "../../data";
 import type { NeuralData } from "../../types";
@@ -36,6 +37,7 @@ export function Modal() {
     theme,
     nodePositions,
   } = useAppStore();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
 
   const [activeTab, setActiveTab] = useState<TabType>("description");
@@ -340,13 +342,13 @@ export function Modal() {
     // Main Node Tabs
     {
       id: "profile",
-      label: "프로필",
+      label: t("modal.tabs.profile"),
       icon: "👤",
       available: node?.type === "main",
     },
     {
       id: "projects",
-      label: "주요 프로젝트",
+      label: t("modal.tabs.projects"),
       icon: "⭐",
       available: Boolean(
         node?.type === "main" &&
@@ -356,7 +358,7 @@ export function Modal() {
     },
     {
       id: "research",
-      label: "연구 & 관심사",
+      label: t("modal.tabs.research"),
       icon: "🔬",
       available: Boolean(
         node?.type === "main" &&
@@ -368,13 +370,13 @@ export function Modal() {
     // Standard Node Tabs
     {
       id: "description",
-      label: "개요",
+      label: t("modal.tabs.description"),
       icon: "📝",
       available: node?.type !== "main",
     },
     {
       id: "features",
-      label: "주요 기능",
+      label: t("modal.tabs.features"),
       icon: "🚀",
       available: Boolean(
         node?.type !== "main" &&
@@ -384,7 +386,7 @@ export function Modal() {
     },
     {
       id: "optimizations",
-      label: "최적화",
+      label: t("modal.tabs.optimizations"),
       icon: "⚡",
       available: Boolean(
         details?.optimizations && details.optimizations.length > 0
@@ -392,7 +394,7 @@ export function Modal() {
     },
     {
       id: "trouble",
-      label: "트러블슈팅",
+      label: t("modal.tabs.trouble"),
       icon: "🔧",
       available: Boolean(
         hasTrouble || (details?.challenges && details.challenges.length > 0)
@@ -400,7 +402,7 @@ export function Modal() {
     },
     {
       id: "code",
-      label: "코드",
+      label: t("modal.tabs.code"),
       icon: "💻",
       available: Boolean(
         details?.codeExamples && details.codeExamples.length > 0
@@ -408,7 +410,7 @@ export function Modal() {
     },
     {
       id: "results",
-      label: "실험 결과",
+      label: t("modal.tabs.results"),
       icon: "📊",
       available: Boolean(
         details?.performance && details.performance.length > 0
@@ -416,13 +418,13 @@ export function Modal() {
     },
     {
       id: "references",
-      label: "참고문헌",
+      label: t("modal.tabs.references"),
       icon: "📚",
       available: Boolean(details?.references && details.references.length > 0),
     },
     {
       id: "lesson",
-      label: "배운 점",
+      label: t("modal.tabs.lesson"),
       icon: "💡",
       available: Boolean(
         // Main node uses Profile/Research for learnings
@@ -433,19 +435,19 @@ export function Modal() {
     // Legacy tabs (Hidden for Main Node now as they are integrated into Profile, hidden for others as unused)
     {
       id: "career",
-      label: "경력",
+      label: t("modal.tabs.career"),
       icon: "💼",
       available: false,
     },
     {
       id: "education",
-      label: "학력",
+      label: t("modal.tabs.education"),
       icon: "🎓",
       available: false,
     },
     {
       id: "skills",
-      label: "기술",
+      label: t("modal.tabs.skills"),
       icon: "🛠️",
       available: Boolean(
         node?.type !== "main" && details?.skills && details.skills.length > 0
@@ -473,7 +475,7 @@ export function Modal() {
 
       {/* 이전 노드 버튼 (왼쪽) - 데스크톱에서만 표시 */}
       <div className="hidden md:block">
-        <MiniTooltip content="이전 노드 (←)">
+        <MiniTooltip content={t("modal.navigation.prevNode")}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -513,7 +515,7 @@ export function Modal() {
                 : "rgba(0, 0, 0, 0.1)";
               e.currentTarget.style.boxShadow = "none";
             }}
-            aria-label="이전 노드"
+            aria-label={t("modal.aria.prevNode")}
           >
             <svg
               className="w-5 h-5 md:w-6 md:h-6"
@@ -535,7 +537,7 @@ export function Modal() {
 
       {/* 다음 노드 버튼 (오른쪽) - 데스크톱에서만 표시 */}
       <div className="hidden md:block">
-        <MiniTooltip content="다음 노드 (→)">
+        <MiniTooltip content={t("modal.navigation.nextNode")}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -575,7 +577,7 @@ export function Modal() {
                 : "rgba(0, 0, 0, 0.1)";
               e.currentTarget.style.boxShadow = "none";
             }}
-            aria-label="다음 노드"
+            aria-label={t("modal.aria.nextNode")}
           >
             <svg
               className="w-5 h-5 md:w-6 md:h-6"
@@ -687,7 +689,7 @@ export function Modal() {
                 <div className="flex items-center gap-2 min-w-0">
                   {/* 제목 */}
                   {details?.link ? (
-                    <MiniTooltip content="GitHub에서 보기">
+                    <MiniTooltip content={t("modal.links.github")}>
                       <a
                         href={details.link}
                         target="_blank"
@@ -881,7 +883,7 @@ export function Modal() {
                         >
                           /
                         </span>
-                        <MiniTooltip content="배포된 사이트 보기">
+                        <MiniTooltip content={t("modal.links.deploy")}>
                           <a
                             href={details.deployLink}
                             target="_blank"
@@ -932,7 +934,7 @@ export function Modal() {
                         >
                           /
                         </span>
-                        <MiniTooltip content="PDF 보기">
+                        <MiniTooltip content={t("modal.links.pdf")}>
                           <a
                             href={details.pdfLink}
                             target="_blank"
@@ -982,7 +984,7 @@ export function Modal() {
                         >
                           /
                         </span>
-                        <MiniTooltip content="기술 블로그 보기">
+                        <MiniTooltip content={t("modal.links.blog")}>
                           <a
                             href={details.blogLink}
                             target="_blank"
@@ -1069,10 +1071,10 @@ export function Modal() {
                       });
 
                       const typeLabels: Record<string, string> = {
-                        main: "메인",
-                        project: "프로젝트",
-                        skill: "스킬",
-                        lesson: "교훈",
+                        main: t("nodeTypes.main"),
+                        project: t("nodeTypes.project"),
+                        skill: t("nodeTypes.skill"),
+                        lesson: t("nodeTypes.lesson"),
                       };
 
                       const typeIcons: Record<string, string> = {
@@ -1085,14 +1087,15 @@ export function Modal() {
                       // 타입 순서 정의: main → project → skill → lesson
                       const typeOrder = ["main", "project", "skill", "lesson"];
 
-                      // 데스크톱용 형식: "메인 1개, 스킬 7개"
+                      // 데스크톱용 형식: "Main 1, Skill 7"
                       const parts = typeOrder
                         .filter((type) => connectionsByType[type])
                         .map(
                           (type) =>
-                            `${typeLabels[type] || type} ${
-                              connectionsByType[type].length
-                            }개`
+                            `${typeLabels[type] || type} ${t(
+                              "modal.connectionCount",
+                              { count: connectionsByType[type].length }
+                            )}`
                         )
                         .join(", ");
 
@@ -1158,11 +1161,11 @@ export function Modal() {
                                   </span>
                                   {/* 데스크톱: 기존 형식 + 연결 */}
                                   <span className="hidden md:inline">
-                                    {parts} 연결
+                                    {parts} {t("modal.connectionsSuffix")}
                                   </span>
                                 </>
                               ) : (
-                                "연결 없음"
+                                t("modal.noConnections")
                               )}
                             </span>
                             {totalConnections > 0 && (
@@ -1337,7 +1340,7 @@ export function Modal() {
                   : "rgba(0, 0, 0, 0.05)";
                 e.currentTarget.style.boxShadow = "none";
               }}
-              aria-label="닫기 (ESC)"
+              aria-label={t("modal.aria.close")}
             >
               <svg
                 className="w-5 h-5 transition-all duration-300 group-hover:rotate-90"
@@ -1846,7 +1849,7 @@ export function Modal() {
                           className="text-xs opacity-50 group-hover:opacity-100 transition-opacity font-mono"
                           style={{ color: nodeColor }}
                         >
-                          OPEN ↗
+                          {t("modal.openProject")}
                         </span>
                       </div>
                       <p
