@@ -62,7 +62,7 @@ export function FloatingContactButton() {
           fixed bottom-6 left-6 md:left-auto md:right-52 z-20
           w-14 h-14 rounded-full
           flex items-center justify-center
-          transition-all duration-300
+          transition-all duration-300 cursor-pointer
           hover:scale-110 active:scale-95
           ${isOpen ? "rotate-45" : ""}
         `}

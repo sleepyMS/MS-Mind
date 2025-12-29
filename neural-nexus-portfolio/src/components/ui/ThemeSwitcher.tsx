@@ -10,7 +10,7 @@ export function ThemeSwitcher() {
   return (
     <button
       onClick={toggleTheme}
-      className="fixed top-6 right-6 z-30 group"
+      className="fixed top-6 right-6 z-30 group cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200"
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
       aria-label="Toggle theme"
     >

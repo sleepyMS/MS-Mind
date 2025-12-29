@@ -258,7 +258,7 @@ export function SidePanel() {
         className={`
           fixed left-4 top-1/2 -translate-y-1/2 z-40
           w-10 h-10 rounded-xl flex items-center justify-center
-          transition-all duration-300 hover:scale-110
+          transition-all duration-300 hover:scale-110 cursor-pointer active:scale-95
           ${
             isSidePanelOpen
               ? "translate-x-64 md:translate-x-72"
@@ -356,7 +356,7 @@ export function SidePanel() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center transition-all"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95"
                 style={{
                   background: isDark
                     ? "rgba(255,255,255,0.1)"
@@ -405,7 +405,7 @@ export function SidePanel() {
                 {/* 그룹 헤더 */}
                 <button
                   onClick={() => toggleType(type)}
-                  className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
+                  className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] cursor-pointer active:scale-[0.98]"
                   style={{
                     background: isExpanded ? `${color}10` : "transparent",
                     border: isExpanded
@@ -489,7 +489,7 @@ export function SidePanel() {
                               {/* 카테고리 헤더 */}
                               <button
                                 onClick={() => toggleCategory(category)}
-                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200"
+                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                                 style={{
                                   background: isCatExpanded
                                     ? `${catColor}15`
@@ -546,7 +546,7 @@ export function SidePanel() {
                                         onMouseLeave={() =>
                                           handleNodeHover(null)
                                         }
-                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300"
+                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300 cursor-pointer"
                                         style={{
                                           background: isHovered
                                             ? `${nodeColor}15`
@@ -610,7 +610,7 @@ export function SidePanel() {
                               {/* 스킬 카테고리 헤더 */}
                               <button
                                 onClick={() => toggleSkillCategory(category)}
-                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200"
+                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                                 style={{
                                   background: isCatExpanded
                                     ? `${catColor}15`
@@ -667,7 +667,7 @@ export function SidePanel() {
                                         onMouseLeave={() =>
                                           handleNodeHover(null)
                                         }
-                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300"
+                                        className="group w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-left transition-all duration-300 cursor-pointer"
                                         style={{
                                           background: isHovered
                                             ? `${nodeColor}15`
@@ -716,7 +716,7 @@ export function SidePanel() {
                               onClick={() => handleNodeClick(node.id)}
                               onMouseEnter={() => handleNodeHover(node.id)}
                               onMouseLeave={() => handleNodeHover(null)}
-                              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-300"
+                              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all duration-300 cursor-pointer"
                               style={{
                                 background: isHovered
                                   ? `linear-gradient(135deg, ${nodeColor}20, ${nodeColor}10)`

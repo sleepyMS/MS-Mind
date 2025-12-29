@@ -71,7 +71,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
       {/* 트리거 버튼 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
         style={{
           background: isOpen
             ? isDark
@@ -182,7 +182,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
                 onClick={() => handleSelect(lang.code)}
                 onMouseEnter={() => setHoveredLang(lang.code)}
                 onMouseLeave={() => setHoveredLang(null)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 transition-all duration-150 text-left"
+                className="w-full flex items-center gap-3 px-4 py-2.5 transition-all duration-150 text-left cursor-pointer"
                 style={{
                   background: isActive
                     ? isDark

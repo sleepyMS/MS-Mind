@@ -72,7 +72,7 @@ export function ControlsGuide() {
         className={`
           fixed bottom-6 right-6 md:bottom-auto md:top-1/2 md:right-4 md:-translate-y-1/2
           z-40 w-10 h-10 rounded-full flex items-center justify-center
-          transition-all duration-300 hover:scale-110
+          transition-all duration-300 hover:scale-110 cursor-pointer active:scale-95
           ${isOpen ? "rotate-180" : ""}
         `}
         style={{

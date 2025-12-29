@@ -1235,7 +1235,7 @@ export function Modal() {
                                           onClick={() =>
                                             navigateToNode(connNode.id)
                                           }
-                                          className="w-full px-3 py-2.5 flex items-center gap-2.5 text-left transition-all duration-200"
+                                          className="w-full px-3 py-2.5 flex items-center gap-2.5 text-left transition-all duration-200 cursor-pointer active:scale-[0.98]"
                                           style={{
                                             color: isDark
                                               ? "rgba(255,255,255,0.85)"
@@ -1384,7 +1384,7 @@ export function Modal() {
                     className={`
                       relative shrink-0 flex items-center justify-center gap-2
                       px-4 py-2.5 rounded-lg text-sm font-medium
-                      transition-all duration-300
+                      transition-all duration-300 cursor-pointer
                       ${!isActive ? "hover:bg-white/10 active:scale-95" : ""}
                     `}
                     style={{
@@ -1800,7 +1800,7 @@ export function Modal() {
                 {details.keyProjects.map((project, idx) => (
                   <button
                     key={idx}
-                    className="group relative p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1 text-left w-full overflow-hidden"
+                    className="group relative p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1 text-left w-full overflow-hidden cursor-pointer active:scale-[0.98]"
                     style={{
                       background: isDark
                         ? "rgba(255,255,255,0.03)"
@@ -1812,6 +1812,16 @@ export function Modal() {
                     onClick={(e) => {
                       e.stopPropagation();
                       navigateToNode(project.id);
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = `${nodeColor}50`;
+                      e.currentTarget.style.boxShadow = `0 8px 30px ${nodeColor}20, 0 4px 15px ${nodeColor}10`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = isDark
+                        ? "rgba(255,255,255,0.1)"
+                        : "rgba(0,0,0,0.05)";
+                      e.currentTarget.style.boxShadow = "none";
                     }}
                   >
                     {/* Hover Glow */}
