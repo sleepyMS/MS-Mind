@@ -485,6 +485,7 @@ export function Modal() {
             p-3 md:p-4 rounded-full
             transition-all duration-300
             hover:scale-110 active:scale-95
+            cursor-pointer
             ${
               isVisible
                 ? "opacity-100 translate-x-0"
@@ -547,6 +548,7 @@ export function Modal() {
             p-3 md:p-4 rounded-full
             transition-all duration-300
             hover:scale-110 active:scale-95
+            cursor-pointer
             ${
               isVisible
                 ? "opacity-100 translate-x-0"
