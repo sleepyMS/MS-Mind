@@ -1,4 +1,5 @@
 import { useMemo, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import { Node } from "./Node";
@@ -8,7 +9,7 @@ import { Background } from "./Background";
 import { PostProcessing } from "./PostProcessing";
 import { useForceGraph } from "../../hooks/useForceGraph";
 import { useAppStore } from "../../stores/useAppStore";
-import { nodesData } from "../../data";
+import { getNodesData } from "../../data";
 import type { NeuralData } from "../../types";
 import * as THREE from "three";
 
@@ -115,9 +116,10 @@ export function Scene() {
     nodePositions,
   } = useAppStore();
   const isDark = theme === "dark";
+  const { i18n } = useTranslation();
 
-  // JSON 데이터를 타입화된 데이터로 변환
-  const data = nodesData as NeuralData;
+  // JSON 데이터를 타입화된 데이터로 변환 (언어별)
+  const data = getNodesData(i18n.language);
   const nodes = data.nodes;
 
   // 포스 시뮬레이션으로 유기적인 노드 위치 계산 (초기화)

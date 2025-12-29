@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import { nodesData } from "../../data";
+import { getNodesData } from "../../data";
 import type { NeuralData } from "../../types";
 
 /**
@@ -12,13 +12,13 @@ import { getThemeColor } from "../../utils/themeUtils";
 
 export function Tooltip() {
   const { hoveredNode, theme } = useAppStore();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isDark = theme === "dark";
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const data = nodesData as NeuralData;
+  const data = getNodesData(i18n.language);
   const node = hoveredNode
     ? data.nodes.find((n) => n.id === hoveredNode)
     : null;

@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import { nodesData } from "../../data";
-import type { NeuralData } from "../../types";
+import { getNodesData } from "../../data";
 import { getThemeColor } from "../../utils/themeUtils";
 import { MiniTooltip } from "./MiniTooltip";
 import ReactMarkdown from "react-markdown";
@@ -37,7 +36,7 @@ export function Modal() {
     theme,
     nodePositions,
   } = useAppStore();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isDark = theme === "dark";
 
   const [activeTab, setActiveTab] = useState<TabType>("description");
@@ -57,7 +56,7 @@ export function Modal() {
   const minSwipeDistance = 80; // 노드 전환 최소 거리
   const maxSwipeDistance = 150; // 최대 이동 제한 (저항감)
 
-  const data = nodesData as NeuralData;
+  const data = getNodesData(i18n.language);
   const node = data.nodes.find((n) => n.id === activeNode);
 
   const rawColor = node?.color || "#00ffff";
@@ -1515,7 +1514,7 @@ export function Modal() {
                                 color: nodeColor,
                               }}
                             >
-                              이름
+                              {t("modal.profile.name")}
                             </th>
                             <td
                               className="px-4 py-3 font-medium"
@@ -1527,7 +1526,7 @@ export function Modal() {
                             >
                               {
                                 details.personalInfo.find(
-                                  (i) => i.key === "이름"
+                                  (i) => i.key === "name"
                                 )?.value
                               }
                             </td>
@@ -1544,7 +1543,7 @@ export function Modal() {
                                 color: nodeColor,
                               }}
                             >
-                              생년월일
+                              {t("modal.profile.birthDate")}
                             </th>
                             <td
                               className="px-4 py-3 font-medium align-middle"
@@ -1552,7 +1551,7 @@ export function Modal() {
                             >
                               {
                                 details.personalInfo.find(
-                                  (i) => i.key === "생년월일"
+                                  (i) => i.key === "birthDate"
                                 )?.value
                               }
                             </td>
@@ -1578,7 +1577,7 @@ export function Modal() {
                                 color: nodeColor,
                               }}
                             >
-                              전공
+                              {t("modal.profile.major")}
                             </th>
                             <td
                               className="px-4 py-3 font-medium"
@@ -1590,7 +1589,7 @@ export function Modal() {
                             >
                               {
                                 details.personalInfo.find(
-                                  (i) => i.key === "전공"
+                                  (i) => i.key === "major"
                                 )?.value
                               }
                             </td>
@@ -1616,12 +1615,12 @@ export function Modal() {
                                 color: nodeColor,
                               }}
                             >
-                              연락처
+                              {t("modal.profile.contact")}
                             </th>
                             <td className="px-4 py-3 font-medium" colSpan={3}>
                               {
                                 details.personalInfo.find(
-                                  (i) => i.key === "연락처"
+                                  (i) => i.key === "contact"
                                 )?.value
                               }
                             </td>
@@ -1641,12 +1640,12 @@ export function Modal() {
                                 color: nodeColor,
                               }}
                             >
-                              이메일
+                              {t("modal.profile.email")}
                             </th>
                             <td className="px-4 py-3 font-medium" colSpan={3}>
                               {
                                 details.personalInfo.find(
-                                  (i) => i.key === "이메일"
+                                  (i) => i.key === "email"
                                 )?.value
                               }
                             </td>
@@ -2005,7 +2004,7 @@ export function Modal() {
                           : "rgba(0,0,0,0.5)",
                       }}
                     >
-                      Links
+                      {t("modal.linksSection")}
                     </h3>
                     <div className="flex flex-wrap gap-3">
                       {details?.link && (
@@ -2041,7 +2040,9 @@ export function Modal() {
                               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                             />
                           </svg>
-                          <span className="font-medium">프로젝트 보기</span>
+                          <span className="font-medium">
+                            {t("modal.viewProject")}
+                          </span>
                         </a>
                       )}
 
@@ -2079,7 +2080,9 @@ export function Modal() {
                               d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
                             />
                           </svg>
-                          <span className="font-bold">배포 사이트</span>
+                          <span className="font-bold">
+                            {t("modal.links.deploy")}
+                          </span>
                         </a>
                       )}
 
@@ -2122,7 +2125,9 @@ export function Modal() {
                               d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                             />
                           </svg>
-                          <span className="font-medium">논문 PDF</span>
+                          <span className="font-medium">
+                            {t("modal.links.pdf")}
+                          </span>
                         </a>
                       )}
 
@@ -2166,7 +2171,9 @@ export function Modal() {
                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                           </svg>
-                          <span className="font-medium">기술 블로그</span>
+                          <span className="font-medium">
+                            {t("modal.links.blog")}
+                          </span>
                         </a>
                       )}
                     </div>
@@ -2184,7 +2191,7 @@ export function Modal() {
                           : "rgba(0,0,0,0.5)",
                       }}
                     >
-                      Tech Stack & Decisions
+                      {t("modal.techStackDecisions")}
                     </h3>
                     <div
                       className="rounded-xl overflow-hidden"
@@ -3055,17 +3062,17 @@ export function Modal() {
                     "state-management": "#8b5cf6",
                   };
                   const categoryLabels: Record<string, string> = {
-                    architecture: "아키텍처",
-                    async: "비동기",
-                    database: "데이터베이스",
-                    business: "비즈니스 로직",
-                    realtime: "실시간",
-                    optimization: "최적화",
-                    performance: "성능",
-                    troubleshooting: "트러블슈팅",
-                    analytics: "분석",
-                    auth: "인증",
-                    "state-management": "상태관리",
+                    architecture: t("categories.code.architecture"),
+                    async: t("categories.code.async"),
+                    database: t("categories.code.database"),
+                    business: t("categories.code.business"),
+                    realtime: t("categories.code.realtime"),
+                    optimization: t("categories.code.optimization"),
+                    performance: t("categories.code.performance"),
+                    troubleshooting: t("categories.code.troubleshooting"),
+                    analytics: t("categories.code.analytics"),
+                    auth: t("categories.code.auth"),
+                    "state-management": t("categories.code.state-management"),
                   };
                   const color = categoryColors[example.category] || nodeColor;
 
@@ -3374,7 +3381,7 @@ export function Modal() {
               color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.4)",
             }}
           >
-            👈 스와이프로 순회 👉
+            {t("modal.navigation.swipeTraverse")}
           </span>
 
           {/* 데스크톱: 키보드 힌트 */}
@@ -3404,7 +3411,7 @@ export function Modal() {
             >
               →
             </kbd>
-            순회
+            {t("modal.navigation.traverse")}
           </span>
           <span
             className="text-xs hidden md:flex items-center gap-1.5 transition-colors duration-300"
@@ -3422,7 +3429,7 @@ export function Modal() {
             >
               ESC
             </kbd>
-            닫기
+            {t("modal.close")}
           </span>
         </div>
       </div>

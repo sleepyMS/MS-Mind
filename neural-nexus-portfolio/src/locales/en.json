@@ -31,11 +31,21 @@
       "creative": "Creative"
     },
     "skill": {
-      "language": "Language",
-      "framework": "Framework",
-      "library": "Library",
       "tool": "Tool",
       "database": "Database"
+    },
+    "code": {
+      "architecture": "Architecture",
+      "async": "Async",
+      "database": "Database",
+      "business": "Business Logic",
+      "realtime": "Real-time",
+      "optimization": "Optimization",
+      "performance": "Performance",
+      "troubleshooting": "Troubleshooting",
+      "analytics": "Analytics",
+      "auth": "Auth",
+      "state-management": "State Management"
     }
   },
   "modal": {
@@ -57,6 +67,9 @@
     },
     "techStack": "Tech Stack",
     "viewProject": "View Project",
+    "viewPaper": "Paper PDF",
+    "viewBlog": "Tech Blog",
+    "close": "Close",
     "connections": "{{count}} connections",
     "connectionCount": "{{count}}",
     "connectionsSuffix": "Connected",
@@ -66,28 +79,41 @@
     "solution": "Solution",
     "keyLesson": "Key Lesson",
     "closeHint": "Press ESC to close",
+    "linksSection": "Links",
+    "techStackDecisions": "Tech Stack & Decisions",
     "navigation": {
       "prevNode": "Previous Node (←)",
-      "nextNode": "Next Node (→)"
+      "nextNode": "Next Node (→)",
+      "traverse": "Traverse",
+      "swipeTraverse": "👈 Swipe to Traverse 👉"
     },
     "links": {
       "github": "View on GitHub",
-      "deploy": "View Deployed Site",
-      "pdf": "View PDF",
-      "blog": "View Tech Blog"
+      "deploy": "Deployed Site",
+      "pdf": "Paper PDF",
+      "blog": "Tech Blog"
     },
     "aria": {
       "prevNode": "Previous node",
       "nextNode": "Next node",
-      "close": "Close (ESC)"
+      "close": "Close (ESC)",
+      "traverse": "Traverse"
     },
     "contact": {
       "label": "Contact"
+    },
+    "profile": {
+      "name": "Name",
+      "birthDate": "Birth Date",
+      "major": "Major",
+      "contact": "Contact",
+      "email": "Email"
     }
   },
   "filter": {
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "viewAll": "View All"
   },
   "language": {
     "toggle": "한국어"

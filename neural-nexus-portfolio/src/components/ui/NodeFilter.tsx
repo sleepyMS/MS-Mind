@@ -15,7 +15,6 @@ interface FilterOption {
 
 interface CategoryOption {
   category: ProjectCategory;
-  label: string;
   darkColor: string;
   lightColor: string;
   icon: string;
@@ -48,28 +47,24 @@ const filterOptions: FilterOption[] = [
 const categoryOptions: CategoryOption[] = [
   {
     category: "frontend",
-    label: "프론트엔드",
     darkColor: "#c026d3",
     lightColor: "#a21caf",
     icon: "🎨",
   },
   {
     category: "backend",
-    label: "백엔드",
     darkColor: "#f97316",
     lightColor: "#ea580c",
     icon: "⚙️",
   },
   {
     category: "ai-ml",
-    label: "AI / ML",
     darkColor: "#8b5cf6",
     lightColor: "#7c3aed",
     icon: "🤖",
   },
   {
     category: "creative",
-    label: "크리에이티브",
     darkColor: "#10b981",
     lightColor: "#059669",
     icon: "🎮",
@@ -378,7 +373,7 @@ export function NodeFilter() {
                           : "rgba(0,0,0,0.7)",
                       }}
                     >
-                      전체 보기
+                      {t("filter.viewAll")}
                     </span>
                     {allCategoriesSelected && (
                       <span
@@ -442,7 +437,7 @@ export function NodeFilter() {
                         >
                           <span>{catOption.icon}</span>
                           <span style={{ color: catColor }}>
-                            {catOption.label}
+                            {t(`categories.project.${catOption.category}`)}
                           </span>
                           {isSelected && (
                             <span

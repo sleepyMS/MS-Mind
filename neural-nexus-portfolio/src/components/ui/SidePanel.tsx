@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import { nodesData } from "../../data";
+import { getNodesData } from "../../data";
 import type {
   NeuralData,
   NodeType,
@@ -92,7 +92,7 @@ const skillCategoryConfig: Record<
  * 노드 탐색을 위한 사이드 패널 컴포넌트
  */
 export function SidePanel() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     isSidePanelOpen,
     setSidePanelOpen,
@@ -142,7 +142,7 @@ export function SidePanel() {
     "skill",
   ]);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
-  const data = nodesData as NeuralData;
+  const data = getNodesData(i18n.language);
 
   const filteredNodes = data.nodes.filter(
     (node) =>

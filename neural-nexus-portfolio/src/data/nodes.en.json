@@ -1,0 +1,2054 @@
+{
+  "nodes": [
+    {
+      "id": "me",
+      "type": "main",
+      "label": "Min Seok",
+      "connections": [
+        "project-chatbot",
+        "project-portfolio",
+        "project-processing",
+        "project-cortex",
+        "project-cortex-fe",
+        "project-paper-lstm",
+        "project-paper-tft"
+      ],
+      "details": {
+        "description": "Hello! I'm Min Seok Choi, a 'Digital Architect' who builds spaces (Frontend) where users feel most comfortable, adding meticulous finishing touches on top of solid systems and structural design (Backend).\n\nFrom the stability of the invisible framework to the 1-pixel details at users' fingertips, I design perfect service experiences with precision construction that tolerates no margin of error.",
+        "personalInfo": [
+          { "key": "name", "value": "Min Seok Choi" },
+          { "key": "birthDate", "value": "Oct 17, 2001" },
+          { "key": "major", "value": "Software Engineering" },
+          { "key": "contact", "value": "+82 10 5848 1017" },
+          { "key": "email", "value": "minseok011017@gmail.com" }
+        ],
+        "philosophy": {
+          "title": "Deep Dive & Wide View",
+          "content": "I pursue the balance between 'Deep Dive' into specific technologies and 'Wide View' of the entire system. Beyond simply writing code, I aim to be a generalist who understands business objectives and designs optimal architectures."
+        },
+        "extendedBio": "Just as great buildings can only embrace people when built on solid foundations, I believe software can only begin to care for users when built on robust backend systems.\n\nThe frontend I envision is not just about appearances, but a process of determining the temperature of the space users inhabit through 'meticulous finishing.' This is the core of 'spatial experience (UX) design' that helps users achieve their goals most intuitively and comfortably.\n\nJust as a 1mm error threatens a building's stability, I guard against complacency in every line of code, 'constructing' digital spaces where structural stability and aesthetic comfort coexist. And I add AI technology to make these spaces transcend mere structures, becoming living organisms that anticipate and respond to user intent.",
+        "profile": {
+          "education": [
+            {
+              "period": "Mar 2020 – Present",
+              "school": "Kangnam University",
+              "major": "Software Application",
+              "status": "Current (Senior)",
+              "gpa": "4.29 / 4.5 (97.6%) - Top of class for last 4 semesters"
+            },
+            {
+              "period": "Mar 2017 – Feb 2020",
+              "school": "Hyowon High School",
+              "major": "Liberal Arts",
+              "status": "Graduated"
+            }
+          ],
+          "career": [],
+          "skills": [
+            {
+              "category": "Languages",
+              "items": [
+                "Python",
+                "TypeScript",
+                "JavaScript",
+                "Java",
+                "C++",
+                "SQL"
+              ]
+            },
+            {
+              "category": "Frontend",
+              "items": [
+                "React",
+                "Next.js",
+                "Three.js (R3F)",
+                "TailwindCSS",
+                "Zustand",
+                "TanStack Query"
+              ]
+            },
+            {
+              "category": "Backend",
+              "items": ["FastAPI", "NestJS", "Node.js", "Django", "Spring Boot"]
+            },
+            {
+              "category": "Data & ML",
+              "items": [
+                "PostgreSQL",
+                "TimescaleDB",
+                "Redis",
+                "TensorFlow",
+                "PyTorch",
+                "Pandas"
+              ]
+            },
+            {
+              "category": "DevOps & Tools",
+              "items": [
+                "Docker",
+                "Git/GitHub",
+                "AWS (EC2, S3)",
+                "Vercel",
+                "Figma"
+              ]
+            }
+          ]
+        },
+        "keyProjects": [
+          {
+            "id": "project-cortex",
+            "title": "Cortex (Backend)",
+            "desc": "A quant platform that trains AI to create custom investment strategies and executes 24/7 automated trading",
+            "tech": ["FastAPI", "TimescaleDB", "Celery", "Redis"]
+          },
+          {
+            "id": "project-cortex-fe",
+            "title": "Cortex (Frontend)",
+            "desc": "An all-in-one investment platform for designing AI models without coding, from backtesting to automated trading",
+            "tech": ["Next.js", "TypeScript", "Zustand", "TanStack Query"]
+          },
+          {
+            "id": "project-chatbot",
+            "title": "GangNaengBot (Frontend)",
+            "desc": "A university AI chatbot service achieving 0ms perceived latency by overcoming LLM response delays",
+            "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
+          },
+          {
+            "id": "project-portfolio",
+            "title": "Neural Portfolio (Frontend)",
+            "desc": "A 3D interactive portfolio exploring projects connected like neurons",
+            "tech": ["R3F", "Three.js", "d3-force", "React"]
+          }
+        ],
+        "researchInterests": [
+          {
+            "category": "Time Series Forecasting",
+            "items": [
+              "Transformer-based long-term time series prediction (TFT, Informer)",
+              "Noise removal and feature extraction methodologies for financial data"
+            ]
+          },
+          {
+            "category": "Human-Computer Interaction",
+            "items": [
+              "Interface research for visualizing generative AI intent",
+              "Intuitive user experience (UX) design in 3D web environments"
+            ]
+          },
+          {
+            "category": "System Architecture",
+            "items": [
+              "Scalable systems based on MSA (Microservices Architecture)",
+              "Building distributed computing environments for high-performance data processing"
+            ]
+          }
+        ],
+        "awards": [
+          {
+            "date": "Nov 2024",
+            "title": "ACK 2024 Conference Best Paper Award",
+            "issuer": "Korean Institute of Information Scientists and Engineers"
+          }
+        ]
+      },
+      "color": "#00ffff"
+    },
+    {
+      "id": "project-chatbot",
+      "type": "project",
+      "category": "frontend",
+      "label": "GangNaengBot-Frontend",
+      "connections": [
+        "me",
+        "skill-react",
+        "skill-typescript",
+        "skill-vite",
+        "skill-tailwind",
+        "skill-zustand",
+        "skill-axios",
+        "skill-i18next"
+      ],
+      "details": {
+        "description": "A frontend project for Gangnam University's AI chatbot service, focusing on **UX Engineering** to overcome the inevitable LLM response delay (1~5s). By implementing Optimistic UI and SWR patterns, I achieved **native app-level responsiveness with 0ms perceived latency**, transcending physical network limitations.",
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Vite",
+          "TailwindCSS",
+          "Zustand",
+          "Axios",
+          "i18next"
+        ],
+        "coreFeatures": [
+          "⚡ Optimistic UI Chat: Pre-reflect UI before API response + 5 auto-retries + rollback on failure for '0ms wait' experience",
+          "🔄 Hover Prefetching + Request Deduplication: Prefetch on mouse enter + block duplicate requests with pendingPrefetches Map",
+          "💾 Stale-While-Revalidate Caching: Show cache immediately → Update in background → Seamlessly update UI if current session",
+          "🌙 FOUC-Free Dark Mode: Inject theme class at HTML parsing stage to completely block white flash",
+          "🌐 Namespace-Split i18n: Separate translation files into common/chat/profile to load only necessary resources"
+        ],
+        "techStackDocs": [
+          {
+            "name": "React & TypeScript",
+            "description": "Why TypeScript? To manage complex chat data structures (MessageItem, SessionItem) and user states without runtime errors. Strict mode forces null checks, preventing bugs in 'no chat room' states."
+          },
+          {
+            "name": "Vite",
+            "description": "Why Vite over CRA? 300ms dev server start, sub-50ms HMR. A key factor determining the efficiency of iterative UI detailing. Production bundles are also optimized via Tree Shaking."
+          },
+          {
+            "name": "TailwindCSS",
+            "description": "Why Utility-First? Removes context switching between component and style files, and enforces design tokens (spacing, colors) for rapid, consistent UI construction. JIT compiler includes only used classes."
+          },
+          {
+            "name": "Zustand",
+            "description": "Why not Redux? Global states like chat sessions and UI themes don't require complex transactions. Hook-based subscription reduces boilerplate by 70%. Map data structures efficiently manage message caches."
+          },
+          {
+            "name": "Axios + Interceptors",
+            "description": "Why Interceptors? Manually adding tokens to every request is error-prone. Centralized entry/exit points (Gateway) control auth logic and error handling."
+          },
+          {
+            "name": "i18next",
+            "description": "Why i18next? The most mature solution supporting not just text replacement but plurals, namespace splitting, browser language detection → local storage → graceful fallback to default (Korean) logic."
+          }
+        ],
+        "link": "https://github.com/sleepyMS/GangNaengBot-FE",
+        "deployLink": "https://gang-naeng-bot-fe.vercel.app/",
+        "blogLink": "https://me-in-journey.tistory.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95",
+        "features": [
+          {
+            "title": "Optimistic UI & Error Recovery (Zero-Latency)",
+            "items": [
+              "Instant Feedback: Pre-commit local message state using `set` in `useChatStore.ts` before API call. User perceives 'sent' immediately.",
+              "Smart Rollback: Rollback optimistic message with `messages.slice(0, -1)` on network failure. Initialize as empty array if new session to maintain consistency.",
+              "Auto-Retry (Transparent Resilience): Auto-retry 5 times at 500ms intervals for empty AI responses. Temporary network errors or AI server delays are recovered without user awareness."
+            ]
+          },
+          {
+            "title": "Intelligent Session Prefetching (SWR Pattern)",
+            "items": [
+              "Hover Prefetch: Background load message list on mouse enter with `prefetchSession()`. Instant display (0ms) from cache on click.",
+              "Request Deduplication: Block duplicate requests for same session using `pendingPrefetches` Map. Reuse existing Promise if already in progress.",
+              "Stale-While-Revalidate: Show cache immediately, then update latest data in background. Seamlessly update UI if it matches current session."
+            ]
+          },
+          {
+            "title": "Secure Token Rotation (Lock & Queue Patterns)",
+            "items": [
+              "Centralized Handling: Detect 401 Unauthorized response in Axios Interceptor and trigger auto-logout + redirect.",
+              "Guest Mode: Chat available with temporary user_id without login. Store user_id in Zustand upon session creation for subsequent requests."
+            ]
+          },
+          {
+            "title": "Seamless Theme Integration (FOUC Prevention)",
+            "items": [
+              "System Sync: Subscribe to OS dark mode changes via `window.matchMedia` API to instantly sync app theme.",
+              "Block FOUC: Read local storage settings and inject class into <html> at HTML parsing stage. Theme applied before JS execution."
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "Achieving '0ms' Perceived Loading with Hover Prefetching",
+            "items": [
+              "Why: Spinners after clicking a chat room break the conversation flow.",
+              "How: Connect `prefetchSession()` to `mouseEnter` event. Map-based cache prevents duplicate requests and stores session messages.",
+              "Impact: Data is ready the moment user clicks. Provides 'instant' transition regardless of physical loading time."
+            ]
+          },
+          {
+            "title": "Reducing Server Load with Request Deduplication",
+            "items": [
+              "Why: Rapid sequential clicks → 5 identical API calls → Unnecessary network traffic + server load.",
+              "How: Check pending requests with `pendingPrefetches.get(sessionId)`. Await existing Promise instead of new request.",
+              "Impact: Limit API calls to exactly 1 even with multiple clicks on same session."
+            ]
+          },
+          {
+            "title": "Drastically Improving Response Speed with Optimistic UI",
+            "items": [
+              "Why: 1-5s delay is inevitable for LLM, and it's a primary cause of user churn.",
+              "How: Apply optimistic pattern to update UI without waiting for API response.",
+              "Impact: Reduced perceived message send time from 1-2s to 0ms."
+            ]
+          },
+          {
+            "title": "Bundle Optimization with Vite + Tailwind JIT",
+            "items": [
+              "Why: Initial loading speed directly correlates with bounce rate in mobile 3G environments.",
+              "How: Exclude unused code/styles with Vite Tree Shaking + Tailwind JIT compiler.",
+              "Impact: Minimized production bundle size, achieved FCP (First Contentful Paint) within 1.5s."
+            ]
+          }
+        ],
+        "performance": [
+          {
+            "title": "Quantitative UX Improvement Metrics",
+            "description": "Maximized perceived performance using only frontend technologies in an LLM service where physically reducing server response speed is limited.",
+            "headers": ["Strategy (Pattern)", "Metric", "Before", "After"],
+            "rows": [
+              ["Optimistic UI", "Perceived Send Time", "1~2s", "0ms ⚡"],
+              [
+                "SWR + Prefetching",
+                "Session Switch Loading",
+                "500ms~1s",
+                "Instant (0ms) ⚡"
+              ],
+              [
+                "Auto-Retry Logic",
+                "Network Error Exposure",
+                "Frequent",
+                "0 (Unnoticed)"
+              ],
+              [
+                "Lock & Queue",
+                "Duplicate Requests on Token Refresh",
+                "N times",
+                "Limited to 1"
+              ]
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Async State Sync vs UI State",
+            "problem": "Users perceived server delays as 'frozen' or attempted duplicate sends, breaking data consistency.",
+            "solution": "Adopted Optimistic UI pattern to Pre-commit local state without waiting for API response, ensuring both UX responsiveness and data integrity via transaction-style rollback on failure."
+          },
+          {
+            "title": "Data Freshness vs Loading Delay (SWR Pattern)",
+            "problem": "Fetching latest data every time caused loading delays (choppy UX), while simple caching left data Stale.",
+            "solution": "Implemented SWR (Stale-While-Revalidate) strategy. Render cached data immediately (0ms) and silently Revalidate in background. Also used `Map` for Request Deduplication to block unnecessary network load."
+          },
+          {
+            "title": "Transient Failures & Resilience",
+            "problem": "Exposing simple error messages (500) for empty LLM responses or timeouts severely degraded UX.",
+            "solution": "Implemented background Silent Retry logic. Retries up to 5 times at 500ms intervals, allowing users to see only the successful result without noticing the retry process ('AI is thinking'), enhancing trust."
+          },
+          {
+            "title": "Fragmented Auth State Management",
+            "problem": "Handling 401 errors and token expiration individually in each component led to code duplication and security holes from missed exceptions.",
+            "solution": "Centralized auth error handling using Axios Interceptors. Batch detect token expiration at entry/exit points and handle auto-logout/redirect, completely separating business logic from system concerns."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "UX is Performance (Perceived Performance)",
+            "content": "Physical loading time can't be zero, but Optimistic UI and Prefetching can make the 'felt' wait time zero. I learned that improving perceived performance impacts user satisfaction more than actual performance tuning."
+          },
+          {
+            "title": "Leveraging Map Data Structures",
+            "content": "`messageCache` and `pendingPrefetches` using Maps allow concise implementation of caching and deduplication with O(1) lookups. Maps also ensure reference stability during insertion/deletion compared to objects."
+          },
+          {
+            "title": "The Power of Declarative Abstraction",
+            "content": "Abstracting repetitive logic like API calls, error handling, and theme sync into Custom Hooks and Interceptors allowed UI components to focus solely on 'presentation'. Gained flexibility to modify business logic in one place."
+          },
+          {
+            "title": "Global Service Mindset",
+            "content": "Approaching i18n as simple translation led to maintenance hell. I deeply understood that namespace separation and scalability must be considered from the design phase, and language includes cultural contexts (date formats, word order)."
+          },
+          {
+            "title": "State Management: Location Matters",
+            "content": "Stored `pendingPrefetches` outside components (module scope) and `messageCache` inside Zustand. Learned that deciding state location based on re-render triggers is key to managing both performance and complexity."
+          }
+        ],
+        "codeExamples": [
+          {
+            "title": "Optimistic UI + Auto Retry + Rollback",
+            "category": "performance",
+            "description": "Why Optimistic? Even 0.5s waiting for API response breaks conversation flow. Display message first, retry 5 times on empty response, and rollback only on failure to provide 'instant reaction' experience.",
+            "filePath": "src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "snippet": "// 1. Optimistic UI\nset(state => ({ messages: [...state.messages, userMessage], isSending: true }));\n\ntry {\n  const response = await chatService.sendMessage({ session_id, message });\n  \n  // 2. Auto Retry (Max 5)\n  for (let i = 0; i < 5 && !response.text?.trim(); i++) {\n    await new Promise(r => setTimeout(r, 500));\n    response = await chatService.sendMessage({ session_id, message });\n  }\n  \n  set(state => ({ messages: [...state.messages, assistantMessage] }));\n} catch {\n  // 3. Rollback on failure\n  set(state => ({ messages: state.messages.slice(0, -1) }));\n}"
+          },
+          {
+            "title": "Hover Prefetching + Request Deduplication",
+            "category": "performance",
+            "description": "Why Prefetch? Loading spinners after click hurt UX. Load data in advance on mouse enter, and block duplicate requests with Map to save server load.",
+            "filePath": "src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "snippet": "const pendingPrefetches = new Map<string, Promise<MessageItem[]>>();\n\nprefetchSession: (sessionId: string) => {\n  // Skip if cached\n  if (messageCache.has(sessionId)) return;\n  // Deduplicate if in progress\n  if (pendingPrefetches.has(sessionId)) return;\n  \n  const promise = sessionsService.getSessionMessages(sessionId)\n    .then(res => {\n      messageCache.set(sessionId, res.messages);\n      return res.messages;\n    })\n    .finally(() => pendingPrefetches.delete(sessionId));\n  \n  pendingPrefetches.set(sessionId, promise);\n}"
+          },
+          {
+            "title": "Stale-While-Revalidate Caching",
+            "category": "performance",
+            "description": "Why SWR? Always fetching = slow. Only cache = stale. combine both for fast response AND freshness.",
+            "filePath": "src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "snippet": "selectSession: async (sessionId, forceRefresh = false) => {\n  const cached = messageCache.get(sessionId);\n  \n  if (cached && !forceRefresh) {\n    // 1. Show cache immediately\n    set({ messages: cached, isLoading: false });\n    \n    // 2. Fetch latest in background\n    sessionsService.getSessionMessages(sessionId)\n      .then(res => {\n        messageCache.set(sessionId, res.messages);\n        // 3. Silently update UI if current session\n        if (get().currentSessionId === sessionId) {\n          set({ messages: res.messages });\n        }\n      });\n    return;\n  }\n  // Load normally if no cache...\n}"
+          },
+          {
+            "title": "Guest Mode Auto Session Creation",
+            "category": "business",
+            "description": "Why Auto-Create? Wanted immediate usage without login. Auto-create session on first message and set title based on content.",
+            "filePath": "src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "snippet": "sendMessage: async (message, createSessionIfNeeded = false) => {\n  let { currentSessionId } = get();\n  \n  // If no session and auto-create flag\n  if (!currentSessionId && createSessionIfNeeded) {\n    const res = await sessionsService.createSession();\n    currentSessionId = res.session_id;\n    \n    const newSession = {\n      sid: res.session_id,\n      title: message.slice(0, 50) + (message.length > 50 ? '...' : ''),\n      is_active: true,\n    };\n    set({ sessions: [newSession, ...sessions], currentSessionId });\n  }\n  // Send message...\n}"
+          },
+          {
+            "title": "Optimistic Delete + Rollback",
+            "category": "performance",
+            "description": "Why Optimistic Delete? Waiting for delete confirmation feels slow. Remove from UI immediately, restore only on failure.",
+            "filePath": "src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "snippet": "deleteSession: async (sessionId) => {\n  const { sessions, currentSessionId } = get();\n  const deleted = sessions.find(s => s.sid === sessionId);\n  \n  // 1. Optimistic UI: Delete immediately\n  set({ sessions: sessions.filter(s => s.sid !== sessionId) });\n  \n  try {\n    await sessionsService.deleteSession(sessionId);\n  } catch {\n    // 2. Rollback on failure\n    if (deleted) {\n      set(state => ({\n        sessions: [deleted, ...state.sessions],\n        error: 'Failed to delete.'\n      }));\n    }\n  }\n}"
+          },
+          {
+            "title": "i18n Namespace Structure",
+            "category": "architecture",
+            "description": "Why Namespace? Putting all translations in one file slows initial load. Separated into common/chat/profile to load only needed resources.",
+            "filePath": "src/i18n/index.ts",
+            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/i18n/index.ts",
+            "snippet": "import i18n from 'i18next';\nimport { initReactI18next } from 'react-i18next';\nimport LanguageDetector from 'i18next-browser-languagedetector';\n\ni18n.use(LanguageDetector).use(initReactI18next).init({\n  fallbackLng: 'ko',\n  ns: ['common', 'chat', 'profile'],  // Separate namespaces\n  defaultNS: 'common',\n  interpolation: { escapeValue: false },\n});"
+          }
+        ]
+      },
+      "color": "#c026d3"
+    },
+    {
+      "id": "project-portfolio",
+      "type": "project",
+      "category": "frontend",
+      "label": "Neural Portfolio",
+      "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
+      "details": {
+        "description": "The portfolio you are viewing now! A 3D neural network-based portfolio visualizing interconnected projects instead of a static sitemap. Focusing on 'seamless 60fps experience' and 'intuitive navigation UX' rather than just 'pretty 3D', I incorporated engineering depth such as d3-force physics engine, Custom Cubic Easing animations, and Dual Ref event handling.",
+        "link": "https://github.com/sleepyMS/MS-Mind",
+        "coreFeatures": [
+          "⚡ 300-tick Warm-up: Prevent explosion on physics init. Pre-calculate synchronously before render for 'balanced neural network' start",
+          "🎥 Custom Cubic Easing Camera: Implemented easeInOutCubic math manually without libs. Reverse-calculate sceneRotation to always face node front",
+          "🔄 180° Theme Rotation: 180° scene rotation animation on theme switch + dynamic interpolation of Bloom/Vignette expressing 'Space→Sky' narrative",
+          "🖱️ Dual Ref Hover Handling: Overcome event lag between WebGL Mesh and DOM Label. 10ms debounce prevents focus loss",
+          "📊 Zustand Transient Update: Minimize React re-renders in 60fps loop. Mutate animation vars directly via useRef to prevent frame drops",
+          "🔗 BFS Indirect Path Finding: Visualize hidden connections between filtered nodes via BFS. Maintain context",
+          "📱 Swipe Angle Detection: Compare vertical/horizontal delta to distinguish scroll vs node traversal. Improved mobile UX"
+        ],
+        "techStackDocs": [
+          {
+            "name": "React Three Fiber (R3F)",
+            "description": "Why R3F over Vanilla Three.js? To solve complex sync between React state and 3D scene. Manage scene graph declaratively with JSX and easily access animation loop via useFrame for max maintainability."
+          },
+          {
+            "name": "Zustand + Transient Updates",
+            "description": "Why Transient? Calling setState every frame in 60fps causes frame drops due to React Reconciler overhead. Animation vars (progress, position) are managed via useRef, calling set() only for final UI updates to eliminate bottlenecks."
+          },
+          {
+            "name": "d3-force-3d",
+            "description": "Why Physics Engine? Manual layout is hard to maintain. Implemented 'alive' layout where data finds its own balance by simulating attraction/repulsion between nodes. forceCollide() prevents overlap."
+          },
+          {
+            "name": "Post-processing (Bloom & Vignette)",
+            "description": "Why Effects? Not just for looks. Bloom focuses attention on key nodes, Vignette darkens edges to increase immersion. Dynamically adjusted intensity per theme to prevent Whiteout in light mode."
+          },
+          {
+            "name": "GSAP-free Animation",
+            "description": "Why No GSAP? For bundle size reduction and learning. Manually implemented easeInOutCubic formula (`t < 0.5 ? 4*t³ : 1-((-2t+2)³)/2`) and interpolated with THREE.Vector3.lerpVectors() to achieve smooth animations without libraries."
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "BFS Based Indirect Path Finding",
+            "items": [
+              "Why: Category filters hide intermediate nodes, breaking visual connection clarity.",
+              "How: `findConnectedVisibleNodes()` uses BFS to find connected visible node pairs through hidden nodes. Guarantees shortest path via level traversal.",
+              "Impact: Maintains context by visualizing relationships as dotted lines even when filters are applied."
+            ]
+          },
+          {
+            "title": "Ref Based 60fps Animation Loop",
+            "items": [
+              "Why: setState inside useFrame = 60fps × React Reconciler = Frame Drop.",
+              "How: Directly mutate ref with `animationRef.current.progress += delta`. Manipulate camera.position with lerpVectors(). Call setIsAnimating(false) only upon completion.",
+              "Impact: Guarantees seamless 60fps animation without React interference."
+            ]
+          },
+          {
+            "title": "Physics Engine 300-tick Warm-up",
+            "items": [
+              "Why: Visual noise of nodes jittering until physics stabilization ruins first impressions.",
+              "How: Execute 300 ticks of simulation synchronously via `for` loop before rendering. Memoize to prevent re-calculation.",
+              "Impact: User faces an instantly 'stabilized neural network', enhancing polish."
+            ]
+          },
+          {
+            "title": "Inverse Scene Rotation Calculation",
+            "items": [
+              "Why: Simple coordinate movement when scene is rotated shows the side/back of nodes.",
+              "How: Reverse-rotate camera offset to match scene rotation using `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`.",
+              "Impact: Camera always faces the 'front' of the node regardless of scene rotation."
+            ]
+          },
+          {
+            "title": "WebGL-DOM Dual Ref Event Handling",
+            "items": [
+              "Why: WebGL Mesh and DOM Label have different event loops, causing hover loss during fast movement.",
+              "How: Manage meshHoverRef and labelHoverRef separately. Clear hover only if both are false after 10ms setTimeout.",
+              "Impact: Overcome technical limitations to provide flicker-free, smooth focusing experience."
+            ]
+          },
+          {
+            "title": "Mobile Swipe Angle Detection",
+            "items": [
+              "Why: Sensitive horizontal swipe triggers during vertical scroll caused unintended node traversal.",
+              "How: Track touchStartY/EndY. If `deltaY > deltaX`, judge as scroll and ignore node traversal. Re-check final direction on touch end.",
+              "Impact: Clearly distinguishes vertical scroll from horizontal swipe, drastically improving mobile UX."
+            ]
+          },
+          {
+            "title": "Distance-Based Adaptive Modal Delay",
+            "items": [
+              "Why: Fixed 1s delay is slow for near nodes and too fast for far nodes, breaking immersion.",
+              "How: Apply delay proportional to distance: `delay = Math.min(distance * 15, 800)`. Instant reaction (75ms) for very close nodes.",
+              "Impact: Makes the app feel much 'snappier' during short-distance navigation."
+            ]
+          },
+          {
+            "title": "Connected Node Label Highlighting",
+            "items": [
+              "Why: Hard to grasp connections in a complex network.",
+              "How: Propagate `isHighlighted` state to recursively reveal labels of all skill nodes connected to a hovered project node.",
+              "Impact: Users can intuitively grasp relationships between nodes."
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "3D Coordinate & Camera Orientation Sync",
+            "problem": "Clicking a node when the scene was rotated 180° caused the camera to view the back of the node.",
+            "solution": "Controlled 'LookAt' instead of just movement. Read current sceneRotation and rotated camera offset vector by the same angle to mathematically ensure it always faces the node front."
+          },
+          {
+            "title": "Event Loss in WebGL + DOM Hybrid Rendering",
+            "problem": "HTML labels are DOM elements, creating a gap from WebGL mouseleave events. Moving mouse from Mesh to Label caused a 0.01s 'no hover' state, causing flickering.",
+            "solution": "Devised Dual Ref pattern: Capture Mesh/Label hover state synchronously via useRef, and clear hover only if 'both are false' after 10ms setTimeout, instead of relying on async React updates."
+          },
+          {
+            "title": "Balancing Post-processing per Theme",
+            "problem": "Beautiful Bloom in Dark Mode caused Whiteout in Light Mode.",
+            "solution": "Theme switch changes 'physical properties of light'. Dynamically adjusted Bloom threshold/intensity based on theme and interpolated with THREE.MathUtils.lerp() to maintain readability and aesthetics in any lighting."
+          },
+          {
+            "title": "Physics Engine Initial Explosion",
+            "problem": "d3-force simulation starts with nodes exploding from random positions, looking unstable.",
+            "solution": "Run 300 ticks() synchronously before render to 'pre-complete' simulation. User only sees the stabilized layout."
+          },
+          {
+            "title": "Node Detail vs Context Maintenance",
+            "problem": "Moving camera too close (`z=8`) for detail caused 3D Mesh to overlap with 2D Modal, harming readability and context.",
+            "solution": "Adopted 'Scale Up' instead of 'Zoom In'. Keep camera at comfortable distance (`z=25`) but scale selected node `2.0x` to achieve visual emphasis and context maintenance simultaneously."
+          },
+          {
+            "title": "Mobile Tab Swipe vs Node Traversal Conflict",
+            "problem": "Horizontal scrolling of tabs in modal conflicted with the node traversal swipe gesture.",
+            "solution": "Referenced tab area with `tabsRef`. If touch starts within tab area, immediately return to disable node traversal logic. Solved UX conflict by separating gestures based on context."
+          }
+        ],
+        "codeExamples": [
+          {
+            "title": "BFS Indirect Path Finding Algorithm",
+            "category": "algorithm",
+            "description": "Why BFS? DFS finds paths but doesn't guarantee 'shortest'. BFS level traversal connects only the nearest visible nodes.",
+            "filePath": "src/components/canvas/Scene.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Scene.tsx",
+            "snippet": "const findConnectedVisibleNodes = (startId: string, visited: Set<string>): string[] => {\n  const result: string[] = [];\n  const queue = [startId];  // BFS Queue\n  visited.add(startId);\n\n  while (queue.length > 0) {\n    const currentId = queue.shift()!;\n    const currentNode = nodes.find(n => n.id === currentId);\n    \n    for (const neighborId of currentNode.connections) {\n      if (visited.has(neighborId)) continue;\n      visited.add(neighborId);\n      \n      if (visibleNodeIds.has(neighborId)) {\n        result.push(neighborId);  // Found visible node\n      } else {\n        queue.push(neighborId);   // Continue searching through hidden node\n      }\n    }\n  }\n  return result;\n};"
+          },
+          {
+            "title": "Ref Based 60fps Animation Optimization",
+            "category": "performance",
+            "description": "Why Ref? setState in useFrame causes frame drops. Convert animationRef.current directly and only call setIsAnimating(false) on completion.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// Manage animation state with ref (Render optimization)\nconst animationRef = useRef({\n  isActive: false,\n  progress: 0,\n  startPosition: new THREE.Vector3(),\n  targetPosition: new THREE.Vector3(),\n  duration: 1.5,\n});\n\nuseFrame((_, delta) => {\n  if (!animationRef.current.isActive) return;\n  animationRef.current.progress += delta / anim.duration; // Mutate ref directly\n  // ... Manipulate camera.position ...\n});"
+          },
+          {
+            "title": "Manual easeInOutCubic Implementation",
+            "category": "animation",
+            "description": "Why No GSAP? Bundle size + Math understanding. Implemented S-curve accelerating with 4t³ for t < 0.5.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "useFrame((_, delta) => {\n  anim.progress += delta / anim.duration;\n  \n  // Manual easeInOutCubic\n  const t = anim.progress;\n  const ease = t < 0.5 \n    ? 4 * t * t * t \n    : 1 - Math.pow(-2 * t + 2, 3) / 2;\n\n  // Apply Easing to Lerp\n  camera.position.lerpVectors(startPos, targetPos, ease);\n  controls.target.lerpVectors(startLookAt, targetLookAt, ease);\n});"
+          },
+          {
+            "title": "Inverse Scene Rotation for Camera Facing",
+            "category": "3d-math",
+            "description": "Why Offset Rotation? Adding fixed offset to rotated scene shows side of nodes. Rotate offset vector by same angle as scene to always face front.",
+            "filePath": "src/components/canvas/CameraManager.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/CameraManager.tsx",
+            "snippet": "// Apply scene rotation to target coordinates\nconst targetLookAt = new THREE.Vector3(...cameraTarget)\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\n// Rotate offset by same angle\nconst baseOffset = new THREE.Vector3(0, 2, 8);\nconst rotatedOffset = baseOffset.clone()\n  .applyAxisAngle(new THREE.Vector3(0, 1, 0), sceneRotation);\n\nconst targetCameraPosition = targetLookAt.clone().add(rotatedOffset);"
+          },
+          {
+            "title": "Physics Engine 300-tick Warm-up",
+            "category": "performance",
+            "description": "Why Warm-up? Waiting for stabilization exposes jittering. Execute 300 ticks() synchronously before render to start in 'completed form'.",
+            "filePath": "src/hooks/useForceGraph.ts",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/hooks/useForceGraph.ts",
+            "snippet": "const simulation = forceSimulation(simNodes, 3)\n  .force('link', forceLink(links).strength(0.5))\n  .force('charge', forceManyBody().strength(-80))\n  .force('center', forceCenter(0, 0, 0))\n  .force('collide', forceCollide().radius(2).strength(0.7));\n\n// 300 Synchronous Executions before Render (Stable Initialization)\nfor (let i = 0; i < 300; i++) {\n  simulation.tick();\n}\nsimulation.stop(); // Freeze position after calc"
+          },
+          {
+            "title": "Distance-Based Event Sync",
+            "category": "ux-engineering",
+            "description": "Why Static Timeout Fails? Fixed delay is too fast/slow depending on distance. Calculate move distance in real-time to sync camera animation time and modal open timing.",
+            "filePath": "src/components/canvas/Node.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/canvas/Node.tsx",
+            "snippet": "// Node.tsx: Distance-based Delay\nconst distance = camera.position.distanceTo(targetCameraPos);\n// Close: ~75ms (Instant), Far: 800ms (Capped)\nconst delay = Math.min(distance * 15, 800);\n\nsetTimeout(() => setModalOpen(true), delay);\n\n// CameraManager.tsx: Matching Duration\nanimationRef.current.duration = Math.min(\n  Math.max(distance * 0.06, 0.6), // Min 0.6s\n  2.0 // Max 2.0s\n);"
+          },
+          {
+            "title": "180° Scene Rotation on Theme Toggle",
+            "category": "ux",
+            "description": "Why 180° Rotation? Simple color switch is boring. Rotate entire scene 180° to face opposite side matching Dark(Space/Moon) → Light(Sky/Sun) narrative for immersive 'World Change'.",
+            "filePath": "src/stores/useAppStore.ts",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/stores/useAppStore.ts",
+            "snippet": "toggleTheme: () => {\n  set((state) => ({\n    isThemeTransitioning: true,\n    theme: state.theme === 'dark' ? 'light' : 'dark',\n    sceneRotation: state.sceneRotation + Math.PI, // Add 180 deg rotation\n  }));\n\n  setTimeout(() => {\n    set({ isThemeTransitioning: false });\n  }, 2000); // Complete after 2s\n}"
+          },
+          {
+            "title": "Mobile Swipe Angle Detection",
+            "category": "mobile-ux",
+            "description": "Why Angle Detection? Simple X-axis tracking triggers horizontal swipe during vertical scroll. Track Y-axis to judge primary touch direction.",
+            "filePath": "src/components/ui/Modal.tsx",
+            "githubLink": "https://github.com/sleepyMS/MS-Mind/blob/main/neural-nexus-portfolio/src/components/ui/Modal.tsx",
+            "snippet": "const [touchStartY, setTouchStartY] = useState<number | null>(null);\nconst [touchEndY, setTouchEndY] = useState<number | null>(null);\n\nconst onTouchMove = (e: React.TouchEvent) => {\n  const currentX = e.targetTouches[0].clientX;\n  const currentY = e.targetTouches[0].clientY;\n  \n  // Judge as scroll if vertical move > horizontal\n  const deltaX = Math.abs(currentX - touchStart);\n  const deltaY = Math.abs(currentY - touchStartY);\n  if (deltaY > deltaX) {\n    setSwipeOffset(0);  // Ignore swipe\n    return;\n  }\n  // Handle horizontal swipe...\n};"
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Engineering Beyond Libraries",
+            "content": "I learned that true quality comes from opening the 'black box' and customizing it—controlling physics engine warm-up, injecting math formulas into animation loops—rather than just using APIs as provided."
+          },
+          {
+            "title": "Information Density in 3D & Aesthetics of Subtraction",
+            "content": "Visual noise increases exponentially with information in 3D. Learned that 'subtraction'—showing links only on hover, hiding nodes with filters—is the core of 3D UX."
+          },
+          {
+            "title": "Math is an Engineer's Weapon",
+            "content": "Handling vector math and interpolation functions like applyAxisAngle(), lerpVectors(), and easeInOutCubic gave me confidence to implement complex animations without relying on libraries."
+          },
+          {
+            "title": "Balancing React and GPU",
+            "content": "Must find balance between React's convenience and GPU rendering performance. Established criteria for 'when to let React handle it vs when to control directly', separating UI state (Zustand) from animation vars (useRef)."
+          },
+          {
+            "title": "Optimization Felt Through Senses",
+            "content": "Users don't see code, but they feel 'polish' in 10ms hover delays and 60fps movement. Learned that optimizations like Dual Ref pattern and Transient Updates are core UX elements that provide a 'smooth, pleasant experience', not just technical showing off."
+          },
+          {
+            "title": "Practical Application of Graph Algorithms",
+            "content": "BFS algorithm learned in college became a key tool solving the 'maintain filtered node relationships' UX problem. Experienced CS fundamentals becoming practical weapons for UX improvement."
+          },
+          {
+            "title": "Interpreting Touch Gesture 'Intent'",
+            "content": "Mobile touch is user 'intent', not just coordinates. Learned that true mobile UX design involves distinguishing horizontal swipe vs vertical scroll by angle and assigning different actions based on touch start area."
+          }
+        ],
+        "technologies": [
+          "React",
+          "Three.js",
+          "R3F",
+          "TypeScript",
+          "Zustand",
+          "d3-force-3d"
+        ]
+      },
+      "color": "#c026d3"
+    },
+    {
+      "id": "project-processing",
+      "type": "project",
+      "category": "creative",
+      "label": "Processing Games",
+      "connections": ["me", "skill-processing", "skill-arduino"],
+      "details": {
+        "description": "Interactive game collection created with Processing. Connected hardware and software using Arduino joystick controls.",
+        "trouble": "Syncing Arduino input with game state and handling various game modes was difficult.",
+        "shooting": "Built a modular input system abstracting hardware control across all game modes.",
+        "lesson": "Hardware-software integration requires careful consideration of timing and state management.",
+        "technologies": ["Processing", "Arduino", "Java"]
+      },
+      "color": "#10b981"
+    },
+    {
+      "id": "skill-react",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "React 19",
+      "connections": ["project-chatbot", "project-portfolio"],
+      "details": {
+        "description": "UI library developed by Meta, supporting functional components with Hooks. Provides efficient rendering via declarative UI paradigm and Virtual DOM, suitable for large-scale apps with features like Concurrent Mode and Server Components."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-typescript",
+      "type": "skill",
+      "skillCategory": "language",
+      "label": "TypeScript",
+      "connections": ["project-chatbot", "project-cortex-fe"],
+      "details": {
+        "description": "Superset of JavaScript by Microsoft, catching errors at compile time via static type checking. Improves stability and maintainability of large apps with strong type systems like interfaces, generics, and unions."
+      },
+      "color": "#3b82f6"
+    },
+    {
+      "id": "skill-threejs",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Three.js / R3F",
+      "connections": ["project-portfolio"],
+      "details": {
+        "description": "WebGL-based 3D graphics library for high-quality 3D experiences in browsers. Declaratively integrable with React via R3F, supporting advanced graphics like custom shaders, post-processing, and physics engine integration."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-gsap",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "GSAP",
+      "connections": ["project-portfolio"],
+      "details": {
+        "description": "GreenSock Animation Platform, the most powerful JavaScript animation library for the web. Implements smooth, optimized animations via hardware acceleration, timeline sequencing, and ScrollTrigger."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-python",
+      "type": "skill",
+      "skillCategory": "language",
+      "label": "Python",
+      "connections": ["project-cortex", "project-paper-lstm"],
+      "details": {
+        "description": "General-purpose programming language widely used in data analysis, machine learning, and backend development."
+      },
+      "color": "#3b82f6"
+    },
+    {
+      "id": "skill-fastapi",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "FastAPI",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "High-performance asynchronous web framework based on Python, providing automatic API documentation and type hint support."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-processing",
+      "type": "skill",
+      "skillCategory": "language",
+      "label": "Processing",
+      "connections": ["project-processing"],
+      "details": {
+        "description": "Programming language and IDE for visual arts and creative coding developed by MIT Media Lab. Based on Java, it simplifies creation of interactive graphics, animations, and data visualizations."
+      },
+      "color": "#3b82f6"
+    },
+    {
+      "id": "skill-arduino",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Arduino",
+      "connections": ["project-processing"],
+      "details": {
+        "description": "Open-source hardware platform and microcontroller prototyping board. Controls sensors, motors, LEDs, widely used in IoT and interactive installations."
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "skill-vite",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Vite",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Next-generation frontend build tool providing lightning-fast dev server via ES Modules and HMR. Generates optimized production builds via Rollup, supporting frameworks like React, Vue, Svelte."
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "skill-tailwind",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "TailwindCSS",
+      "connections": ["project-chatbot", "project-cortex-fe"],
+      "details": {
+        "description": "Utility-first CSS framework for rapid styling via predefined classes. JIT compiler generates minimal CSS by including only used classes, ideal for consistent design systems."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-zustand",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Zustand",
+      "connections": ["project-chatbot", "project-cortex-fe"],
+      "details": {
+        "description": "Lightweight, fast React state management library. Less boilerplate than Redux, lower learning curve, and intuitive hook-based API. Handles complex nested state easily with Immer."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-axios",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Axios",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Promise-based HTTP client for browser and Node.js. Features interceptors, auto JSON transformation, cancellation, and timeouts for robust API communication."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-i18next",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "i18next",
+      "connections": ["project-chatbot"],
+      "details": {
+        "description": "Most widely used JS internationalization framework. Provides comprehensive features like resource management, pluralization, language detection, and lazy loading. Integrates with React, Vue, etc."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "project-cortex",
+      "type": "project",
+      "category": "backend",
+      "label": "Cortex-Backend",
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-celery",
+        "skill-redis",
+        "skill-timescaledb",
+        "skill-docker",
+        "skill-postgresql",
+        "project-cortex-fe"
+      ],
+      "details": {
+        "description": "A data-driven quant investment and automated trading platform for individual investors. The key challenge was not just building a CRUD API, but 'reliably processing real-time financial operations while querying millions of time-series data points in milliseconds'. I applied enterprise-grade architecture including physical separation of CPU/IO workers, Bayesian optimization, and a double-entry credit system.",
+        "technologies": [
+          "FastAPI",
+          "Celery",
+          "Redis",
+          "TimescaleDB",
+          "PostgreSQL",
+          "Docker",
+          "Python 3.11"
+        ],
+        "coreFeatures": [
+          "⚡ Vectorized Backtesting: Reduced 1-year backtest from 45s to 0.8s (98% reduction) using NumPy/Pandas. Generator-based step-by-step execution allows intermediate Pruning via Optuna",
+          "🔧 Physical Separation of CPU/IO Workers: Segregated cpu_queue (prefork) and io_queue (gevent) to guarantee millisecond-level order execution even during heavy backtesting",
+          "📊 TimescaleDB Time-Series Optimization: Auto-chunk partitioning for hundreds of millions of OHLCV records. Composite index (ticker, time DESC) maintains query performance",
+          "💰 Double-Entry Credit System: Separation of Ledger (Creation) and Transaction (Consumption). Priority FIFO algorithm (Expiring → Free → Paid). Integrated history query via UNION ALL",
+          "🧠 WFO + Optuna Bayesian Optimization: Expanding Window split, TPE sampler focuses on promising parameters, MedianPruner early-stops bottom 50% trails"
+        ],
+        "techStackDocs": [
+          {
+            "name": "FastAPI",
+            "description": "Why FastAPI over Django/Flask? Strict runtime data validation via Pydantic and Native Async support were essential. It is the optimal choice for ensuring financial data integrity while handling High Concurrency."
+          },
+          {
+            "name": "Celery + Redis",
+            "description": "Why Distributed Task Queue? It is impossible to process long-running backtesting tasks within a single HTTP request cycle. Established a pattern where tasks are queued (Fire-and-Forget), processed asynchronously by workers, and progress is broadcasted via Pub/Sub."
+          },
+          {
+            "name": "TimescaleDB",
+            "description": "Why not standard PostgreSQL? Standard B-Tree indexes have limits when querying hundreds of millions of candle (OHLCV) records. TimescaleDB automates time-based partitioning (Chunking) to maintain query speed."
+          },
+          {
+            "name": "Docker",
+            "description": "Why Single Image? Adopted a strategy where API server, CPU worker, and I/O worker share the same codebase but use different execution commands (CMD). This reduced build time and solved version mismatch issues."
+          }
+        ],
+        "link": "https://github.com/sleepyMS/Cortex",
+        "features": [
+          {
+            "title": "Hybrid Cryptography & Security Strategy",
+            "items": [
+              "Dual Hashing Strategy: Passwords hashed with `Bcrypt` (slow, strong) to prevent brute-force. Tokens requiring frequent auth signed with `HMAC-SHA256` (fast, secure) to balance security and performance. (backend/app/security.py)",
+              "Fernet Symmetric Encryption: Sensitive API Keys in DB are encrypted with `Fernet` symmetric key algorithm, ensuring they cannot be used without the decryption key even if data is leaked.",
+              "Why this mix? Using Bcrypt for everything increases auth load, and simple hashing makes API Key recovery impossible. Selected optimal algorithms per use case."
+            ]
+          },
+          {
+            "title": "Async Distributed System",
+            "items": [
+              "Layered Architecture: Clear separation of Router → Service → Repository (DB) to improve maintainability",
+              "Resource Isolation: Workers share a single Docker image but are separated by characteristics (API/CPU/I/O) via different execution CMDs",
+              "Message Broker: Used Redis as a broker to reduce coupling between services and manage asynchronous task queues"
+            ]
+          },
+          {
+            "title": "Massive Time-Series Data Processing (TimescaleDB)",
+            "items": [
+              "Hypertables: Automatically partition data into time-based chunks to minimize disk I/O",
+              "Composite Indexing: Optimizes query speed for latest prices by configuring (ticker, time DESC) index"
+            ]
+          },
+          {
+            "title": "Advanced Strategy Optimization (WFO + Optuna)",
+            "items": [
+              "WFO(Walk-Forward Optimization): Prevents overfitting by validating data via sliding Train/Test windows",
+              "Bayesian Optimization (TPE): Introduced Optuna to learn from previous parameter performance and focus search on promising areas",
+              "Aggressive Pruning: Immediately stop calculation if return is in bottom 50% during each Fold validation (Early Stopping)",
+              "Result: Reduced total computation time to 1/5 of original despite 10x more operations due to WFO, securing both stability and speed"
+            ]
+          },
+          {
+            "title": "Advanced Analytics & Visualization Data Processing",
+            "items": [
+              "Financial Metrics: High-speed vector calculation of 10+ core metrics like Sharpe Ratio, Sortino Ratio, MDD, Win Rate, Profit Factor, CAGR",
+              "Parameter Importance: Quantitatively extracts parameters with biggest impact on returns using Optuna's fANOVA algorithm",
+              "Parallel Coordinates Serving: Serializes thousands of Trial data (params JSONB + metrics JSONB) for visualization, optimizing DTO to exclude unnecessary fields",
+              "Parameter Stability Analysis: Tracks how optimal parameters change across Folds during WFO to judge strategy overfitting"
+            ]
+          },
+          {
+            "title": "Credit Economy System (Double-Entry Logic)",
+            "items": [
+              "Credits Ledger: Records 'Creation' of credits, managing expiration dates (expires_at) individually per record",
+              "Credits Transaction: Records 'Consumption', tracking deduction details per Ledger via transaction_details",
+              "Priority Algorithm: Modified FIFO logic automatically deducting in order: [Expiring Soon > Free (Event) > Paid]"
+            ]
+          },
+          {
+            "title": "Real-time Progress Feedback (Redis Pub/Sub + WebSocket)",
+            "items": [
+              "Celery worker publishes progress messages to Redis Pub/Sub channel during task execution",
+              "FastAPI server subscribes to channel and pushes to WebSocket client immediately upon receipt",
+              "Provides smooth Progress UI without Polling and reduces server load"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "98% Performance Boost via Algorithm Vectorization",
+            "items": [
+              "Why: Calculating metrics by iterating hundreds of thousands of candles with Python loops took minutes. Worst UX forcing users to wait.",
+              "How: Removed loops using Pandas/NumPy vector operations, vectorized conditionals with `np.where`, and processed columns in batch. Pattern: `df['signal'] = np.where(...)`.",
+              "Impact: Reduced 1-year backtest from 45s to 0.8s (98% reduction). Enabled users to compare multiple strategies in 'real-time'."
+            ]
+          },
+          {
+            "title": "Generator-based Step-by-Step Execution for Intermediate Pruning",
+            "items": [
+              "Why: No need to finish running Trials if returns are in bottom tier during Optuna optimization. Existing run() method was 'all-or-nothing'.",
+              "How: Added `run_step_by_step()` Generator method. Yield intermediate results at each timestep, allowing external `trial.should_prune()` check.",
+              "Impact: WFO 10-Fold × 100 Trial = 1000 runs, but bottom 50% stopped early, reducing total time to 1/5."
+            ]
+          },
+          {
+            "title": "Solving Starvation via Physical CPU/IO Worker Separation",
+            "items": [
+              "Why: If backtesting hogs 100% CPU, trade execution tasks on the same worker wait in queue. Delayed orders in volatile markets mean critical losses.",
+              "How: Dualized workers into `cpu_bound_queue` (prefork Pool, process isolation) and `io_bound_queue` (gevent Pool, coroutine concurrency). Deployed as separate containers via Docker Compose.",
+              "Impact: Guaranteed millisecond-level immediate execution for trade orders even during backtesting."
+            ]
+          },
+          {
+            "title": "10x Improvement on N+1 Queries via Eager Loading",
+            "items": [
+              "Why: ORM Lazy Loading caused N additional queries for associated data (backtests, params) when listing strategies. 10 strategies = 100+ queries = 1.2s delay.",
+              "How: Specified `selectinload(Strategy.backtests)`, `joinedload(Strategy.parameters)`. Preloaded all associated data in a single JOIN query.",
+              "Impact: Improved strategy list API response from 1.2s to 0.1s (10x+)."
+            ]
+          },
+          {
+            "title": "Optimizing Bulk Data Save with bulk_insert_mappings",
+            "items": [
+              "Why: Inserting 1000 optimization Trial results individually meant 1000 DB roundtrips. Network latency accumulated to tens of seconds.",
+              "How: Batch insertion of dictionary lists using SQLAlchemy `bulk_insert_mappings()`. Single transaction without ORM overhead.",
+              "Impact: Reduced Trial save time from 30s to 2s (15x reduction)."
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "The Frozen Server: Sync Operations Blocking Event Loop",
+            "problem": "Initially ran backtesting directly inside FastAPI endpoints. Pandas operations hogged CPU, blocking the async event loop. Health checks and all API requests timed out, causing Load Balancer to mark server as 'Dead'.",
+            "solution": "Fundamentally changed architecture. Adopted Celery to delegate calculations to separate processes (Fire-and-Forget). FastAPI only handles 'Receive Request → Return Job ID → Check Progress'. Implemented real-time feedback via Redis Pub/Sub → WebSocket without polling."
+          },
+          {
+            "title": "Exchange API Errors due to Floating Point Precision",
+            "problem": "Python `float` resulted in `0.1 BTC × 3 = 0.30000000000000004`, causing 'Insufficient Balance' or 'Precision Exceeded' errors from Exchange APIs. In crypto requiring 8 decimal places, this could lead to real financial loss.",
+            "solution": "Converted all financial/quantity operations to `Decimal`. Enforced consistent precision from DB schema (`Numeric(20, 8)`), Pydantic models (`condecimal`), to business logic, allowing zero error tolerance even for 1 Satoshi."
+          },
+          {
+            "title": "Race Condition: Celery Task Reading DB Before Commit",
+            "problem": "Celery worker queried DB immediately after API called `backtest.delay(backtest_id)`, but transaction wasn't committed yet, causing 'Backtest not found'. Hard to debug as it only happened in production.",
+            "solution": "Added retry logic inside worker. `for attempt in range(5): ... time.sleep(1)` to wait for commit. If still missing, fail with clear error. Also enabled Celery `acks_late=True` to guarantee retry if worker crashes."
+          },
+          {
+            "title": "Untraceable Credit Deductions",
+            "problem": "Simple `user.credit_balance -= amount` made it impossible to track 'where the credit came from and where it went'. Significant business risk for refunds or audits.",
+            "solution": "Applied Double-Entry principles. Separated `CreditLedger` (creation) and `CreditTransaction` (consumption), utilizing `CreditTransactionDetail` to track deduction per ledger. Implemented FIFO priority algorithm (Expiring → Event → Paid) and `UNION ALL` API for integrated history."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Stepping Stone to MSA: Modular Monolith",
+            "content": "Starting with MSA brings overwhelming infrastructure complexity. I kept a single codebase but enforced a rule forbidding direct imports between domains (Auth/Backtest/Trade), communicating only via services/ layer. Created a flexible structure that allows 'peeling off' services into MSA if needed."
+          },
+          {
+            "title": "CPU-bound vs I/O-bound: Necessity of Physical Isolation",
+            "content": "`async/await` only optimizes I/O wait; CPU-heavy ops still block the loop. Learned that true isolation requires physical separation (containers), not just logical (Queues), for tasks like Backtesting (CPU) vs API calls (I/O). Experienced the difference between prefork (multiprocess) and gevent (coroutine) through actual failures."
+          },
+          {
+            "title": "Non-negotiable Data Integrity in Finance",
+            "content": "User trust collapses if past backtest results change after strategy modification. I learned that 'Exactness from the start' is basic in finance: storing Strategy JSON snapshots for immutability, using Decimal to remove calc errors, and double-entry bookkeeping for credits."
+          },
+          {
+            "title": "Flexibility of Event-Driven Architecture",
+            "content": "Implemented Pub/Sub pattern: `publish_event` → `dispatch_event` Task calls subscriber Tasks. Adding features like Slack notifications requires no code change, just registering a subscriber. Learned design principles for loose coupling and scalability."
+          },
+          {
+            "title": "Optimization Without Measurement is Guesswork",
+            "content": "Thought 'Indexes on everything' was the answer, but profiling showed bottlenecks were only Time Range queries and N+1. Achieved 10x performance by measuring actual bottlenecks via `EXPLAIN ANALYZE` and Query Logging. Learned that engineering is based on 'Measurement', not 'Guesswork'."
+          }
+        ],
+        "codeExamples": [
+          {
+            "title": "Generator-based Step-by-Step Backtesting (Prunable)",
+            "category": "performance",
+            "description": "Why Generator? Waste of time to finish low-return Trials during optimization. `run_step_by_step()` yields intermediate results at each step, allowing external Optuna `trial.should_prune()` check to stop early, reducing calc time to 1/5.",
+            "filePath": "backend/app/engine/backtesting_engine.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/engine/backtesting_engine.py",
+            "snippet": "def run_step_by_step(self) -> Generator[Dict, None, None]:\n    \"\"\"Step-by-step exe with Generator. Pruning available externally.\"\"\"\n    for timestamp, group in self.merged_df.groupby(level=0):\n        self.process_single_step(timestamp, group)\n        # Yield intermediate result (For Pruning)\n        if self.step_count % 100 == 0:\n            yield {\n                'is_intermediate': True,\n                'backtest_score': self._calculate_current_score(),\n                'mdd_pct': self._calculate_current_mdd()\n            }\n    yield self._calculate_summary_stats()  # Final Result"
+          },
+          {
+            "title": "Event-Based Pub/Sub Dispatcher",
+            "category": "architecture",
+            "description": "Why Event-Driven? Modifying existing code for every new notification (Email/Slack) is a maintenance nightmare. Ensured scalability via loose coupling where only subscriber Tasks need to be registered.",
+            "filePath": "backend/app/tasks.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
+            "snippet": "@celery_app.task(name='dispatch_event', queue='io_bound_queue')\ndef dispatch_event(event_name: str, payload: dict):\n    EVENT_SUBSCRIBERS = {\n        'backtest.completed': ['send_backtest_notification_task'],\n        'optimization.completed': ['send_optimization_notification_task'],\n        'payment.succeeded': ['fulfill_order_task'],\n    }\n    if task_names := EVENT_SUBSCRIBERS.get(event_name):\n        for task_name in task_names:\n            celery_app.send_task(task_name, args=[payload])"
+          },
+          {
+            "title": "Double-Entry Credit Deduction (Priority FIFO)",
+            "category": "business",
+            "description": "Why Double-Entry? Simple `balance -= amount` cannot track 'where credit came from'. Lack of evidence for refunds/audits is a risk. Tracked deduction per Ledger via TransactionDetail for full traceability.",
+            "filePath": "backend/app/services/credit_service.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/services/credit_service.py",
+            "snippet": "# Priority: Expiring Soon > Event Coupon > Purchase\npriority_order = {'EVENT_COUPON': 1, 'ATTENDANCE': 2, 'PURCHASE': 3}\navailable_ledgers.sort(key=lambda l: (priority_order.get(l.source_type, 99), l.expires_at))\n\nfor ledger in available_ledgers:\n    if remaining <= 0: break\n    deduct = min(ledger.remaining_amount, remaining)\n    ledger.remaining_amount -= deduct\n    # Log detailed deduction per ledger\n    transaction_details.append({'ledger_id': ledger.id, 'amount': deduct})"
+          },
+          {
+            "title": "CPU/I/O Isolation via Celery Queue",
+            "category": "async",
+            "description": "Why Segregation? If backtesting hogs 100% CPU, trade orders on same worker get delayed, causing loss. Physically separated workers to ensure millisecond instant execution for orders even during backtesting.",
+            "filePath": "backend/app/tasks.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
+            "snippet": "@celery_app.task(name='run_backtest', queue='cpu_bound_queue', acks_late=True)\ndef run_backtest(backtest_id: str):\n    # prefork Pool: Multiprocess → CPU Isolation\n    ...\n\n@celery_app.task(name='execute_live_trade', queue='io_bound_queue')\ndef execute_live_trade(bot_id: str):\n    # gevent Pool: Coroutine → I/O Concurrency\n    ..."
+          },
+          {
+            "title": "Optuna + WFO Bayesian Optimization + MedianPruner",
+            "category": "optimization",
+            "description": "Why TPE+Pruning? Grid Search is inefficient. TPE (Tree-structured Parzen Estimator) focuses on promising areas. MedianPruner stops if intermediate result is in bottom 50%, reducing 10x WFO load to 1/5.",
+            "filePath": "backend/app/tasks.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
+            "snippet": "sampler = optuna.samplers.TPESampler(seed=42)\npruner = optuna.pruners.MedianPruner(n_startup_trials=5, n_warmup_steps=10)\nstudy = optuna.create_study(direction='maximize', sampler=sampler, pruner=pruner)\n\nfor intermediate in engine.run_step_by_step():\n    if intermediate.get('is_intermediate'):\n        trial.report(intermediate['backtest_score'], step=step)\n        if trial.should_prune():\n            raise optuna.TrialPruned()  # Early Stop"
+          },
+          {
+            "title": "Vectorization - 98% Backtest Acceleration",
+            "category": "performance",
+            "description": "Why Vectorization? Loops over thousands of candles take minutes. Vectorized conditionals with `np.where` and batch column processing reduced 45s to 0.8s (98% reduction).",
+            "filePath": "backend/app/engine/backtesting_engine.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/engine/backtesting_engine.py",
+            "snippet": "# Vector operations instead of For loops\ndf['signal'] = np.where(\n    (df['sma_short'] > df['sma_long']) & \n    (df['sma_short'].shift(1) <= df['sma_long'].shift(1)),\n    1,   # Golden Cross: Buy\n    np.where(df['sma_short'] < df['sma_long'], -1, 0)  # Dead Cross: Sell\n)"
+          },
+          {
+            "title": "Prevent Race Condition: Retry Logic in Task",
+            "category": "troubleshooting",
+            "description": "Why Retry? 'Not Found' error if Celery reads DB before API commit. Hard to debug in production. Loop 5 retries in worker, and `acks_late=True` guarantees re-run on crash.",
+            "filePath": "backend/app/tasks.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
+            "snippet": "@celery_app.task(bind=True, acks_late=True)\ndef run_backtest(self, backtest_id: str):\n    # Retry logic waiting for commit\n    for attempt in range(5):\n        backtest = session.query(Backtest).filter_by(id=uuid).one_or_none()\n        if backtest: break\n        time.sleep(1)  # Wait for transaction commit\n    if not backtest:\n        raise ValueError(f'Backtest {backtest_id} not found after 5 retries')"
+          },
+          {
+            "title": "Fixing N+1 Queries: Eager Loading",
+            "category": "troubleshooting",
+            "description": "Why Eager? Lazy Loading caused 100+ queries for 10 strategies (1.2s). `selectinload` preloads associated data in 1 query, improving speed to 0.1s (10x).",
+            "filePath": "backend/app/routers/strategies.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/routers/strategies.py",
+            "snippet": "# Before: N+1 Problem (1.2s, 100+ queries)\nstrategies = await db.execute(select(Strategy))\n\n# After: Eager Loading (0.1s, 2 queries)\nstrategies = await db.execute(\n    select(Strategy)\n    .options(selectinload(Strategy.backtests))\n    .options(selectinload(Strategy.parameters))\n)"
+          },
+          {
+            "title": "15x Faster Bulk Data Save",
+            "category": "performance",
+            "description": "Why Bulk? 1000 individual INSERTs take 30s. `bulk_insert_mappings` inserts list of dicts in single transaction, reducing time to 2s.",
+            "filePath": "backend/app/tasks.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
+            "snippet": "# Bulk Insert instead of individual INSERTs\ntrial_objects = []\nfor t in study.trials:\n    trial_objects.append({\n        'job_id': job_uuid, 'trial_id': t.number,\n        'params': t.params, 'metrics': t.user_attrs.get('metrics'),\n        'state': 'COMPLETE' if t.state == TrialState.COMPLETE else 'PRUNED'\n    })\nsession.bulk_insert_mappings(OptimizationTrial, trial_objects)"
+          },
+          {
+            "title": "Decimal Type for Financial Precision",
+            "category": "troubleshooting",
+            "description": "Why Decimal? `float` math errors (0.30000000004) caused API failures. Unified `Decimal(20, 8)` from DB to Pydantic ensures zero error for 1 Satoshi.",
+            "filePath": "backend/app/schemas.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/schemas.py",
+            "snippet": "from pydantic import condecimal\n\nclass OrderCreate(BaseModel):\n    quantity: condecimal(max_digits=20, decimal_places=8)\n    price: condecimal(max_digits=20, decimal_places=8)\n    # Decimal guarantees precision over float\n    # 0.1 + 0.2 == Decimal('0.3')  # True"
+          },
+          {
+            "title": "Efficient Integrated History via UNION ALL",
+            "category": "database",
+            "description": "Why UNION? Merging Gain/Usage history in app requires 2 queries + memory sort. `UNION ALL` at DB level with sort/paging handles it in single efficient query.",
+            "filePath": "backend/app/services/credit_service.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/services/credit_service.py",
+            "snippet": "gains_query = select(Ledger.created_at, Ledger.initial_amount.label('amount'), ...)\nusages_query = select(Transaction.created_at, (-Transaction.amount).label('amount'), ...)\n\n# DB Combine + Sort + Page\nunified = union_all(gains_query, usages_query).alias('unified')\nfinal = select(unified).order_by(desc(unified.c.created_at)).offset(offset).limit(limit)"
+          }
+        ]
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "skill-celery",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Celery",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "Distributed task queue system processing CPU-bound and I/O-bound tasks asynchronously."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-redis",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "Redis",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "In-memory data store used as Message Broker and for Pub/Sub real-time communication."
+      },
+      "color": "#14b8a6"
+    },
+    {
+      "id": "skill-timescaledb",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "TimescaleDB",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "PostgreSQL-based time-series database optimized for handling massive OHLCV data."
+      },
+      "color": "#14b8a6"
+    },
+    {
+      "id": "skill-docker",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Docker",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "Ensures container-based application deployment and environment consistency."
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "skill-postgresql",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "PostgreSQL",
+      "connections": ["project-cortex"],
+      "details": {
+        "description": "Relational database used for storing user, strategy, and backtest data, and as a shared storage for Optuna Studies."
+      },
+      "color": "#14b8a6"
+    },
+    {
+      "id": "project-cortex-fe",
+      "type": "project",
+      "category": "frontend",
+      "label": "Cortex-Frontend",
+      "connections": [
+        "me",
+        "project-cortex",
+        "skill-nextjs",
+        "skill-typescript",
+        "skill-tailwind",
+        "skill-zustand",
+        "skill-react-query",
+        "skill-recharts",
+        "skill-websocket"
+      ],
+      "details": {
+        "description": "The frontend of an all-in-one quant platform where individual investors can design trading strategies without coding, verify them via backtesting, and connect to automated trading. Beyond simple UI implementation, the key challenge was 'making complex financial algorithms designable by non-developers'. To achieve this, I applied enterprise-grade architecture such as recursive tree structure rendering, a 1000+ line chart manager hook, and a Lock & Queue pattern authentication system.",
+        "technologies": [
+          "Next.js 14 (App Router)",
+          "TypeScript 5",
+          "Tailwind CSS",
+          "Zustand + Immer",
+          "TanStack Query v5",
+          "React Hook Form + Zod",
+          "Lightweight Charts",
+          "Recharts",
+          "WebSocket"
+        ],
+        "coreFeatures": [
+          "🔐 Lock & Queue based Silent Auth Refresh: Resolved Race Condition where 5 concurrent API calls caused token expiration, reducing traffic by 80% via single refresh",
+          "📈 1062-line Chart Manager Hook: Multi-chart timeline synchronization, complex indicator rendering (Bollinger Bands/Ichimoku), 50% performance boost via Imperative Update",
+          "🧠 Recursive No-Code Strategy Builder: Type-safe handling of 7 logic blocks (Comparison/Crossover/State/Channel etc.) using Discriminated Union type system",
+          "📊 Custom Parallel Coordinates Chart: Direct SVG rendering of thousands of Trial results, real-time interaction with 300 lines via useMemo optimization",
+          "⚡ WebSocket → Query Cache Direct Sync: Instant UI update without API re-calls, significantly reducing network traffic"
+        ],
+        "techStackDocs": [
+          {
+            "name": "Next.js 14 (App Router)",
+            "description": "Why App Router? For a quant platform, dashboard code splitting and layout sharing are more important than SEO. Separated auth/non-auth layouts via Route Groups and improved FCP by 40% via dynamic import of 150KB chart libraries."
+          },
+          {
+            "name": "TypeScript + Discriminated Unions",
+            "description": "Why Union Types? Had to handle 7 logic blocks (Comparison, Crossover, State, TrendSignal, Channel, Divergence, Pattern) as a single type. Implemented automatic type inference via Discriminated Union on 'type' field, preventing runtime errors at compile time."
+          },
+          {
+            "name": "Zustand + Immer",
+            "description": "Why not Redux? Redux boilerplate is excessive for updating nested tree structures (blocks[].children[].children[]...). Used Immer for automatic immutability and implemented findAndModify utility to update only target nodes, reducing code by 70%."
+          },
+          {
+            "name": "TanStack Query v5",
+            "description": "Why Query over SWR? Needed complex cache manipulation. Implemented hybrid pattern: direct UI update via setQueryData on WebSocket message without API re-fetch, and full re-fetch via invalidateQueries only upon completion."
+          },
+          {
+            "name": "React Hook Form + Zod",
+            "description": "Why not Formik? Formik triggers full re-render on dynamic forms with 50+ condition blocks. Used useFieldArray to update only individual fields and Zod schema for type-safe validation of nested objects."
+          },
+          {
+            "name": "Lightweight Charts",
+            "description": "Why not D3/Recharts? Rendering tens of thousands of candles via SVG freezes the browser. Selected TradingView's Canvas-based library but avoided Virtual DOM overhead via React state separation and Imperative Update pattern."
+          }
+        ],
+        "codeExamples": [
+          {
+            "title": "Lock & Queue 토큰 갱신 시스템",
+            "category": "auth",
+            "description": "Race Condition 해결의 정석. 대시보드 진입 시 5개 API가 동시에 401을 받으면 5번의 refresh 요청이 발생하고, 서버는 이를 토큰 탈취로 간주합니다. isRefreshing 플래그로 첫 401만 갱신을 시도하고, 나머지는 Promise Queue에 대기시켜 갱신 완료 후 일괄 재시도합니다.",
+            "filePath": "frontend/src/lib/apiClient.ts",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/lib/apiClient.ts",
+            "snippet": "let isRefreshing = false;\nlet failedQueue: Array<{resolve, reject}> = [];\n\nconst processQueue = (error, token) => {\n  failedQueue.forEach(p => error ? p.reject(error) : p.resolve(token));\n  failedQueue = [];\n};\n\napiClient.interceptors.response.use(res => res, async (error) => {\n  const originalRequest = error.config;\n  if (error.response?.status === 401 && !originalRequest._retry) {\n    if (isRefreshing) {\n      // 이미 갱신 중이면 Queue에 대기\n      return new Promise((resolve, reject) => {\n        failedQueue.push({ resolve, reject });\n      }).then(token => {\n        originalRequest.headers['Authorization'] = 'Bearer ' + token;\n        return apiClient(originalRequest);\n      });\n    }\n    originalRequest._retry = true;\n    isRefreshing = true;\n    const newToken = await useUserStore.getState().refreshSession();\n    processQueue(null, newToken);\n    isRefreshing = false;\n    return apiClient(originalRequest);\n  }\n  return Promise.reject(error);\n});"
+          },
+          {
+            "title": "1062줄 차트 매니저 훅 (useChartIndicatorManager)",
+            "category": "performance",
+            "description": "React와 Canvas 라이브러리의 패러다임 충돌을 해결한 핵심 훅입니다. 멀티 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대 렌더링, 크로스헤어 연동, 테마 전환 등 복잡한 요구사항을 1062줄로 캡슐화했습니다.",
+            "filePath": "frontend/src/hooks/useChartIndicatorManager.ts",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/hooks/useChartIndicatorManager.ts",
+            "snippet": "// 멀티 차트 시간축 동기화\nchart.timeScale().subscribeVisibleTimeRangeChange((range) => {\n  const allCharts = [chartRef.current, ...paneCharts];\n  allCharts.forEach(otherChart => {\n    if (otherChart && otherChart !== chart) {\n      otherChart.timeScale().setVisibleRange(range);\n    }\n  });\n});\n\n// 볼린저밴드 구름대 렌더링\nconst cloudData = bbuData.map((d, i) => ({\n  time: d.time,\n  upperValue: d.value,\n  lowerValue: bblData[i]?.value,\n  color: 'rgba(33, 150, 243, 0.15)'\n}));\nmainChart.addCustomSeries(new CloudSeries(), { cloudColor });"
+          },
+          {
+            "title": "Discriminated Union 기반 로직 블록 타입 시스템",
+            "category": "architecture",
+            "description": "7가지 조건 유형(비교, 크로스오버, 상태, 추세, 채널, 다이버전스, 패턴)을 하나의 Union 타입으로 관리합니다. type 필드로 구분되어 TypeScript가 각 블록의 필드를 자동 추론하므로, 런타임 타입 체크 없이 안전한 코드를 작성할 수 있습니다.",
+            "filePath": "frontend/src/types/strategy.ts",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/types/strategy.ts",
+            "snippet": "export interface ComparisonLogic {\n  id: string;\n  type: 'comparison';  // Discriminant\n  operandA: IndicatorValue | number | null;\n  operator: '>' | '<' | '==' | '!=';\n  operandB: IndicatorValue | number | null;\n  children?: LogicBlock[];\n}\n\nexport interface CrossoverLogic {\n  id: string;\n  type: 'crossover';  // Discriminant  \n  mainLine: IndicatorValue | number | null;\n  signalLine: IndicatorValue | number | null;\n  crossDirection: 'above' | 'below';\n}\n\n// Union Type: switch(block.type)으로 자동 타입 추론\nexport type LogicBlock = \n  | ComparisonLogic | CrossoverLogic | StateLogic \n  | TrendSignalLogic | ChannelLogic | DivergenceLogic | PatternLogic;"
+          },
+          {
+            "title": "커스텀 평행좌표 차트 (ParallelCoordinatesChart)",
+            "category": "visualization",
+            "description": "수천 번의 최적화 Trial 결과를 시각화하는 고성능 SVG 차트입니다. useMemo로 데이터 전처리를 캐싱하고, 상위 300개만 샘플링하여 렌더링 성능을 보장합니다. Score 기반 색상/투명도 그라데이션으로 우수 파라미터 영역을 직관적으로 파악할 수 있습니다.",
+            "filePath": "frontend/src/components/domain/optimization/ParallelCoordinatesChart.tsx",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/components/domain/optimization/ParallelCoordinatesChart.tsx",
+            "snippet": "const { processedTrials, dimensions, maxScore } = useMemo(() => {\n  // 1. Score 기준 정렬 후 상위 300개만 샘플링\n  const sortedTrials = [...trials].sort((a, b) => \n    (b.metrics?.backtestScore ?? 0) - (a.metrics?.backtestScore ?? 0)\n  ).slice(0, 300);\n  \n  // 2. 숫자형 파라미터만 추출하여 축 생성\n  const paramKeys = Object.keys(trials[0].params)\n    .filter(key => typeof trials[0].params[key] === 'number')\n    .slice(0, 8);  // 최대 8개 축\n  \n  return { processedTrials: sortedTrials, dimensions, maxScore };\n}, [trials]);\n\n// Score 기반 색상 그라데이션\nconst getLineColor = (score, maxScore) => {\n  const normalized = score / maxScore;\n  if (normalized >= 0.8) return '#10b981';  // 상위 20%: 녹색\n  if (normalized >= 0.5) return '#3b82f6';  // 중상위: 파랑\n  return '#ef4444';  // 하위: 빨강\n};"
+          },
+          {
+            "title": "WebSocket → Query Cache 직접 동기화",
+            "category": "realtime",
+            "description": "백테스팅 진행 중 매 초마다 API를 호출하면 서버 부하가 급증합니다. WebSocket 메시지를 수신하면 setQueryData로 TanStack Query 캐시를 직접 수정하여 UI를 즉시 갱신하고, 완료 시점에만 invalidateQueries로 전체 데이터를 리페칭합니다.",
+            "filePath": "frontend/src/components/domain/backtesting/BacktestContent.tsx",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/components/domain/backtesting/BacktestContent.tsx",
+            "snippet": "useEffect(() => {\n  if (backtest?.status === 'running') {\n    const ws = new WebSocket(`${wsUrl}/ws/backtest/${backtestId}`);\n    \n    ws.onmessage = (event) => {\n      const message = JSON.parse(event.data);\n      \n      // API 호출 없이 캐시 직접 수정 (Optimistic-like)\n      queryClient.setQueryData(['backtestCore', backtestId], (old) => ({\n        ...old,\n        progress: message.progress,\n        status: message.status,\n      }));\n      \n      // 완료 시에만 전체 데이터 리페칭\n      if (message.status === 'completed') {\n        queryClient.invalidateQueries({ queryKey: ['backtestCore', backtestId] });\n        queryClient.invalidateQueries({ queryKey: ['backtestCharts', backtestId] });\n      }\n    };\n    \n    return () => ws.close();\n  }\n}, [backtest?.status]);"
+          },
+          {
+            "title": "935줄 전략 에디터 패널 (StrategyEditorPanel)",
+            "category": "architecture",
+            "description": "전략 CRUD의 모든 복잡성을 단일 컴포넌트에 응집시킨 핵심 UI입니다. React Hook Form + Zustand 이중 상태 관리, 실시간 차트 프리뷰, 디바운스된 API 호출, 스냅샷 복원 등 935줄의 밀도 높은 로직을 포함합니다.",
+            "filePath": "frontend/src/components/domain/strategy/StrategyEditorPanel.tsx",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/components/domain/strategy/StrategyEditorPanel.tsx",
+            "snippet": "// 폼 상태와 Zustand 상태의 독립적 Dirty 체크\nconst isZustandDirty = useMemo(() => {\n  if (!initialStrategyRef.current) {\n    return strategyState.longEntryRules?.blocks?.length > 0;\n  }\n  return JSON.stringify(strategyState.longEntryRules) !== \n         JSON.stringify(initialStrategyRef.current.longEntryRules);\n}, [strategyState]);\n\n// 규칙 변경 시 500ms 디바운스 후 차트 프리뷰 업데이트\nconst [debouncedRules, setDebouncedRules] = useState(currentRules);\nuseEffect(() => {\n  const timer = setTimeout(() => setDebouncedRules(currentRules), 500);\n  return () => clearTimeout(timer);\n}, [currentRules]);\n\n// 디바운스된 규칙으로 지표/시그널 데이터 페칭\nconst { data: indicatorData } = useQuery({\n  queryKey: ['indicators', chartTicker, chartTimeframe, indicatorConfigs],\n  queryFn: ({ signal }) => fetchIndicatorData(..., signal),\n  enabled: !!ohlcvData && indicatorConfigs.length > 0,\n});"
+          }
+        ],
+        "link": "https://github.com/sleepyMS/Cortex",
+        "deployLink": "https://cortex-five-eosin.vercel.app/",
+        "features": [
+          {
+            "title": "Lock & Queue based Seamless Auth System",
+            "items": [
+              "Problem: 5 concurrent API calls on dashboard entry -> 5 401s -> 5 refresh requests -> Server detects as token theft -> Force Logout.",
+              "Solution: Introduced Lock & Queue via Axios Interceptor. Only first 401 attempts refresh; others wait in Promise Queue.",
+              "Result: Reduced refresh requests by 80% and provided seamless UX where users don't notice expiration."
+            ]
+          },
+          {
+            "title": "1062-line Encapsulated Chart Manager Hook",
+            "items": [
+              "Complexity: Multi-pane chart timeline sync, Bollinger/Keltner Channels, Ichimoku Clouds, Crosshair Legend sync, Theme switching.",
+              "Technique: Managed chart instances via useRef (Imperative Update) instead of React State, responsive via ResizeObserver.",
+              "Result: 50% faster chart loading, 60fps scrolling, zero memory leaks."
+            ]
+          },
+          {
+            "title": "Recursive No-Code Strategy Builder",
+            "items": [
+              "Challenge: Visually constructing complex logic like IF (A AND (B OR C)) without coding.",
+              "Implementation: Defined 7 logic blocks via Discriminated Union, infinite nesting via recursive components.",
+              "Zustand findAndModify: Optimized to O(N) by updating only target node via ID instead of full tree traversal."
+            ]
+          },
+          {
+            "title": "Custom Parallel Coordinates Visualization (ParallelCoordinatesChart)",
+            "items": [
+              "Goal: Visualize thousands of optimization Trials to find optimal parameter ranges at a glance.",
+              "Technique: Direct SVG rendering, data caching via useMemo, performance guarantee via top 300 sampling.",
+              "UX: Score-based color/opacity gradient, parameter details on hover."
+            ]
+          },
+          {
+            "title": "Parallel Data Fetching + Progressive Loading",
+            "items": [
+              "Pattern: Independent queries for [Core Info], [Chart Data], [Trade Logs] on Backtesting Detail page.",
+              "UX: Independent Skeleton UI per section, instant display of core metrics while chart loads (Non-blocking).",
+              "Tech: Controlled query order via TanStack Query 'enabled' option."
+            ]
+          },
+          {
+            "title": "Clear Separation of Server/Client State",
+            "items": [
+              "Principle: Select tool based on 'Source' and 'Frequency' of data.",
+              "Server State (TanStack Query): API Data (Backtest, User) - Caching, Revalidation, Error Handling.",
+              "Client State (Zustand): UI State (DarkMode, Sidebar) - Instant reflection, LocalStorage sync."
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "50% Chart Performance Boost via Imperative Update",
+            "items": [
+              "Why: Lightweight Charts manipulates Canvas directly; React State changes caused full chart recreation & GC spikes.",
+              "How: Manage chart instance via useRef, call series.setData() directly bypassing React Reconciler.",
+              "Impact: Candle loading 2s→1s, FPS 30→60, Memory usage reduced 40%."
+            ]
+          },
+          {
+            "title": "Large Scale Data Caching via useMemo",
+            "items": [
+              "Why: Sorting/Sampling/Normalizing thousands of trials on every render caused UI lag in Parallel Coordinates.",
+              "How: Cached preprocessing results via useMemo, re-calculating only when trials array reference changes.",
+              "Impact: Render time 300ms→50ms, smooth hover interaction."
+            ]
+          },
+          {
+            "title": "80% Server Load Reduction via Debounced API",
+            "items": [
+              "Why: Instant chart preview update on every condition change in Strategy Builder triggered dozens of API calls/sec.",
+              "How: Applied 500ms setTimeout debounce, cancelling duplicate requests via useEffect cleanup.",
+              "Impact: Indicator calc API calls reduced to 1/10, saving server costs."
+            ]
+          },
+          {
+            "title": "Lazy Loading Chart Libs via next/dynamic",
+            "items": [
+              "Why: Lightweight Charts (~80KB) + Recharts (~70KB) = 150KB in initial bundle delayed FCP.",
+              "How: Split chart components via next/dynamic, loading only when entering viewport.",
+              "Impact: Initial bundle size reduced by 150KB, FCP improved 40%."
+            ]
+          },
+          {
+            "title": "Form Performance Optimization via React.memo + Isolation",
+            "items": [
+              "Why: Single field change in 50-block dynamic form triggered full re-render.",
+              "How: Isolated input components with React.memo, used useFieldArray to update only individual fields.",
+              "Impact: 0ms typing lag even with 50 blocks, memory usage reduced 30%."
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Fatal Race Condition: 5-fold 401 Error",
+            "problem": "5 concurrent API calls (Profile/Strategy/Backtest/Credit/Notif) on dashboard entry. Token expiry caused 5 401s and independent refreshes, leading server to invalidate session due to 'concurrent refresh' security check.",
+            "solution": "Implemented Lock & Queue in Axios Interceptor. 'isRefreshing' flag ensures single refresh attempt; others wait in Promise Queue. Retry all queued requests with new token in batch via processQueue()."
+          },
+          {
+            "title": "React vs Canvas: Paradigm Conflict",
+            "problem": "Lightweight Charts manipulates Canvas; managing chart data via React State caused destruction/recreation of chart instance, leading to flickering, memory leaks, and frame drops.",
+            "solution": "Applied Imperative Update pattern. Managed chart/series via useRef, called series.setData() directly. Encapsulated cleanup logic in 1062-line useChartIndicatorManager hook."
+          },
+          {
+            "title": "Two Sources of Truth: Form vs Global State Async",
+            "problem": "Zustand store couldn't keep up with React Hook Form's fast typing; Save button sent old data to server. Sync via useEffect caused infinite loops.",
+            "solution": "Separation of Concerns. React Hook Form manages local state during input; handleSubmit pushes final value to Zustand only on Save. Implemented dual isDirty tracking (Form vs Store) for unsaved changes dialog."
+          },
+          {
+            "title": "Type Safety in Complex Nested Structures",
+            "problem": "Strategy Builder allows infinite nesting of 7 logic block types. Runtime 'Cannot read property' errors were frequent due to differing fields.",
+            "solution": "Leveraged TypeScript Discriminated Unions. Added 'type' field to all blocks (ComparisonLogic | CrossoverLogic...). switch(block.type) enabled automatic field inference, blocking invalid field access at compile time."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Understanding Library Abstraction Levels",
+            "content": "Direct DOM manipulation libs like Lightweight Charts conflict with React's Virtual DOM. Learned to explicitly sync library lifecycle (Init->Update->Cleanup) with React's, not just use inside useEffect. Applicable to D3/Three.js integration."
+          },
+          {
+            "title": "Criteria for State Management Selection",
+            "content": "'Data Source' is key. Server data needs caching/revalidation -> TanStack Query. Client UI state needs instant updates -> Zustand. This principle eliminated 'where to put state' dilemmas."
+          },
+          {
+            "title": "True Value of Type Systems",
+            "content": "Beyond autocomplete, TypeScript is a tool to 'pull runtime errors to compile time' via Discriminated Unions. Investing time in type design for complex domains dramatically reduces debugging time."
+          },
+          {
+            "title": "Appropriate Level of Abstraction",
+            "content": "Tried to split everything into custom hooks, making code tracing harder. Learned that for high cohesion, 1000+ line complex logic like useChartIndicatorManager suits a hook, but simple API calls are better inside components."
+          },
+          {
+            "title": "Optimization After Measurement",
+            "content": "Thought 'React.memo everything' was right, but Chrome DevTools showed bottlenecks were only in Charts and Large Forms. Experienced the engineering principle that optimization should be based on 'Measurement', not 'Guesswork'."
+          }
+        ]
+      },
+      "color": "#c026d3"
+    },
+    {
+      "id": "skill-nextjs",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "Next.js",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "React-based full-stack framework used for optimized web app development utilizing App Router and Server Components."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-react-query",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "TanStack Query",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "Server state management library efficiently handling asynchronous data fetching, caching, and synchronization."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-recharts",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Recharts",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "React-based chart library providing reusable chart components."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-websocket",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "WebSocket",
+      "connections": ["project-cortex-fe"],
+      "details": {
+        "description": "Bi-directional real-time communication protocol used for instant UI updates like backtesting progress."
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "project-paper-lstm",
+      "type": "project",
+      "category": "ai-ml",
+      "label": "LSTM_Crypto_Paper-AI",
+      "connections": ["me", "skill-python", "skill-lstm", "skill-tensorflow"],
+      "details": {
+        "description": "A KCI-indexed academic paper researching a cryptocurrency futures trading system using LSTM-based high and low price prediction models. Instead of conventional closing price-based models, I used high/low data to achieve substantial return improvements in futures trading.",
+        "technologies": [
+          "Python",
+          "TensorFlow/Keras",
+          "LSTM",
+          "Pandas",
+          "NumPy",
+          "Matplotlib"
+        ],
+        "coreFeatures": [
+          "📊 LSTM prediction model based on High/Low prices",
+          "💹 Cryptocurrency futures trading system (Long/Short positions)",
+          "📈 Average +28.3% return improvement (ETH/XRP/DOGE)",
+          "🎯 Up to +45.96% return improvement for DOGE"
+        ],
+        "techStackDocs": [
+          {
+            "name": "LSTM (Long Short-Term Memory)",
+            "description": "A deep learning model that resolves the long-term dependency problem of RNNs and shows stable and consistent prediction performance even in noisy financial time-series data."
+          },
+          {
+            "name": "TensorFlow 2.15 / Keras 2.15",
+            "description": "Used for implementing and training the LSTM model in a Google Colab environment. Applied Adam optimizer (lr=0.001) and MSE loss function."
+          },
+          {
+            "name": "MinMaxScaler",
+            "description": "Scaling process for normalizing time-series data. Preprocessed data with a timestamp length of 14."
+          }
+        ],
+        "link": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003239433",
+        "features": [
+          {
+            "title": "Data Collection & Preprocessing",
+            "items": [
+              "Binance exchange data (extracted via TradingView)",
+              "Targets: ETH, XRP, DOGE (Major altcoins following BTC)",
+              "Period: 2022.02.01 ~ 2023.12.31 (Approx. 2 years)",
+              "Timestamp length 14, MinMaxScaler normalization",
+              "Data split: 60% Train / 20% Val / 20% Test"
+            ]
+          },
+          {
+            "title": "LSTM Model Architecture",
+            "items": [
+              "Env: Google Colab + Python 3.10 + TensorFlow 2.15",
+              "2 LSTM layers (256 → 128 units) + 2 Dense layers (64 → 1 unit)",
+              "Dropout 0.05, Adam optimizer (lr=0.001)",
+              "Loss function: MSE, batch size 32, epochs 100"
+            ]
+          },
+          {
+            "title": "Futures Trading Return Calculation System",
+            "items": [
+              "Long position: If predicted price < daily high → Liquidate at predicted price",
+              "Short position: If predicted price > daily low → Liquidate at predicted price",
+              "Daily Stop-Loss: Liquidate at daily closing price if predicted price is not reached",
+              "React to market conditions by setting new positions daily"
+            ]
+          },
+          {
+            "title": "Quantitative Performance Comparison",
+            "items": [
+              "ETH: Pearson 0.973→0.946, Win rate 80.1%→77.9%, Return +6.27%",
+              "XRP: Pearson 0.962→0.914, Win rate 72.2%→69.5%, Return +32.71%",
+              "DOGE: Pearson 0.969→0.930, Win rate 75.1%→73.6%, Return +45.96%",
+              "Key Insight: DOGE closing price model -13.19% → High/Low model +32.77%"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "Target Design Specialized for Futures Trading",
+            "items": [
+              "Price Rising Days: High price set as prediction target",
+              "Price Falling Days: Low price set as prediction target",
+              "Maximizing returns by predicting volatility range unlike standard closing price prediction"
+            ]
+          },
+          {
+            "title": "Overfitting Prevention Techniques",
+            "items": [
+              "EarlyStopping: Halt training if validation loss doesn't improve for 10 epochs",
+              "Auto-restoration of best weights (restore_best_weights)",
+              "LSTM layer regularization with Dropout 0.05"
+            ]
+          },
+          {
+            "title": "Reflecting 24-Hour Market Characteristics",
+            "items": [
+              "Considered 24/7 nature of cryptocurrency market",
+              "Responded to rapid volatility via daily unit positions",
+              "Captured sharp price shifts using High/Low features"
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Model Selection: Transformer vs LSTM",
+            "problem": "While latest Transformer models (TFT, FEDformer) excel at integrating multiple features, they are prone to high volatility and noise. Questioned suitability for extreme noise environments with simple features (OHLC).",
+            "solution": "Referencing Bilokon & Qiu (2023), confirmed that LSTM's recurrent memory structure operates more stably without overfitting in simple feature + high volatility environments. Pursued both minimal complexity and stability."
+          },
+          {
+            "title": "Gap Between Prediction Accuracy and Actual Return",
+            "problem": "High/Low based models showed lower Pearson correlation and win rates than closing price models (e.g., ETH 0.973→0.946). Hard to judge effectiveness via traditional metrics.",
+            "solution": "Set 'Return', the essence of futures trading, as the core evaluation metric. Validated models as effective if returns were high despite lower correlation/win rates. Proven by DOGE: Closing price model -13.19% vs. High/Low model +32.77%."
+          },
+          {
+            "title": "Trade-off Between Data Complexity and Model Performance",
+            "problem": "Predicting both High and Low simultaneously increased data complexity, slightly lowering prediction accuracy.",
+            "solution": "Proven through experiments that predicting price ranges is more important in futures trading than exact directional prediction. Complexity increase acted as an advantage for returns."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Why LSTM over Transformer?",
+            "content": "According to Bilokon & Qiu (2023), in environments with simple OHLC features and high volatility, LSTM's recurrent memory structure works more robustly than Transformer's complex Attention without overfitting."
+          },
+          {
+            "title": "Prediction Performance ≠ Return Performance",
+            "content": "High Pearson correlation and win rates don't guarantee actual returns. Model evaluation must use return metrics reflecting futures trading characteristics (Long/Short leverage) to measure real performance."
+          },
+          {
+            "title": "Domain Knowledge Determines Feature Design",
+            "content": "Understanding the profit structure of Long/Short positions in futures trading and setting High/Low data as prediction targets accordingly was the key differentiator from existing closing price research."
+          },
+          {
+            "title": "Greater Effect with Higher Volatility",
+            "content": "Showed return improvements of +6.27% for low-volatility ETH, +32.71% for mid-volatility XRP, and +45.96% for high-volatility DOGE. The High/Low approach is particularly effective for high-volatility assets."
+          },
+          {
+            "title": "Future Research Directions",
+            "content": "Future expansions include comparing with latest time-series algorithms (TFT, FEDformer, PatchTST, TimesNet), analyzing feature importance via SHAP and Attention visualization, and integrating sentiment analysis from news/social media."
+          }
+        ],
+        "references": [
+          {
+            "id": 1,
+            "title": "Crypto-assets: Economic Nature, Classification and Regulation of Turnover",
+            "authors": "D. Kochergin",
+            "year": "2022",
+            "source": "Int. Organ. Res. J., Vol. 17, No. 3, pp. 75-113"
+          },
+          {
+            "id": 2,
+            "title": "The Cross-section of Crypto-currencies as Financial Assets: An Overview",
+            "authors": "H. Elendner, S. Trimborn, B. Ong, T. M. Lee",
+            "year": "2016",
+            "source": "SFB 649 Discussion Paper"
+          },
+          {
+            "id": 3,
+            "title": "Automation and Machine Learning in Transforming the Financial Industry",
+            "authors": "P. K. Donepudi",
+            "year": "2019",
+            "source": "Asian Business Review, Vol. 9, No. 3, pp. 129-138"
+          },
+          {
+            "id": 4,
+            "title": "Artificial Intelligence Driven Crypto Currencies",
+            "authors": "A. Ganapathy, M. Redwanuzzaman, M. M. Rahaman, W. Khan",
+            "year": "2020",
+            "source": "Global Disclosure of Economics and Business, Vol. 9, No. 2, pp. 107-118"
+          },
+          {
+            "id": 5,
+            "title": "A Deep Reinforcement Learning Approach for Automated Cryptocurrency Trading",
+            "authors": "G. Lucarelli and M. Borrotti",
+            "year": "2019",
+            "source": "Proc. of AIAI 2019, pp. 247-258"
+          },
+          {
+            "id": 6,
+            "title": "Understanding LSTM—A Tutorial into Long Short-term Memory Recurrent Neural Networks",
+            "authors": "R. C. Staudemeyer and E. R. Morris",
+            "year": "2019",
+            "source": "arXiv:1909.09586"
+          },
+          {
+            "id": 7,
+            "title": "Time Series Analysis of Cryptocurrency Prices Using Long Short-term Memory",
+            "authors": "J. P. Fleischer, G. von Laszewski, C. Theran, Y. J. Parra Bautista",
+            "year": "2022",
+            "source": "Algorithms, Vol. 15, No. 7, p. 230"
+          },
+          {
+            "id": 8,
+            "title": "Transformers versus LSTMs for electronic trading",
+            "authors": "P. Bilokon and Y. Qiu",
+            "year": "2023",
+            "source": "arXiv:2309.11400"
+          },
+          {
+            "id": 9,
+            "title": "Forecasting Cryptocurrency Prices Using LSTM, GRU, and Bi-directional LSTM: A Deep Learning Approach",
+            "authors": "P. L. Seabe, C. R. B. Moutsinga, E. Pindza",
+            "year": "2023",
+            "source": "Fractal and Fractional, Vol. 7, No. 2, p. 203"
+          },
+          {
+            "id": 10,
+            "title": "A Novel Cryptocurrency Price Prediction Model Using GRU, LSTM and Bi-LSTM Machine Learning Algorithms",
+            "authors": "M. J. Hamayel and A. Y. Owda",
+            "year": "2021",
+            "source": "AI, Vol. 2, No. 4, pp. 477-496"
+          },
+          {
+            "id": 11,
+            "title": "Enhancing Price Prediction in Cryptocurrency Using Transformer Neural Network and Technical Indicators",
+            "authors": "M. A. L. Khaniki and M. Manthouri",
+            "year": "2024",
+            "source": "arXiv:2403.03606"
+          },
+          {
+            "id": 12,
+            "title": "LSTM Based Sentiment Analysis for Cryptocurrency Prediction",
+            "authors": "X. Huang et al.",
+            "year": "2021",
+            "source": "Proc. of DASFAA 2021, pp. 617-621"
+          },
+          {
+            "id": 13,
+            "title": "Forecasting Directional Bitcoin Price Returns Using Aspect-based Sentiment Analysis on Online Text Data",
+            "authors": "E. Loginova et al.",
+            "year": "2024",
+            "source": "Machine Learning, Vol. 113, No. 7, pp. 4761-4784"
+          },
+          {
+            "id": 14,
+            "title": "Sentiment-driven Price Prediction of the Bitcoin Based on Statistical and Deep Learning Approaches",
+            "authors": "G. Serafini et al.",
+            "year": "2020",
+            "source": "Proc. of IJCNN 2020, pp. 1-8"
+          },
+          {
+            "id": 15,
+            "title": "Algorithmic Trading of Cryptocurrency Based on Twitter Sentiment Analysis",
+            "authors": "S. Colianni, S. Rosales, M. Signorotti",
+            "year": "2015",
+            "source": "CS229 Project, Vol. 1, No. 5, pp. 1-4"
+          },
+          {
+            "id": 16,
+            "title": "Price Movement Prediction of Cryptocurrencies Using Sentiment Analysis and Machine Learning",
+            "authors": "F. Valencia, A. Gómez-Espinosa, B. Valdés-Aguirre",
+            "year": "2019",
+            "source": "Entropy, Vol. 21, No. 6, p. 589"
+          },
+          {
+            "id": 17,
+            "title": "Sentiment Analysis of News for Effective Cryptocurrency Price Prediction",
+            "authors": "A.-D. Vo, Q.-P. Nguyen, C.-Y. Ock",
+            "year": "2019",
+            "source": "Int. J. Knowl. Eng., Vol. 5, No. 2, pp. 47-52"
+          },
+          {
+            "id": 18,
+            "title": "Breaking News Headlines: Impact on Trading Activity in the Cryptocurrency Market",
+            "authors": "A. K. Kulbhaskar and S. Subramaniam",
+            "year": "2023",
+            "source": "Econ. Model., Vol. 126, p. 106397"
+          },
+          {
+            "id": 19,
+            "title": "Investigating the Informativeness of Technical Indicators and News Sentiment in Financial Market Price Prediction",
+            "authors": "S. A. Farimani et al.",
+            "year": "2022",
+            "source": "Knowl.-Based Syst., Vol. 247, p. 108742"
+          },
+          {
+            "id": 20,
+            "title": "Bitcoin Futures—What Use Are They?",
+            "authors": "S. Corbet, B. Lucey, M. Peat, S. Vigne",
+            "year": "2018",
+            "source": "Econ. Lett., Vol. 172, pp. 23-27"
+          },
+          {
+            "id": 21,
+            "title": "The Impacts of Futures Trading on Volatility and Volatility Asymmetry of Bitcoin Returns",
+            "authors": "C. Zhang, H. Ma, G. B. Arkorful, Z. Peng",
+            "year": "2023",
+            "source": "Int. Rev. Financ. Anal., Vol. 86, p. 102497"
+          }
+        ],
+        "pdfLink": "/pdf/LSTM_Cryptocurrency_Future_Prediction_Model.pdf",
+        "image": "/images/lstm/Deep_learning_architecture_flow_chart.png",
+        "performance": [
+          {
+            "title": "Prediction Performance Comparison by Altcoin Data Type",
+            "description": "Comparison of prediction performance between conventional closing price-based models (Basic) and proposed high/low-based models (Improved). High/low models focus on volatility prediction, resulting in slightly lower correlation and win rates but contributing to actual return improvements.",
+            "headers": ["Altcoin", "Model", "Pearson Correlation", "Win Rate"],
+            "rows": [
+              ["ETH", "Basic Data", "0.973", "80.1%"],
+              ["ETH", "Improved Data", "0.946", "77.9%"],
+              ["XRP", "Basic Data", "0.962", "72.2%"],
+              ["XRP", "Improved Data", "0.914", "69.5%"],
+              ["DOGE", "Basic Data", "0.969", "75.1%"],
+              ["DOGE", "Improved Data", "0.930", "73.6%"]
+            ]
+          },
+          {
+            "title": "Profit Comparison by Altcoin Data Type",
+            "description": "Proposed high/low model (Improved Data) recorded higher returns across all coins compared to conventional models. Significant improvements were seen particularly in high-volatility DOGE and XRP.",
+            "headers": [
+              "Altcoin",
+              "Basic Data Profit",
+              "Improved Data Profit",
+              "Gain"
+            ],
+            "rows": [
+              ["ETH", "30.78%", "37.05%", "+6.27%"],
+              ["XRP", "64.78%", "97.49%", "+32.71%"],
+              ["DOGE", "-13.19%", "32.77%", "+45.96%"]
+            ]
+          },
+          {
+            "title": "DOGE Price Prediction Result Analysis",
+            "description": "Closing price-based results (a) are similar to actuals, but high/low-based results (b) yield higher returns by better reflecting volatility.",
+            "image": "/images/lstm/DOGE_Price_Prediction_Results.png"
+          },
+          {
+            "title": "Data Preprocessing Procedure",
+            "description": "MinMaxScaler scaling and 60:20:20 data split strategy.",
+            "image": "/images/lstm/Data_preprocessing.png"
+          }
+        ]
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "project-paper-tft",
+      "type": "project",
+      "category": "ai-ml",
+      "label": "Dual-Stream_TFT_Paper-AI",
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-transformer",
+        "skill-pytorch"
+      ],
+      "details": {
+        "description": "Research paper presented at Ritsumeikan University conference in Osaka, Japan, investigating a cryptocurrency price prediction system using Dual-Stream Temporal Fusion Transformer. It improves generalization and interpretability by processing price indicators and sentiment data through separate streams and fusing them via a dynamic gating mechanism.",
+        "technologies": [
+          "Python 3.10",
+          "PyTorch 2.1.0",
+          "Lightning 2.5.1",
+          "Temporal Fusion Transformer",
+          "Optuna",
+          "CUDA 11.8"
+        ],
+        "coreFeatures": [
+          "🔀 Dual-Stream Architecture Design",
+          "📊 Independent processing of Price + Sentiment data",
+          "🎯 Improved MAE 2.31% / RMSE 2.28% / Vol 1.31%",
+          "🔍 Attention-based Interpretability"
+        ],
+        "techStackDocs": [
+          {
+            "name": "Temporal Fusion Transformer (TFT)",
+            "description": "An interpretable time-series prediction model that suppresses unnecessary features and highlights important variables through Variable Selection Networks and Gating mechanisms."
+          },
+          {
+            "name": "PyTorch + Lightning",
+            "description": "Deep learning model implementation using PyTorch 2.1.0 and Lightning 2.5.1. Utilized CUDA 11.8 GPU acceleration."
+          },
+          {
+            "name": "Optuna",
+            "description": "Framework for automated hyperparameter search. Optimized batch size, hidden size, dropout, and learning rate."
+          }
+        ],
+        "features": [
+          {
+            "title": "Data Collection & Preprocessing",
+            "items": [
+              "BTC OHLCV Data: Binance API (Hourly)",
+              "Social Sentiment Score: Santiment API (sentiment_balance_total, soc_sr)",
+              "News Sentiment Score: Alpha Vantage API (ticker_sentiment_score, news_sr)",
+              "Technical Indicators: Calculated MA, RSI",
+              "Applied 4-hour half-life exponential decay to news sentiment",
+              "Data split: 70% Train / 15% Val / 15% Test"
+            ]
+          },
+          {
+            "title": "Dual-Stream TFT Architecture",
+            "items": [
+              "Price Stream: BTC Price data + Tech Indicators (MA, RSI)",
+              "Sentiment Stream: Social Sentiment + News Sentiment + Change Rate",
+              "Independent TFT encoders for each stream",
+              "Gated Fusion: α = σ(gate([yp, ys])), ŷ = α·yp + (1-α)·ys"
+            ]
+          },
+          {
+            "title": "Quantitative Performance Comparison",
+            "items": [
+              "Validation: MAE 320.78 (+0.47%), RMSE 484.13 (-0.24%)",
+              "Test: MAE 350.01 (-2.31%), RMSE 555.69 (-2.28%)",
+              "Improved stability with 1.31% reduction in prediction volatility",
+              "Confirmed improved generalization performance over single-stream"
+            ]
+          },
+          {
+            "title": "Attention Analysis Results",
+            "items": [
+              "Price Stream: Gradual concentration on later timesteps (15-23)",
+              "Sentiment Stream: Sharp peaks at 10, 17, 21 timesteps",
+              "Confirmed distinct temporal patterns between the two streams",
+              "Improved model interpretability"
+            ]
+          }
+        ],
+        "optimizations": [
+          {
+            "title": "Dynamic Gating Mechanism",
+            "items": [
+              "Applied gating layer after concatenating price/sentiment stream outputs",
+              "Learned contribution weights per timestep for each stream",
+              "Interpretability: Visualized stream importance via gate weights"
+            ]
+          },
+          {
+            "title": "Hyperparameter Optimization",
+            "items": [
+              "Automated search based on Optuna",
+              "Optimized batch size, hidden size, dropout, and learning rate",
+              "Performed independent optimization for each scenario"
+            ]
+          },
+          {
+            "title": "Sentiment Data Preprocessing",
+            "items": [
+              "Applied 4-hour half-life exponential decay to news sentiment",
+              "Maintained explicit zero values for periods with no sentiment",
+              "Normalized scales by calculating 1st-order change rate (sr)"
+            ]
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Fusion of Heterogeneous Data Sources",
+            "problem": "Conventional single-stream methods merge price/sentiment data into a single input, diluting the unique characteristics of each modality and limiting interpretation of cross-modal interactions.",
+            "solution": "Separated into a Dual-Stream architecture where each stream learns modality-specific temporal representations. Fused via dynamic gating to secure both generalization and interpretability."
+          },
+          {
+            "title": "Discrepancy Between Validation and Test Performance",
+            "problem": "Validation MAE of the Dual-Stream model was 0.47% higher than single-stream, but it showed 2.31% lower performance in testing.",
+            "solution": "Proven that dynamic fusion of heterogeneous data prevents overfitting and strengthens generalization. Resolved the mid-sequence over-concentration problem in single-stream models."
+          },
+          {
+            "title": "Interpretation of Temporal Importance",
+            "problem": "Hard to interpret consistent temporal patterns in single-stream models due to dispersed attention.",
+            "solution": "Improved interpretability in Dual-Stream by clearly separating into late-concentration for the Price stream and sharp peaks for the Sentiment stream."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Importance of Modality Separation",
+            "content": "Price and sentiment data have inherently different temporal patterns. Processing them separately preserves unique characteristics and allows for more sophisticated fusion."
+          },
+          {
+            "title": "What 'Validation ↗ but Test ↘' Means",
+            "content": "Even if validation performance slightly drops, improvement in test performance indicates enhanced generalization capability. Overfitting prevention and model robustness are more critical in practice."
+          },
+          {
+            "title": "Securing Interpretability via Attention Visualization",
+            "content": "Visualizing TFT's attention weights reveals when the model focuses on what information. Clearly distinguishes between the recent bias of the Price stream and the event-driven peaks of the Sentiment stream."
+          },
+          {
+            "title": "Future Research Directions",
+            "content": "Potential for advancing dynamic fusion mechanisms, integrating additional streams for exogenous variables (macroeconomic indicators, etc.), and validating the scalability and robustness of multi-modal prediction frameworks."
+          }
+        ],
+        "references": [
+          {
+            "id": 1,
+            "title": "Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting",
+            "authors": "B. Lim, S. Ö. Arik, N. Loeff, T. Pfister",
+            "year": "2019",
+            "source": "arXiv:1912.09363"
+          },
+          {
+            "id": 2,
+            "title": "Cryptocurrency Price Prediction using Twitter Sentiment Analysis",
+            "authors": "G. B. Haritha and N. B. Sahana",
+            "year": "2023",
+            "source": "arXiv:2303.09397"
+          },
+          {
+            "id": 3,
+            "title": "Price Prediction of Cryptocurrency Using User Sentiments and Quantitative Data",
+            "authors": "D. Perera, J. Lim, S. Gunraku, W. H. Lim",
+            "year": "2024",
+            "source": "Proc. 2024 Int. Conf. Data Sci. Adv. Analytics"
+          }
+        ],
+        "performance": [
+          {
+            "title": "Performance Comparison by Scenario",
+            "description": "While showing minimal difference in the Validation Set, Scenario 2 (Dual-Stream) recorded superior performance across all metrics in the Test Set, proving its generalization capability.",
+            "headers": [
+              "Scenario",
+              "Val_MAE",
+              "Val_RMSE",
+              "Val_Vol",
+              "Test_MAE",
+              "Test_RMSE",
+              "Test_Vol"
+            ],
+            "rows": [
+              [
+                "Scenario 1",
+                "319.2764",
+                "485.3020",
+                "483.9223",
+                "358.3081",
+                "568.6622",
+                "562.9303"
+              ],
+              [
+                "Scenario 2",
+                "320.7794",
+                "484.1341",
+                "483.5529",
+                "350.0146",
+                "555.6910",
+                "555.5461"
+              ]
+            ]
+          },
+          {
+            "title": "Proposed System Architecture",
+            "description": "Dual-Stream structure independently processing Price and Sentiment streams then combining them via Gated Fusion.",
+            "image": "/images/tft/Proposed Model System Architecture.svg"
+          },
+          {
+            "title": "Attention Distribution Analysis (Scenario 1 vs 2)",
+            "description": "Scenario 1 (top) shows dispersed attention making pattern interpretation difficult, while Scenario 2 (bottom) shows clear patterns with Price stream concentration at the end and Sentiment stream responding to specific events.",
+            "image": "/images/tft/Encoder attention distribution in Scenario 2 (a price stream, b sentiment stream).svg"
+          },
+          {
+            "title": "Scenario 1 Attention Distribution (Reference)",
+            "description": "Attention distribution of the single-stream model (Scenario 1), showing a dispersed form without specific patterns.",
+            "image": "/images/tft/Encoder attention distribution in Scenario 1.png"
+          }
+        ],
+        "pdfLink": "/pdf/Conference_Paper_Dual-Stream-TFT.pdf",
+        "image": "/images/tft/Proposed Model System Architecture.svg"
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-lstm",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "LSTM",
+      "connections": ["project-paper-lstm"],
+      "details": {
+        "description": "Long Short-Term Memory network, an RNN architecture capable of learning long-term dependencies in time-series data."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-tensorflow",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "TensorFlow",
+      "connections": ["project-paper-lstm"],
+      "details": {
+        "description": "Open-source deep learning framework developed by Google, used for building and training neural network models."
+      },
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-transformer",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Transformer",
+      "connections": ["project-paper-tft"],
+      "details": {
+        "description": "Deep learning architecture based on Self-Attention mechanism, showing excellent performance in time-series forecasting and NLP."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-pytorch",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "PyTorch",
+      "connections": ["project-paper-tft"],
+      "details": {
+        "description": "Open-source deep learning framework developed by Facebook, providing dynamic calculation graphs and an intuitive API."
+      },
+      "color": "#8b5cf6"
+    }
+  ]
+}

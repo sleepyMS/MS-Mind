@@ -1,6 +1,7 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import { nodesData } from "../../data";
+import { getNodesData } from "../../data";
 import type { NeuralData } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
@@ -19,8 +20,9 @@ export function MiniMap() {
     theme,
   } = useAppStore();
   const isDark = theme === "dark";
+  const { i18n } = useTranslation();
 
-  const data = nodesData as NeuralData;
+  const data = getNodesData(i18n.language);
 
   // 노드 위치를 2D 좌표로 변환 (X, Z 평면 사용)
   const mappedNodes = useMemo(() => {
