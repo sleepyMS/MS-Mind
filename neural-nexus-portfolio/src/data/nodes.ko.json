@@ -822,6 +822,7 @@
       "connections": [
         "me",
         "skill-python",
+        "skill-pytorch",
         "skill-celery",
         "skill-redis",
         "skill-timescaledb",
@@ -830,9 +831,12 @@
         "project-cortex-fe"
       ],
       "details": {
-        "description": "개인 투자자를 위한 데이터 기반 퀀트 투자 및 자동매매 플랫폼입니다. 단순한 CRUD API가 아닌, '실시간 금융 연산을 안정적으로 처리하면서 수백만 건의 시계열 데이터를 밀리초 단위로 조회'하는 것이 핵심 과제였습니다. CPU/IO 워커 분리, 베이지안 최적화, 복식부기 크레딧 시스템 등 엔터프라이즈급 아키텍처를 적용했습니다.",
+        "description": "개인 투자자를 위한 데이터 기반 퀀트 투자 및 자동매매 플랫폼입니다. 단순한 CRUD API가 아닌, '실시간 금융 연산을 안정적으로 처리하면서 수백만 건의 시계열 데이터를 밀리초 단위로 조회'하는 것이 핵심 과제였습니다. GRU/LSTM 기반 AI 예측 모델 학습 파이프라인과 ONNX 추론 시스템을 구축하고, CPU/IO 워커 분리, 베이지안 최적화, 복식부기 크레딧 시스템 등 엔터프라이즈급 아키텍처를 적용했습니다.",
         "technologies": [
           "FastAPI",
+          "PyTorch",
+          "ONNX Runtime",
+          "Optuna",
           "Celery",
           "Redis",
           "TimescaleDB",
@@ -841,6 +845,7 @@
           "Python 3.11"
         ],
         "coreFeatures": [
+          "🤖 AI 예측 모델 파이프라인: GRU/LSTM 기반 시계열 분류(BUY/HOLD/SELL), Triple Barrier 라벨링, Optuna TPE로 하이퍼파라미터 자동 최적화, PyTorch→ONNX 변환으로 추론 30% 가속",
           "⚡ 벡터 연산 백테스팅: NumPy/Pandas로 45초→0.8초(98% 단축), Generator 기반 step-by-step 실행으로 Optuna 중간 Pruning 가능",
           "🔧 CPU/IO 워커 물리적 분리: cpu_queue(prefork)+io_queue(gevent)로 백테스팅 중에도 매매 주문 밀리초 체결 보장",
           "📊 TimescaleDB 시계열 최적화: 수억 건 OHLCV를 자동 청크 파티셔닝, (ticker, time DESC) 복합 인덱스로 조회 성능 유지",
@@ -848,6 +853,14 @@
           "🧠 WFO + Optuna 베이지안 최적화: Expanding Window 분할, TPE 샘플러로 유망 파라미터 집중 탐색, MedianPruner로 하위 50% 조기 중단"
         ],
         "techStackDocs": [
+          {
+            "name": "PyTorch + ONNX Runtime",
+            "description": "Why PyTorch for training, ONNX for inference? PyTorch의 유연한 동적 그래프로 실험하고, 학습 완료 후 ONNX로 변환하여 Python 의존성 없이 빠른 추론을 제공합니다. onnxruntime은 PyTorch 대비 약 30% 빠른 추론 속도를 보여줍니다."
+          },
+          {
+            "name": "Optuna + Captum",
+            "description": "Why Optuna over Grid Search? TPE(Tree-structured Parzen Estimator)로 유망한 하이퍼파라미터 영역을 집중 탐색하고, MedianPruner로 하위 Trial을 조기 중단하여 탐색 효율 5배 향상. Captum의 Integrated Gradients로 피처 중요도를 정량적으로 분석합니다."
+          },
           {
             "name": "FastAPI",
             "description": "Why FastAPI over Django/Flask? Pydantic을 통한 엄격한 런타임 데이터 검증과 Native Async 지원이 필수적이었습니다. 금융 데이터의 정합성을 보장하면서도 High Concurrency를 처리하기 위한 최적의 선택입니다."
@@ -867,6 +880,24 @@
         ],
         "link": "https://github.com/sleepyMS/Cortex",
         "features": [
+          {
+            "title": "AI 모델 아키텍처 (Deep Learning Models)",
+            "items": [
+              "GRU/LSTM 시계열 분류기: BUY/HOLD/SELL 3클래스 분류 + 가격 수익률 회귀 2가지 Task Type 지원. LSTM 대비 파라미터 수가 적은 GRU를 기본으로 채택하여 학습 속도 향상",
+              "Triple Barrier 라벨링: Marcos López de Prado의 금융 ML 표준 라벨링 방법론 구현. Take Profit/Stop Loss/Horizon 세 장벽 중 먼저 도달하는 것으로 라벨 결정",
+              "MC Dropout 불확실성 추정: 회귀 모델의 95% 신뢰구간 제공. Monte Carlo Dropout으로 N번 forward pass하여 예측 분포 추정",
+              "50+ 기술적 지표 피처 추출: SMA, EMA, MACD, RSI, Bollinger Bands 등 FeatureEngineer 클래스로 일괄 처리. RobustScaler로 이상치에 강건한 정규화"
+            ]
+          },
+          {
+            "title": "AI 학습 파이프라인 자동화 (ML Pipeline Automation)",
+            "items": [
+              "End-to-End 파이프라인: 데이터 로딩 → 피처 추출 → 라벨링 → 학습 → ONNX 변환까지 TrainingPipelineConfig로 일괄 관리",
+              "Optuna 하이퍼파라미터 최적화: hidden_size, num_layers, dropout, learning_rate, batch_size 자동 탐색. TPE 샘플러로 유망 영역 집중 탐색",
+              "Integrated Gradients 피처 중요도: Captum 라이브러리로 모델 예측에 가장 영향력 있는 피처 정량 분석. XAI(Explainable AI)로 블랙박스 해소",
+              "실시간 학습 진행률: 에포크/Trial마다 Redis Pub/Sub → WebSocket으로 UI 실시간 업데이트. 진행률, 손실값, 메트릭 표시"
+            ]
+          },
           {
             "title": "하이브리드 암호화 및 보안 전략 (Hybrid Cryptography)",
             "items": [
@@ -911,7 +942,7 @@
           {
             "title": "크레딧 경제 시스템 (Double-Entry Logic)",
             "items": [
-              "Credits Ledger (원장): 크레딧의 '생성'을 기록하며, 각 레코드별로 만료일(expires_at)을 개별 관리",
+              "Credits Ledger (원장): 크레딧의 '생성'을 기록하며, 각 레코드별로 만료일(expires*at)을 개별 관리",
               "Credits Transaction: 크레딧의 '소비'를 기록하고, transaction_details로 원장별 차감 내역 추적",
               "우선순위 알고리즘: [만료 임박 > 무료(보너스) > 유료] 순서로 자동 차감되는 FIFO 변형 로직"
             ]
@@ -926,6 +957,14 @@
           }
         ],
         "optimizations": [
+          {
+            "title": "ONNX Runtime으로 프로덕션 추론 30% 가속화",
+            "items": [
+              "Why: PyTorch 모델은 Python 런타임 의존성으로 배포 복잡도 증가. 매 API 호출마다 모델 로드하면 지연 발생.",
+              "How: 학습 완료 후 `torch.onnx.export()`로 ONNX 변환. `onnxruntime.InferenceSession`으로 최적화된 추론. CPU 환경에서도 효율적 동작.",
+              "Impact: PyTorch 대비 추론 속도 30% 향상. AIModelRegistry로 모델 캐싱하여 중복 로드 방지."
+            ]
+          },
           {
             "title": "Algorithm Vectorization으로 98% 성능 향상",
             "items": [
@@ -969,6 +1008,16 @@
         ],
         "challenges": [
           {
+            "title": "금융 시계열 라벨링의 한계와 Triple Barrier 도입",
+            "problem": "단순 '다음 봉 방향(Up/Down)' 라벨링은 가격 잡음에 민감하고, 실제 트레이딩 P&L과 연결되지 않았습니다. 라벨 불균형이 심하고 모델이 의미 없는 패턴을 학습하는 문제가 발생했습니다.",
+            "solution": "Marcos López de Prado의 Triple Barrier Method를 구현했습니다. Take Profit(+2%), Stop Loss(-1%), Time Horizon(24시간) 세 가지 장벽 중 먼저 도달하는 것으로 라벨을 결정합니다. 실제 트레이딩 시나리오(손절/익절/타임아웃)를 라벨에 반영하여 모델이 P&L과 연관된 패턴을 학습하도록 했습니다."
+          },
+          {
+            "title": "AI 학습 중 실시간 진행률 모니터링 시스템",
+            "problem": "AI 모델 학습은 수십 분~수 시간이 소요됩니다. 사용자는 진행 상황을 알 수 없어 '작업이 멈춘 건지 진행 중인지' 불안해했고, 브라우저를 닫으면 상태를 확인할 방법이 없었습니다.",
+            "solution": "학습 콜백 함수를 통해 에포크/Trial마다 Redis Pub/Sub 채널로 진행률 메시지를 발행합니다. FastAPI 서버가 구독하여 WebSocket으로 클라이언트에 푸시합니다. 현재 에포크, 손실값, 정확도, 남은 시간 추정치를 실시간으로 제공하여 투명한 학습 모니터링을 구현했습니다."
+          },
+          {
             "title": "동기식 연산으로 인한 웹 서버 '동결' (The Frozen Server)",
             "problem": "초기에는 백테스팅을 FastAPI 엔드포인트 내부에서 직접 실행했습니다. Pandas 연산이 CPU를 점유하자 async 이벤트 루프가 멈춰버려, 헬스 체크를 포함한 모든 API 요청이 타임아웃되어 로드밸런서가 서버를 '죽은 것'으로 판단, 트래픽을 차단하는 치명적 장애가 발생했습니다.",
             "solution": "아키텍처를 근본적으로 변경했습니다. Celery를 도입하여 연산 작업을 별도 프로세스로 위임(Fire-and-Forget)하고, FastAPI는 '요청 접수 → 작업 ID 반환 → 진행률 조회'만 담당하도록 역할을 분리했습니다. Redis Pub/Sub으로 진행률을 WebSocket에 중계하여 폴링 없이 실시간 피드백을 구현했습니다."
@@ -990,6 +1039,10 @@
           }
         ],
         "learnings": [
+          {
+            "title": "ML Ops의 첫걸음: 학습-추론 파이프라인 분리",
+            "content": "처음에는 PyTorch 모델을 그대로 API 서버에 로드하려 했으나, CUDA 의존성과 무거운 라이브러리 때문에 배포가 복잡해졌습니다. 학습(Training)과 추론(Inference)을 물리적으로 분리하여, 학습은 GPU 환경에서 PyTorch로, 추론은 CPU 환경에서 ONNX Runtime으로 수행하는 아키텍처를 설계했습니다. AIModelRegistry로 모델을 캐싱하고, 버전 관리를 통해 A/B 테스트도 가능하게 했습니다. '학습한 모델을 어떻게 프로덕션에 안전하게 배포할 것인가'라는 ML Ops의 핵심 질문에 대한 첫 번째 해결책을 경험했습니다."
+          },
           {
             "title": "MSA로 가는 징검다리: 모듈러 모놀리스",
             "content": "처음부터 MSA로 시작하면 인프라 복잡도(서비스 디스커버리, 분산 트랜잭션, 로그 통합)에 압도당합니다. 코드베이스는 하나로 유지하되 Auth/Backtest/Trade/Credit 등 도메인 간 직접 import를 금지하고, services/ 레이어를 통해서만 통신하는 규칙을 세웠습니다. 덕분에 필요 시 서비스를 '떼어내기만 하면' MSA로 전환할 수 있는 유연한 구조를 만들었습니다."
@@ -1013,12 +1066,44 @@
         ],
         "codeExamples": [
           {
+            "title": "Triple Barrier 라벨링 (금융 ML 표준 방법론)",
+            "category": "ai",
+            "description": "Why Triple Barrier? 단순 Up/Down 라벨링은 잡음에 민감하고 P&L과 괴리됩니다. TP/SL/Horizon 세 장벽 중 먼저 도달하는 것으로 라벨을 결정하여 실제 트레이딩 시나리오를 반영합니다.",
+            "filePath": "backend/app/ai/labeling/triple_barrier.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/labeling/triple_barrier.py",
+            "snippet": "# 상단 장벽 (Take Profit) 도달 시점\ntp_hits = np.where(returns >= self.config.profit_target)[0]\ntp_time = tp_hits[0] if len(tp_hits) > 0 else np.inf\n\n# 하단 장벽 (Stop Loss) 도달 시점\nsl_hits = np.where(returns <= -self.config.stop_loss)[0]\nsl_time = sl_hits[0] if len(sl_hits) > 0 else np.inf\n\n# 먼저 도달한 장벽으로 라벨 결정\nif tp_time < sl_time:\n    return Label.BUY\nelif sl_time < tp_time:\n    return Label.SELL\nelse:\n    return Label.HOLD # 시간 만료"
+          },
+          {
+            "title": "Optuna TPE + MedianPruner 하이퍼파라미터 최적화",
+            "category": "ai",
+            "description": "Why TPE over Grid Search? 베이지안 최적화로 유망한 파라미터 영역을 집중 탐색하고, MedianPruner로 하위 Trial을 조기 중단하여 5배 빠른 탐색을 달성했습니다.",
+            "filePath": "backend/app/ai/training/optimizer.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/training/optimizer.py",
+            "snippet": "# Optuna Objective 함수에서 파라미터 샘플링\nhidden_size = trial.suggest_int(\"hidden_size\", 32, 256, step=16)\nnum_layers = trial.suggest_int(\"num_layers\", 1, 4)\ndropout = trial.suggest_float(\"dropout\", 0.1, 0.5, step=0.05)\nlr = trial.suggest_float(\"learning_rate\", 1e-4, 1e-2, log=True)\n\n# 중간 결과 보고 (Pruning용)\ntrial.report(val_loss, epoch)\nif trial.should_prune():\n    raise optuna.exceptions.TrialPruned()"
+          },
+          {
+            "title": "Integrated Gradients 피처 중요도 분석 (XAI)",
+            "category": "ai",
+            "description": "Why Explainability? 블랙박스 모델은 신뢰하기 어렵습니다. Captum의 Integrated Gradients로 어떤 피처가 예측에 가장 큰 영향을 미쳤는지 정량적으로 분석하여 모델 해석 가능성을 확보했습니다.",
+            "filePath": "backend/app/ai/training/optimizer.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/training/optimizer.py",
+            "snippet": "from captum.attr import IntegratedGradients\n\n# Integrated Gradients 인스턴스\nig = IntegratedGradients(model.model)\nbaseline = torch.zeros_like(X_sample)\n\n# 중요도 계산 (Target: BUY class)\nattributions, delta = ig.attribute(\n    inputs=X_sample, baselines=baseline,\n    target=2, # BUY class\n    return_convergence_delta=True\n)\n\n# 집계: 절대값 → 배치 평균 → 시퀀스 평균\nimportances = torch.mean(torch.abs(attributions), dim=0)\nimportances = torch.mean(importances, dim=0)"
+          },
+          {
+            "title": "MC Dropout 불확실성 추정 (회귀 모델)",
+            "category": "ai",
+            "description": "Why Uncertainty? 점 추정만으로는 예측의 신뢰도를 알 수 없습니다. Monte Carlo Dropout으로 여러 번 forward pass하여 예측 분포를 추정하고, 95% 신뢰구간을 제공합니다.",
+            "filePath": "backend/app/ai/models/gru.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/models/gru.py",
+            "snippet": "def predict_with_uncertainty(self, X: np.ndarray, n_iter: int = 10):\n    self.model.train() # Dropout 활성화\n    predictions = []\n    \n    for _ in range(n_iter):\n        with torch.no_grad():\n            pred = self.model(X_tensor)\n            predictions.append(pred.cpu().numpy())\n\n    preds = np.stack(predictions, axis=0) # (n_iter, batch, 1)\n    mean = np.mean(preds, axis=0)\n    std = np.std(preds, axis=0)\n\n    return {\n        'mean': mean,\n        'std': std,\n        'lower_bound': mean - 1.96 * std, # 95% CI\n        'upper_bound': mean + 1.96 * std\n    }"
+          },
+          {
             "title": "Generator 기반 Step-by-Step 백테스팅 (Pruning 가능)",
             "category": "performance",
             "description": "Why Generator? 최적화 시 수익률 하위권 Trial을 끝까지 돌리면 시간 낭비입니다. yield로 각 스텝마다 중간 결과를 반환하고, 외부에서 Optuna `trial.should_prune()` 체크 후 중단하여 연산 시간 1/5로 단축했습니다.",
             "filePath": "backend/app/engine/backtesting_engine.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/engine/backtesting_engine.py",
-            "snippet": "def run_step_by_step(self) -> Generator[Dict, None, None]:\n    \"\"\"제너레이터로 단계별 실행. 외부에서 Pruning 제어 가능.\"\"\"\n    for timestamp, group in self.merged_df.groupby(level=0):\n        self.process_single_step(timestamp, group)\n        # 중간 결과 yield (Pruning 판단용)\n        if self.step_count % 100 == 0:\n            yield {\n                'is_intermediate': True,\n                'backtest_score': self._calculate_current_score(),\n                'mdd_pct': self._calculate_current_mdd()\n            }\n    yield self._calculate_summary_stats()  # 최종 결과"
+            "snippet": "def run_step_by_step(self):\n    for timestamp, group in self.merged_df.groupby(level=0):\n        self.process_single_step(timestamp, group)\n        if self.step_count % 100 == 0:\n            yield {'is_intermediate': True, 'score': self.calc_score()}\n    yield self.calc_summary_stats()"
           },
           {
             "title": "이벤트 기반 Pub/Sub 디스패처",
@@ -1050,7 +1135,7 @@
             "description": "Why TPE+Pruning? Grid Search는 모든 조합을 탐색하여 비효율적입니다. TPE(Tree-structured Parzen Estimator)로 유망 영역을 집중 탐색하고, MedianPruner로 중간 성과가 하위 50%면 즉시 중단하여 10배 늘어난 WFO 연산을 1/5로 단축했습니다.",
             "filePath": "backend/app/tasks.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
-            "snippet": "sampler = optuna.samplers.TPESampler(seed=42)\npruner = optuna.pruners.MedianPruner(n_startup_trials=5, n_warmup_steps=10)\nstudy = optuna.create_study(direction='maximize', sampler=sampler, pruner=pruner)\n\nfor intermediate in engine.run_step_by_step():\n    if intermediate.get('is_intermediate'):\n        trial.report(intermediate['backtest_score'], step=step)\n        if trial.should_prune():\n            raise optuna.TrialPruned()  # 조기 중단"
+            "snippet": "sampler = optuna.samplers.TPESampler(seed=42)\npruner = optuna.pruners.MedianPruner(n_startup_trials=5, n_warmup_steps=10)\nstudy = optuna.create_study(direction='maximize', sampler=sampler, pruner=pruner)\n\nfor intermediate in engine.run_step_by_step():\n    if intermediate.get('is_intermediate'):\n        trial.report(intermediate['backtest_score'], step=step)\n        if trial.should_prune():\n            raise optuna.TrialPruned() # 조기 중단"
           },
           {
             "title": "벡터 연산으로 백테스팅 98% 가속화",
@@ -1058,7 +1143,7 @@
             "description": "Why Vectorization? Python For 루프로 수십만 캔들을 순회하면 수 분 소요. `np.where`로 조건문을 벡터화하고 컬럼 단위로 일괄 처리하여 45초→0.8초로 98% 단축했습니다.",
             "filePath": "backend/app/engine/backtesting_engine.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/engine/backtesting_engine.py",
-            "snippet": "# For 루프 대신 벡터 연산\ndf['signal'] = np.where(\n    (df['sma_short'] > df['sma_long']) & \n    (df['sma_short'].shift(1) <= df['sma_long'].shift(1)),\n    1,   # 골든크로스: 매수\n    np.where(df['sma_short'] < df['sma_long'], -1, 0)  # 데드크로스: 매도\n)"
+            "snippet": "# For 루프 대신 벡터 연산\ndf['signal'] = np.where(\n    (df['sma_short'] > df['sma_long']) & \n    (df['sma_short'].shift(1) <= df['sma_long'].shift(1)),\n    1, # 골든크로스: 매수\n    np.where(df['sma_short'] < df['sma_long'], -1, 0) # 데드크로스: 매도\n)"
           },
           {
             "title": "Race Condition 방지: Task 내 재시도 로직",
@@ -1066,7 +1151,7 @@
             "description": "Why Retry? API에서 commit 전에 Celery가 DB 조회하면 'Not Found'. 로컬에서는 안 생기다가 프로덕션에서만 간헐적 발생하여 디버깅이 악몽이었습니다. 워커 내부에서 5회 재시도하고, `acks_late=True`로 워커 충돌 시에도 재실행을 보장했습니다.",
             "filePath": "backend/app/tasks.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/tasks.py",
-            "snippet": "@celery_app.task(bind=True, acks_late=True)\ndef run_backtest(self, backtest_id: str):\n    # 커밋 대기를 위한 재시도 로직\n    for attempt in range(5):\n        backtest = session.query(Backtest).filter_by(id=uuid).one_or_none()\n        if backtest: break\n        time.sleep(1)  # 트랜잭션 커밋 대기\n    if not backtest:\n        raise ValueError(f'Backtest {backtest_id} not found after 5 retries')"
+            "snippet": "@celery_app.task(bind=True, acks_late=True)\ndef run_backtest(self, backtest_id: str):\n    # 커밋 대기를 위한 재시도 로직\n    for attempt in range(5):\n        backtest = session.query(Backtest).filter_by(id=uuid).one_or_none()\n        if backtest: break\n        time.sleep(1) # 트랜잭션 커밋 대기\n    if not backtest:\n        raise ValueError(f'Backtest {backtest_id} not found after 5 retries')"
           },
           {
             "title": "N+1 쿼리 문제 해결: Eager Loading",
@@ -1090,7 +1175,7 @@
             "description": "Why Decimal? `float`로 `0.1 BTC × 3 = 0.30000000000000004`가 되어 거래소 API에서 '잔액 부족' 오류. DB부터 Pydantic까지 `Decimal(20, 8)`로 통일하여 1사토시 오차도 허용하지 않습니다.",
             "filePath": "backend/app/schemas.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/schemas.py",
-            "snippet": "from pydantic import condecimal\n\nclass OrderCreate(BaseModel):\n    quantity: condecimal(max_digits=20, decimal_places=8)\n    price: condecimal(max_digits=20, decimal_places=8)\n    # float 대신 Decimal로 정밀도 보장\n    # 0.1 + 0.2 == Decimal('0.3')  # True"
+            "snippet": "from pydantic import condecimal\n\nclass OrderCreate(BaseModel):\n    quantity: condecimal(max_digits=20, decimal_places=8)\n    price: condecimal(max_digits=20, decimal_places=8)\n    # float 대신 Decimal로 정밀도 보장\n    # 0.1 + 0.2 == Decimal('0.3') # True"
           },
           {
             "title": "UNION ALL로 통합 이력 효율적 조회",

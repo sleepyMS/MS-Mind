@@ -16,11 +16,26 @@
       "details": {
         "description": "Hello! I'm Min Seok Choi, a 'Digital Architect' who builds spaces (Frontend) where users feel most comfortable, adding meticulous finishing touches on top of solid systems and structural design (Backend).\n\nFrom the stability of the invisible framework to the 1-pixel details at users' fingertips, I design perfect service experiences with precision construction that tolerates no margin of error.",
         "personalInfo": [
-          { "key": "name", "value": "Min Seok Choi" },
-          { "key": "birthDate", "value": "Oct 17, 2001" },
-          { "key": "major", "value": "Software Engineering" },
-          { "key": "contact", "value": "+82 10 5848 1017" },
-          { "key": "email", "value": "minseok011017@gmail.com" }
+          {
+            "key": "name",
+            "value": "Min Seok Choi"
+          },
+          {
+            "key": "birthDate",
+            "value": "Oct 17, 2001"
+          },
+          {
+            "key": "major",
+            "value": "Software Engineering"
+          },
+          {
+            "key": "contact",
+            "value": "+82 10 5848 1017"
+          },
+          {
+            "key": "email",
+            "value": "minseok011017@gmail.com"
+          }
         ],
         "philosophy": {
           "title": "Deep Dive & Wide View",
@@ -817,6 +832,7 @@
       "connections": [
         "me",
         "skill-python",
+        "skill-pytorch",
         "skill-celery",
         "skill-redis",
         "skill-timescaledb",
@@ -828,6 +844,9 @@
         "description": "A data-driven quant investment and automated trading platform for individual investors. The key challenge was not just building a CRUD API, but 'reliably processing real-time financial operations while querying millions of time-series data points in milliseconds'. I applied enterprise-grade architecture including physical separation of CPU/IO workers, Bayesian optimization, and a double-entry credit system.",
         "technologies": [
           "FastAPI",
+          "PyTorch",
+          "ONNX Runtime",
+          "Optuna",
           "Celery",
           "Redis",
           "TimescaleDB",
@@ -836,6 +855,7 @@
           "Python 3.11"
         ],
         "coreFeatures": [
+          "🤖 AI Prediction Pipeline: GRU/LSTM based time-series classification (BUY/HOLD/SELL), Triple Barrier labeling, Autotuning hyperparameters with Optuna TPE, 30% inference speedup via PyTorch→ONNX conversion",
           "⚡ Vectorized Backtesting: Reduced 1-year backtest from 45s to 0.8s (98% reduction) using NumPy/Pandas. Generator-based step-by-step execution allows intermediate Pruning via Optuna",
           "🔧 Physical Separation of CPU/IO Workers: Segregated cpu_queue (prefork) and io_queue (gevent) to guarantee millisecond-level order execution even during heavy backtesting",
           "📊 TimescaleDB Time-Series Optimization: Auto-chunk partitioning for hundreds of millions of OHLCV records. Composite index (ticker, time DESC) maintains query performance",
@@ -843,6 +863,14 @@
           "🧠 WFO + Optuna Bayesian Optimization: Expanding Window split, TPE sampler focuses on promising parameters, MedianPruner early-stops bottom 50% trails"
         ],
         "techStackDocs": [
+          {
+            "name": "PyTorch + ONNX Runtime",
+            "description": "Why PyTorch for training, ONNX for inference? Experimented with PyTorch's flexible dynamic graph, then converted to ONNX for fast inference without Python dependencies after training. onnxruntime shows about 30% faster inference speed than PyTorch."
+          },
+          {
+            "name": "Optuna + Captum",
+            "description": "Why Optuna over Grid Search? Focused search on promising hyperparameter areas using TPE (Tree-structured Parzen Estimator), and improved search efficiency by 5x using MedianPruner to early-stop poor trials. Quantitatively analyzed feature importance with Captum's Integrated Gradients."
+          },
           {
             "name": "FastAPI",
             "description": "Why FastAPI over Django/Flask? Strict runtime data validation via Pydantic and Native Async support were essential. It is the optimal choice for ensuring financial data integrity while handling High Concurrency."
@@ -862,6 +890,24 @@
         ],
         "link": "https://github.com/sleepyMS/Cortex",
         "features": [
+          {
+            "title": "AI Model Architecture (Deep Learning Models)",
+            "items": [
+              "GRU/LSTM Time-series Classifier: Supports 2 task types: BUY/HOLD/SELL 3-class classification + 2-class return regression. Adopted GRU as default for faster training with fewer parameters than LSTM",
+              "Triple Barrier Labeling: Implemented Marcos López de Prado's standard financial ML labeling methodology. Label determined by which of the three barriers (Take Profit/Stop Loss/Horizon) is hit first",
+              "MC Dropout Uncertainty Estimation: Provides 95% confidence interval for regression models. Estimates prediction distribution by performing N forward passes with Monte Carlo Dropout",
+              "50+ Technical Indicator Feature Extraction: Batch processing of SMA, EMA, MACD, RSI, Bollinger Bands etc. via FeatureEngineer class. Robust scaling against outliers"
+            ]
+          },
+          {
+            "title": "AI Training Pipeline Automation (ML Pipeline Automation)",
+            "items": [
+              "End-to-End Pipeline: Unified management from Data Loading → Feature Extraction → Labeling → Training → ONNX Conversion via TrainingPipelineConfig",
+              "Optuna Hyperparameter Optimization: Auto-search for hidden_size, num_layers, dropout, learning_rate, batch_size. Focused search on promising areas via TPE sampler",
+              "Integrated Gradients Feature Importance: Quantitative analysis of features most influential to model prediction using Captum library. Explaining Black-box models (XAI)",
+              "Real-time Training Progress: Real-time UI updates via Redis Pub/Sub → WebSocket for every epoch/trial. Displays progress, loss, and metrics"
+            ]
+          },
           {
             "title": "Hybrid Cryptography & Security Strategy",
             "items": [
@@ -922,6 +968,14 @@
         ],
         "optimizations": [
           {
+            "title": "30% Acceleration of Production Inference via ONNX Runtime",
+            "items": [
+              "Why: PyTorch models increase deployment complexity due to Python runtime dependencies. Loading model on every API call causes latency.",
+              "How: Convert to ONNX via `torch.onnx.export()` after training. Optimized inference with `onnxruntime.InferenceSession`. Efficient execution even in CPU environments.",
+              "Impact: 30% faster inference speed compared to PyTorch. Prevent duplicate loading by caching models with AIModelRegistry."
+            ]
+          },
+          {
             "title": "98% Performance Boost via Algorithm Vectorization",
             "items": [
               "Why: Calculating metrics by iterating hundreds of thousands of candles with Python loops took minutes. Worst UX forcing users to wait.",
@@ -964,6 +1018,16 @@
         ],
         "challenges": [
           {
+            "title": "Limitations of Financial Time-series Labeling and Triple Barrier Adoption",
+            "problem": "Simple 'Next Bar Direction (Up/Down)' labeling is sensitive to price noise and disconnected from actual Trading P&L. Severe label imbalance and model learning meaningless patterns.",
+            "solution": "Implemented Marcos López de Prado's Triple Barrier Method. Labels determined by hitting one of three barriers: Take Profit (+2%), Stop Loss (-1%), Time Horizon (24h) first. Reflects actual trading scenarios (Stop/Profit/Timeout) in labels so model learns P&L-related patterns."
+          },
+          {
+            "title": "Real-time Progress Monitoring System during AI Training",
+            "problem": "AI model training takes tens of minutes to hours. Users felt anxious not knowing if 'work is stuck or running', and had no way to check status if browser was closed.",
+            "solution": "Publish progress messages to Redis Pub/Sub channel every epoch/trial via training callback function. FastAPI server subscribes and pushes to client via WebSocket. Implemented transparent monitoring by providing current epoch, loss, accuracy, and estimated time remaining in real-time."
+          },
+          {
             "title": "The Frozen Server: Sync Operations Blocking Event Loop",
             "problem": "Initially ran backtesting directly inside FastAPI endpoints. Pandas operations hogged CPU, blocking the async event loop. Health checks and all API requests timed out, causing Load Balancer to mark server as 'Dead'.",
             "solution": "Fundamentally changed architecture. Adopted Celery to delegate calculations to separate processes (Fire-and-Forget). FastAPI only handles 'Receive Request → Return Job ID → Check Progress'. Implemented real-time feedback via Redis Pub/Sub → WebSocket without polling."
@@ -986,6 +1050,10 @@
         ],
         "learnings": [
           {
+            "title": "First Step to ML Ops: Separation of Training-Inference Pipelines",
+            "content": "Initially tried loading PyTorch models directly into API server, but deployment became complex due to CUDA dependencies and heavy libraries. Designed architecture to physically separate Training (GPU/PyTorch) and Inference (CPU/ONNX Runtime). Cached models with AIModelRegistry and enabled A/B testing via version control. Experienced the first solution to the core ML Ops question: 'How to safely deploy trained models to production'."
+          },
+          {
             "title": "Stepping Stone to MSA: Modular Monolith",
             "content": "Starting with MSA brings overwhelming infrastructure complexity. I kept a single codebase but enforced a rule forbidding direct imports between domains (Auth/Backtest/Trade), communicating only via services/ layer. Created a flexible structure that allows 'peeling off' services into MSA if needed."
           },
@@ -1003,10 +1071,42 @@
           },
           {
             "title": "Optimization Without Measurement is Guesswork",
-            "content": "Thought 'Indexes on everything' was the answer, but profiling showed bottlenecks were only Time Range queries and N+1. Achieved 10x performance by measuring actual bottlenecks via `EXPLAIN ANALYZE` and Query Logging. Learned that engineering is based on 'Measurement', not 'Guesswork'."
+            "content": "Thought 'Indexes on everything' was the answer, but profiling showed bottlenecks were only in Charts and Large Forms. Experienced the engineering principle that optimization should be based on 'Measurement', not 'Guesswork'."
           }
         ],
         "codeExamples": [
+          {
+            "title": "Triple Barrier Labeling (Financial ML Standard Methodology)",
+            "category": "ai",
+            "description": "Why Triple Barrier? Simple Up/Down labeling is sensitive to noise and disjointed from P&L. Deciding labels by which of TP/SL/Horizon barriers is hit first reflects actual trading scenarios.",
+            "filePath": "backend/app/ai/labeling/triple_barrier.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/labeling/triple_barrier.py",
+            "snippet": "# Hit Take Profit Barrier\ntp_hits = np.where(returns >= self.config.profit_target)[0]\ntp_time = tp_hits[0] if len(tp_hits) > 0 else np.inf\n\n# Hit Stop Loss Barrier\nsl_hits = np.where(returns <= -self.config.stop_loss)[0]\nsl_time = sl_hits[0] if len(sl_hits) > 0 else np.inf\n\n# Determine Label by first hit barrier\nif tp_time < sl_time:\n    return Label.BUY\nelif sl_time < tp_time:\n    return Label.SELL\nelse:\n    return Label.HOLD # Time expired"
+          },
+          {
+            "title": "Optuna TPE + MedianPruner Hyperparameter Optimization",
+            "category": "ai",
+            "description": "Why TPE over Grid Search? Focused search on promising parameter areas via Bayesian optimization, and achieved 5x faster search by early-stopping poor Trials with MedianPruner.",
+            "filePath": "backend/app/ai/training/optimizer.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/training/optimizer.py",
+            "snippet": "# Sample parameters in Optuna Objective\nhidden_size = trial.suggest_int(\"hidden_size\", 32, 256, step=16)\nnum_layers = trial.suggest_int(\"num_layers\", 1, 4)\ndropout = trial.suggest_float(\"dropout\", 0.1, 0.5, step=0.05)\nlr = trial.suggest_float(\"learning_rate\", 1e-4, 1e-2, log=True)\n\n# Report intermediate result (for Pruning)\ntrial.report(val_loss, epoch)\nif trial.should_prune():\n    raise optuna.exceptions.TrialPruned()"
+          },
+          {
+            "title": "Integrated Gradients Feature Importance Analysis (XAI)",
+            "category": "ai",
+            "description": "Why Explainability? Black-box models are hard to trust. Secured model interpretability by quantitatively analyzing which features had the most impact on predictions using Captum's Integrated Gradients.",
+            "filePath": "backend/app/ai/training/optimizer.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/training/optimizer.py",
+            "snippet": "from captum.attr import IntegratedGradients\n\n# Integrated Gradients Instance\nig = IntegratedGradients(model.model)\nbaseline = torch.zeros_like(X_sample)\n\n# Calculate Importance (Target: BUY class)\nattributions, delta = ig.attribute(\n    inputs=X_sample, baselines=baseline,\n    target=2, # BUY class\n    return_convergence_delta=True\n)\n\n# Aggregate: Abs → Batch Mean → Sequence Mean\nimportances = torch.mean(torch.abs(attributions), dim=0)\nimportances = torch.mean(importances, dim=0)"
+          },
+          {
+            "title": "MC Dropout Uncertainty Estimation (Regression Model)",
+            "category": "ai",
+            "description": "Why Uncertainty? Point estimates don't show prediction reliability. Estimate prediction distribution by performing multiple forward passes with Monte Carlo Dropout, providing 95% confidence intervals.",
+            "filePath": "backend/app/ai/models/gru.py",
+            "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/ai/models/gru.py",
+            "snippet": "def predict_with_uncertainty(self, X: np.ndarray, n_iter: int = 10):\n    self.model.train() # Enable Dropout\n    predictions = []\n    \n    for _ in range(n_iter):\n        with torch.no_grad():\n            pred = self.model(X_tensor)\n            predictions.append(pred.cpu().numpy())\n\n    preds = np.stack(predictions, axis=0) # (n_iter, batch, 1)\n    mean = np.mean(preds, axis=0)\n    std = np.std(preds, axis=0)\n\n    return {\n        'mean': mean,\n        'std': std,\n        'lower_bound': mean - 1.96 * std, # 95% CI\n        'upper_bound': mean + 1.96 * std\n    }"
+          },
           {
             "title": "Generator-based Step-by-Step Backtesting (Prunable)",
             "category": "performance",

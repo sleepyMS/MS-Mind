@@ -19,8 +19,8 @@ type TabType =
   | "education"
   | "skills"
   | "research"
-  | "profile" // New Main
-  | "projects"; // New Main
+  | "profile"
+  | "projects";
 
 /**
  * 고급 글래스모피즘 모달 컴포넌트
