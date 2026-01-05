@@ -1315,7 +1315,7 @@ export function Modal() {
             {/* 닫기 버튼 */}
             <button
               onClick={handleClose}
-              className="group p-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shrink-0"
+              className="group p-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shrink-0 cursor-pointer"
               style={{
                 background: isDark
                   ? "rgba(255, 255, 255, 0.05)"
