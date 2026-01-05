@@ -358,7 +358,7 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2"
+        className="mt-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
         style={{
           background:
             status === "success"
@@ -370,6 +370,18 @@ export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
           opacity: status === "sending" ? 0.7 : 1,
           cursor: status === "sending" ? "not-allowed" : "pointer",
           boxShadow: `0 4px 20px ${nodeColor}40`,
+        }}
+        onMouseEnter={(e) => {
+          if (status !== "sending") {
+            e.currentTarget.style.transform = "scale(1.02)";
+            e.currentTarget.style.filter = "brightness(1.1)";
+            e.currentTarget.style.boxShadow = `0 6px 25px ${nodeColor}60`;
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.filter = "brightness(1)";
+          e.currentTarget.style.boxShadow = `0 4px 20px ${nodeColor}40`;
         }}
       >
         {status === "idle" && (
