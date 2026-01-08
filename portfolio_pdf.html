@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>최민석 - 포트폴리오</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f0f23 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 60px;
+        max-width: 700px;
+        width: 100%;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #666;
+        font-weight: 400;
+      }
+
+      .divider {
+        height: 3px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+        border-radius: 2px;
+        margin: 30px 0;
+      }
+
+      .portfolio-section {
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      .portfolio-label {
+        font-size: 14px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+      }
+
+      .portfolio-link {
+        display: inline-block;
+        font-size: 22px;
+        font-weight: 600;
+        color: #6366f1;
+        text-decoration: none;
+        padding: 15px 30px;
+        border: 2px solid #6366f1;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .portfolio-link:hover {
+        background: #6366f1;
+        color: white;
+      }
+
+      .description {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+      }
+
+      .description-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin-bottom: 15px;
+      }
+
+      .description-text {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.8;
+      }
+
+      .tech-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin: 25px 0;
+      }
+
+      .tech-item {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .contact {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .contact-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+      }
+
+      .contact-info {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.8;
+      }
+
+      .contact-info a {
+        color: #6366f1;
+        text-decoration: none;
+      }
+
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+
+        .container {
+          box-shadow: none;
+          border: 1px solid #e0e0e0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="title">Neural Portfolio</h1>
+        <p class="subtitle">3D 인터랙티브 포트폴리오</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="portfolio-section">
+        <p class="portfolio-label">Live Demo</p>
+        <a
+          href="https://ms-mind.vercel.app/"
+          class="portfolio-link"
+          target="_blank"
+        >
+          🔗 ms-mind.vercel.app
+        </a>
+      </div>
+
+      <div class="description">
+        <p class="description-title">
+          💡 본 포트폴리오는 프론트엔드 역량을 직접 증명하기 위해
+          제작되었습니다.
+        </p>
+        <p class="description-text">
+          프로젝트들을 상호 연결된 뉴런으로 시각화한 신경망 기반 3D 웹
+          애플리케이션입니다. 물리 엔진 기반 노드 시각화, 60fps 유지 최적화, BFS
+          알고리즘 간접 연결 탐색 등 다양한 프론트엔드 기술을 적용했습니다.
+        </p>
+      </div>
+
+      <div class="tech-list">
+        <span class="tech-item">React Three Fiber</span>
+        <span class="tech-item">Three.js</span>
+        <span class="tech-item">d3-force-3d</span>
+        <span class="tech-item">TypeScript</span>
+        <span class="tech-item">Zustand</span>
+      </div>
+
+      <div class="contact">
+        <p class="contact-name">최민석</p>
+        <p class="contact-info">
+          📧 <a href="mailto:minseok011017@gmail.com">minseok011017@gmail.com</a
+          ><br />
+          💻
+          <a href="https://github.com/sleepyMS" target="_blank"
+            >github.com/sleepyMS</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
