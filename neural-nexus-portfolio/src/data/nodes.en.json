@@ -1285,7 +1285,7 @@
         ],
         "coreFeatures": [
           "🔐 Lock & Queue based Silent Auth Refresh: Resolved Race Condition where 5 concurrent API calls caused token expiration, reducing traffic by 80% via single refresh",
-          "📈 1062-line Chart Manager Hook: Multi-chart timeline synchronization, complex indicator rendering (Bollinger Bands/Ichimoku), 50% performance boost via Imperative Update",
+          "📈 Chart Manager Hook: Multi-chart timeline synchronization, complex indicator rendering (Bollinger Bands/Ichimoku), 50% performance boost via Imperative Update",
           "🧠 Recursive No-Code Strategy Builder: Type-safe handling of 7 logic blocks (Comparison/Crossover/State/Channel etc.) using Discriminated Union type system",
           "📊 Custom Parallel Coordinates Chart: Direct SVG rendering of thousands of Trial results, real-time interaction with 300 lines via useMemo optimization",
           "⚡ WebSocket → Query Cache Direct Sync: Instant UI update without API re-calls, significantly reducing network traffic"
@@ -1326,9 +1326,9 @@
             "snippet": "let isRefreshing = false;\nlet failedQueue: Array<{resolve, reject}> = [];\n\nconst processQueue = (error, token) => {\n  failedQueue.forEach(p => error ? p.reject(error) : p.resolve(token));\n  failedQueue = [];\n};\n\napiClient.interceptors.response.use(res => res, async (error) => {\n  const originalRequest = error.config;\n  if (error.response?.status === 401 && !originalRequest._retry) {\n    if (isRefreshing) {\n      // 이미 갱신 중이면 Queue에 대기\n      return new Promise((resolve, reject) => {\n        failedQueue.push({ resolve, reject });\n      }).then(token => {\n        originalRequest.headers['Authorization'] = 'Bearer ' + token;\n        return apiClient(originalRequest);\n      });\n    }\n    originalRequest._retry = true;\n    isRefreshing = true;\n    const newToken = await useUserStore.getState().refreshSession();\n    processQueue(null, newToken);\n    isRefreshing = false;\n    return apiClient(originalRequest);\n  }\n  return Promise.reject(error);\n});"
           },
           {
-            "title": "1062줄 차트 매니저 훅 (useChartIndicatorManager)",
+            "title": "Chart Manager Hook (useChartIndicatorManager)",
             "category": "performance",
-            "description": "React와 Canvas 라이브러리의 패러다임 충돌을 해결한 핵심 훅입니다. 멀티 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대 렌더링, 크로스헤어 연동, 테마 전환 등 복잡한 요구사항을 1062줄로 캡슐화했습니다.",
+            "description": "React와 Canvas 라이브러리의 패러다임 충돌을 해결한 핵심 훅입니다. 멀티 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대 렌더링, 크로스헤어 연동, 테마 전환 등 복잡한 요구사항을 단일 훅으로 캡슐화했습니다.",
             "filePath": "frontend/src/hooks/useChartIndicatorManager.ts",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/hooks/useChartIndicatorManager.ts",
             "snippet": "// 멀티 차트 시간축 동기화\nchart.timeScale().subscribeVisibleTimeRangeChange((range) => {\n  const allCharts = [chartRef.current, ...paneCharts];\n  allCharts.forEach(otherChart => {\n    if (otherChart && otherChart !== chart) {\n      otherChart.timeScale().setVisibleRange(range);\n    }\n  });\n});\n\n// 볼린저밴드 구름대 렌더링\nconst cloudData = bbuData.map((d, i) => ({\n  time: d.time,\n  upperValue: d.value,\n  lowerValue: bblData[i]?.value,\n  color: 'rgba(33, 150, 243, 0.15)'\n}));\nmainChart.addCustomSeries(new CloudSeries(), { cloudColor });"
@@ -1378,7 +1378,7 @@
             ]
           },
           {
-            "title": "1062-line Encapsulated Chart Manager Hook",
+            "title": "Encapsulated Chart Manager Hook",
             "items": [
               "Complexity: Multi-pane chart timeline sync, Bollinger/Keltner Channels, Ichimoku Clouds, Crosshair Legend sync, Theme switching.",
               "Technique: Managed chart instances via useRef (Imperative Update) instead of React State, responsive via ResizeObserver.",
@@ -1469,7 +1469,7 @@
           {
             "title": "React vs Canvas: Paradigm Conflict",
             "problem": "Lightweight Charts manipulates Canvas; managing chart data via React State caused destruction/recreation of chart instance, leading to flickering, memory leaks, and frame drops.",
-            "solution": "Applied Imperative Update pattern. Managed chart/series via useRef, called series.setData() directly. Encapsulated cleanup logic in 1062-line useChartIndicatorManager hook."
+            "solution": "Applied Imperative Update pattern. Managed chart/series via useRef, called series.setData() directly. Encapsulated cleanup logic in useChartIndicatorManager hook."
           },
           {
             "title": "Two Sources of Truth: Form vs Global State Async",

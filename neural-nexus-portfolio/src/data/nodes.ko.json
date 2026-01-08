@@ -1275,7 +1275,7 @@
         ],
         "coreFeatures": [
           "🔐 Lock & Queue 기반 Silent Auth Refresh: 동시 5개 API 호출 시 토큰 만료 Race Condition을 단일 갱신으로 해결, 트래픽 80% 절감",
-          "📈 1062줄 차트 매니저 훅: 멀티 차트 시간축 동기화, 볼린저밴드/일목균형표 등 복합 지표 렌더링, Imperative Update로 50% 성능 향상",
+          "📈 차트 매니저 훅: 멀티 차트 시간축 동기화, 볼린저밴드/일목균형표 등 복합 지표 렌더링, Imperative Update로 50% 성능 향상",
           "🧠 재귀적 No-Code 전략 빌더: Discriminated Union 타입 시스템으로 7가지 로직 블록(Comparison/Crossover/State/Channel 등) 타입 안전 처리",
           "📊 커스텀 평행좌표 차트: 수천 Trial 결과를 SVG로 직접 렌더링, useMemo 기반 최적화로 300개 라인 실시간 인터랙션",
           "⚡ WebSocket → Query Cache 직접 동기화: API 재호출 없이 진행률 UI 즉시 갱신, 네트워크 트래픽 대폭 감소"
@@ -1316,9 +1316,9 @@
             "snippet": "let isRefreshing = false;\nlet failedQueue: Array<{resolve, reject}> = [];\n\nconst processQueue = (error, token) => {\n  failedQueue.forEach(p => error ? p.reject(error) : p.resolve(token));\n  failedQueue = [];\n};\n\napiClient.interceptors.response.use(res => res, async (error) => {\n  const originalRequest = error.config;\n  if (error.response?.status === 401 && !originalRequest._retry) {\n    if (isRefreshing) {\n      // 이미 갱신 중이면 Queue에 대기\n      return new Promise((resolve, reject) => {\n        failedQueue.push({ resolve, reject });\n      }).then(token => {\n        originalRequest.headers['Authorization'] = 'Bearer ' + token;\n        return apiClient(originalRequest);\n      });\n    }\n    originalRequest._retry = true;\n    isRefreshing = true;\n    const newToken = await useUserStore.getState().refreshSession();\n    processQueue(null, newToken);\n    isRefreshing = false;\n    return apiClient(originalRequest);\n  }\n  return Promise.reject(error);\n});"
           },
           {
-            "title": "1062줄 차트 매니저 훅 (useChartIndicatorManager)",
+            "title": "차트 매니저 훅 (useChartIndicatorManager)",
             "category": "performance",
-            "description": "React와 Canvas 라이브러리의 패러다임 충돌을 해결한 핵심 훅입니다. 멀티 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대 렌더링, 크로스헤어 연동, 테마 전환 등 복잡한 요구사항을 1062줄로 캡슐화했습니다.",
+            "description": "React와 Canvas 라이브러리의 패러다임 충돌을 해결한 핵심 훅입니다. 멀티 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대 렌더링, 크로스헤어 연동, 테마 전환 등 복잡한 요구사항을 단일 훅으로 캡슐화했습니다.",
             "filePath": "frontend/src/hooks/useChartIndicatorManager.ts",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/frontend/src/hooks/useChartIndicatorManager.ts",
             "snippet": "// 멀티 차트 시간축 동기화\nchart.timeScale().subscribeVisibleTimeRangeChange((range) => {\n  const allCharts = [chartRef.current, ...paneCharts];\n  allCharts.forEach(otherChart => {\n    if (otherChart && otherChart !== chart) {\n      otherChart.timeScale().setVisibleRange(range);\n    }\n  });\n});\n\n// 볼린저밴드 구름대 렌더링\nconst cloudData = bbuData.map((d, i) => ({\n  time: d.time,\n  upperValue: d.value,\n  lowerValue: bblData[i]?.value,\n  color: 'rgba(33, 150, 243, 0.15)'\n}));\nmainChart.addCustomSeries(new CloudSeries(), { cloudColor });"
@@ -1368,7 +1368,7 @@
             ]
           },
           {
-            "title": "1062줄 캡슐화된 차트 매니저 훅",
+            "title": "캡슐화된 차트 매니저 훅",
             "items": [
               "복잡도: 멀티 팬 차트 시간축 동기화, 볼린저밴드/켈트너채널/일목균형표 구름대, 크로스헤어 Legend 연동, 테마 전환",
               "핵심 기법: React State 대신 useRef로 차트 인스턴스 관리 (Imperative Update), ResizeObserver로 반응형 처리",
@@ -1459,7 +1459,7 @@
           {
             "title": "React vs Canvas: 패러다임 충돌",
             "problem": "Lightweight Charts는 Canvas를 직접 조작하는 라이브러리입니다. 차트 데이터를 React State로 관리하면, 상태 변경마다 전체 차트가 파괴→재생성되어 1) 깜빡임 발생, 2) 이전 인스턴스의 메모리 누수, 3) GC로 인한 프레임 드랍이 발생했습니다.",
-            "solution": "Imperative Update 패턴을 적용했습니다. 차트 인스턴스와 시리즈를 useRef로 관리하고, 데이터 변경 시 series.setData()를 직접 호출합니다. useEffect cleanup에서 chart.remove()를 호출하여 메모리 누수를 방지하고, 이 모든 로직을 1062줄의 useChartIndicatorManager 훅으로 캡슐화하여 재사용성을 확보했습니다."
+            "solution": "Imperative Update 패턴을 적용했습니다. 차트 인스턴스와 시리즈를 useRef로 관리하고, 데이터 변경 시 series.setData()를 직접 호출합니다. useEffect cleanup에서 chart.remove()를 호출하여 메모리 누수를 방지하고, 이 모든 로직을 useChartIndicatorManager 훅으로 캡슐화하여 재사용성을 확보했습니다."
           },
           {
             "title": "Two Sources of Truth: 폼 vs 전역 상태 비동기화",
