@@ -109,7 +109,7 @@
           },
           {
             "id": "project-chatbot",
-            "title": "GangNaengBot (Frontend)",
+            "title": "KangNaengBot (Frontend)",
             "desc": "LLM 응답 지연을 극복한 체감 속도 0ms의 교내 AI 챗봇 서비스",
             "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
           },
@@ -157,7 +157,7 @@
       "id": "project-chatbot",
       "type": "project",
       "category": "frontend",
-      "label": "GangNaengBot-Frontend",
+      "label": "KangNaengBot-Frontend",
       "connections": [
         "me",
         "skill-react",
@@ -212,8 +212,8 @@
             "description": "Why i18next? 단순 텍스트 치환을 넘어 언어별 복수형 처리, 네임스페이스 분리, 브라우저 언어 감지 → 로컬 스토리지 → 기본값(한국어)의 우아한 폴백 로직을 지원하는 가장 성숙한 솔루션입니다."
           }
         ],
-        "link": "https://github.com/sleepyMS/GangNaengBot-FE",
-        "deployLink": "https://gang-naeng-bot-fe.vercel.app/",
+        "link": "https://github.com/sleepyMS/KangNaengBot-FE",
+        "deployLink": "https://kang-naeng-bot-fe.vercel.app/",
         "blogLink": "https://me-in-journey.tistory.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95",
         "features": [
           {
@@ -364,7 +364,7 @@
             "category": "performance",
             "description": "Why Optimistic? API 응답을 기다리는 0.5초도 대화 흐름을 끊습니다. 메시지를 먼저 표시하고, 빈 응답은 5회 재시도, 실패 시에만 롤백하여 '즉각 반응' 경험을 제공합니다.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "// 1. 낙관적 UI: 서버 응답 전 메시지 표시\nset(state => ({ messages: [...state.messages, userMessage], isSending: true }));\n\ntry {\n  const response = await chatService.sendMessage({ session_id, message });\n  \n  // 2. 빈 응답 자동 재시도 (최대 5회)\n  for (let i = 0; i < 5 && !response.text?.trim(); i++) {\n    await new Promise(r => setTimeout(r, 500));\n    response = await chatService.sendMessage({ session_id, message });\n  }\n  \n  set(state => ({ messages: [...state.messages, assistantMessage] }));\n} catch {\n  // 3. 실패 시 롤백\n  set(state => ({ messages: state.messages.slice(0, -1) }));\n}"
           },
           {
@@ -372,7 +372,7 @@
             "category": "performance",
             "description": "Why Prefetch? 클릭 후 로딩 스피너도 UX를 해칩니다. 마우스 진입 시 데이터를 미리 로드하고, Map으로 중복 요청을 차단하여 서버 부하를 절감합니다.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "const pendingPrefetches = new Map<string, Promise<MessageItem[]>>();\n\nprefetchSession: (sessionId: string) => {\n  // 캐시 있으면 스킵\n  if (messageCache.has(sessionId)) return;\n  // 이미 진행 중이면 중복 요청 방지\n  if (pendingPrefetches.has(sessionId)) return;\n  \n  const promise = sessionsService.getSessionMessages(sessionId)\n    .then(res => {\n      messageCache.set(sessionId, res.messages);\n      return res.messages;\n    })\n    .finally(() => pendingPrefetches.delete(sessionId));\n  \n  pendingPrefetches.set(sessionId, promise);\n}"
           },
           {
@@ -380,7 +380,7 @@
             "category": "performance",
             "description": "Why SWR? 항상 최신 데이터를 가져오면 매번 로딩. 캐시만 쓰면 오래된 데이터. 둘의 장점을 결합하여 빠른 응답성과 최신성을 동시에 확보합니다.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "selectSession: async (sessionId, forceRefresh = false) => {\n  const cached = messageCache.get(sessionId);\n  \n  if (cached && !forceRefresh) {\n    // 1. 캐시 즉시 표시\n    set({ messages: cached, isLoading: false });\n    \n    // 2. 백그라운드에서 최신 데이터 가져오기\n    sessionsService.getSessionMessages(sessionId)\n      .then(res => {\n        messageCache.set(sessionId, res.messages);\n        // 3. 현재 세션이면 UI도 조용히 업데이트\n        if (get().currentSessionId === sessionId) {\n          set({ messages: res.messages });\n        }\n      });\n    return;\n  }\n  // 캐시 없으면 일반 로딩...\n}"
           },
           {
@@ -388,7 +388,7 @@
             "category": "business",
             "description": "Why Auto-Create? 로그인 없이도 챗봇을 즉시 사용하게 하고 싶었습니다. 첫 메시지 전송 시점에 세션을 자동 생성하고, 메시지 내용으로 제목을 자동 설정합니다.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "sendMessage: async (message, createSessionIfNeeded = false) => {\n  let { currentSessionId } = get();\n  \n  // 세션이 없고 자동 생성 플래그가 true면\n  if (!currentSessionId && createSessionIfNeeded) {\n    const res = await sessionsService.createSession();\n    currentSessionId = res.session_id;\n    \n    const newSession = {\n      sid: res.session_id,\n      title: message.slice(0, 50) + (message.length > 50 ? '...' : ''),\n      is_active: true,\n    };\n    set({ sessions: [newSession, ...sessions], currentSessionId });\n  }\n  // 이후 메시지 전송...\n}"
           },
           {
@@ -396,7 +396,7 @@
             "category": "performance",
             "description": "Why Optimistic Delete? 삭제 확인을 기다리는 동안 UI가 멈추면 '느리다'고 느낍니다. 즉시 UI에서 제거하고, 실패 시에만 복원하여 반응성을 극대화합니다.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "deleteSession: async (sessionId) => {\n  const { sessions, currentSessionId } = get();\n  const deleted = sessions.find(s => s.sid === sessionId);\n  \n  // 1. 낙관적 UI: 즉시 삭제\n  set({ sessions: sessions.filter(s => s.sid !== sessionId) });\n  \n  try {\n    await sessionsService.deleteSession(sessionId);\n  } catch {\n    // 2. 실패 시 롤백: 삭제 취소\n    if (deleted) {\n      set(state => ({\n        sessions: [deleted, ...state.sessions],\n        error: '삭제에 실패했습니다.'\n      }));\n    }\n  }\n}"
           },
           {
@@ -404,7 +404,7 @@
             "category": "architecture",
             "description": "Why Namespace? 모든 번역을 한 파일에 넣으면 초기 로딩이 느려지고 키 충돌 위험도 있습니다. common/chat/profile로 분리하여 필요한 리소스만 로딩하고 관리 용이성을 확보했습니다.",
             "filePath": "src/i18n/index.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/i18n/index.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/i18n/index.ts",
             "snippet": "import i18n from 'i18next';\nimport { initReactI18next } from 'react-i18next';\nimport LanguageDetector from 'i18next-browser-languagedetector';\n\ni18n.use(LanguageDetector).use(initReactI18next).init({\n  fallbackLng: 'ko',\n  ns: ['common', 'chat', 'profile'],  // 네임스페이스 분리\n  defaultNS: 'common',\n  interpolation: { escapeValue: false },\n});"
           }
         ]

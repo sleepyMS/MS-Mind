@@ -124,7 +124,7 @@
           },
           {
             "id": "project-chatbot",
-            "title": "GangNaengBot (Frontend)",
+            "title": "KangNaengBot (Frontend)",
             "desc": "A university AI chatbot service achieving 0ms perceived latency by overcoming LLM response delays",
             "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
           },
@@ -172,7 +172,7 @@
       "id": "project-chatbot",
       "type": "project",
       "category": "frontend",
-      "label": "GangNaengBot-Frontend",
+      "label": "KangNaengBot-Frontend",
       "connections": [
         "me",
         "skill-react",
@@ -227,8 +227,8 @@
             "description": "Why i18next? The most mature solution supporting not just text replacement but plurals, namespace splitting, browser language detection → local storage → graceful fallback to default (Korean) logic."
           }
         ],
-        "link": "https://github.com/sleepyMS/GangNaengBot-FE",
-        "deployLink": "https://gang-naeng-bot-fe.vercel.app/",
+        "link": "https://github.com/sleepyMS/KangNaengBot-FE",
+        "deployLink": "https://kang-naeng-bot-fe.vercel.app/",
         "blogLink": "https://me-in-journey.tistory.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95",
         "features": [
           {
@@ -374,7 +374,7 @@
             "category": "performance",
             "description": "Why Optimistic? Even 0.5s waiting for API response breaks conversation flow. Display message first, retry 5 times on empty response, and rollback only on failure to provide 'instant reaction' experience.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "// 1. Optimistic UI\nset(state => ({ messages: [...state.messages, userMessage], isSending: true }));\n\ntry {\n  const response = await chatService.sendMessage({ session_id, message });\n  \n  // 2. Auto Retry (Max 5)\n  for (let i = 0; i < 5 && !response.text?.trim(); i++) {\n    await new Promise(r => setTimeout(r, 500));\n    response = await chatService.sendMessage({ session_id, message });\n  }\n  \n  set(state => ({ messages: [...state.messages, assistantMessage] }));\n} catch {\n  // 3. Rollback on failure\n  set(state => ({ messages: state.messages.slice(0, -1) }));\n}"
           },
           {
@@ -382,7 +382,7 @@
             "category": "performance",
             "description": "Why Prefetch? Loading spinners after click hurt UX. Load data in advance on mouse enter, and block duplicate requests with Map to save server load.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "const pendingPrefetches = new Map<string, Promise<MessageItem[]>>();\n\nprefetchSession: (sessionId: string) => {\n  // Skip if cached\n  if (messageCache.has(sessionId)) return;\n  // Deduplicate if in progress\n  if (pendingPrefetches.has(sessionId)) return;\n  \n  const promise = sessionsService.getSessionMessages(sessionId)\n    .then(res => {\n      messageCache.set(sessionId, res.messages);\n      return res.messages;\n    })\n    .finally(() => pendingPrefetches.delete(sessionId));\n  \n  pendingPrefetches.set(sessionId, promise);\n}"
           },
           {
@@ -390,7 +390,7 @@
             "category": "performance",
             "description": "Why SWR? Always fetching = slow. Only cache = stale. combine both for fast response AND freshness.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "selectSession: async (sessionId, forceRefresh = false) => {\n  const cached = messageCache.get(sessionId);\n  \n  if (cached && !forceRefresh) {\n    // 1. Show cache immediately\n    set({ messages: cached, isLoading: false });\n    \n    // 2. Fetch latest in background\n    sessionsService.getSessionMessages(sessionId)\n      .then(res => {\n        messageCache.set(sessionId, res.messages);\n        // 3. Silently update UI if current session\n        if (get().currentSessionId === sessionId) {\n          set({ messages: res.messages });\n        }\n      });\n    return;\n  }\n  // Load normally if no cache...\n}"
           },
           {
@@ -398,7 +398,7 @@
             "category": "business",
             "description": "Why Auto-Create? Wanted immediate usage without login. Auto-create session on first message and set title based on content.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "sendMessage: async (message, createSessionIfNeeded = false) => {\n  let { currentSessionId } = get();\n  \n  // If no session and auto-create flag\n  if (!currentSessionId && createSessionIfNeeded) {\n    const res = await sessionsService.createSession();\n    currentSessionId = res.session_id;\n    \n    const newSession = {\n      sid: res.session_id,\n      title: message.slice(0, 50) + (message.length > 50 ? '...' : ''),\n      is_active: true,\n    };\n    set({ sessions: [newSession, ...sessions], currentSessionId });\n  }\n  // Send message...\n}"
           },
           {
@@ -406,7 +406,7 @@
             "category": "performance",
             "description": "Why Optimistic Delete? Waiting for delete confirmation feels slow. Remove from UI immediately, restore only on failure.",
             "filePath": "src/store/useChatStore.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/store/useChatStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useChatStore.ts",
             "snippet": "deleteSession: async (sessionId) => {\n  const { sessions, currentSessionId } = get();\n  const deleted = sessions.find(s => s.sid === sessionId);\n  \n  // 1. Optimistic UI: Delete immediately\n  set({ sessions: sessions.filter(s => s.sid !== sessionId) });\n  \n  try {\n    await sessionsService.deleteSession(sessionId);\n  } catch {\n    // 2. Rollback on failure\n    if (deleted) {\n      set(state => ({\n        sessions: [deleted, ...state.sessions],\n        error: 'Failed to delete.'\n      }));\n    }\n  }\n}"
           },
           {
@@ -414,7 +414,7 @@
             "category": "architecture",
             "description": "Why Namespace? Putting all translations in one file slows initial load. Separated into common/chat/profile to load only needed resources.",
             "filePath": "src/i18n/index.ts",
-            "githubLink": "https://github.com/sleepyMS/GangNaengBot-FE/blob/main/src/i18n/index.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/i18n/index.ts",
             "snippet": "import i18n from 'i18next';\nimport { initReactI18next } from 'react-i18next';\nimport LanguageDetector from 'i18next-browser-languagedetector';\n\ni18n.use(LanguageDetector).use(initReactI18next).init({\n  fallbackLng: 'ko',\n  ns: ['common', 'chat', 'profile'],  // Separate namespaces\n  defaultNS: 'common',\n  interpolation: { escapeValue: false },\n});"
           }
         ]
