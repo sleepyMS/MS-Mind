@@ -523,6 +523,8 @@ export function Node({ node, position }: NodeProps) {
           zIndexRange={[10, 0]}
           style={{
             userSelect: "none",
+            pointerEvents:
+              node.type === "skill" && !isHovered ? "none" : "auto",
           }}
         >
           <div
