@@ -116,6 +116,86 @@ export function Modal() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isConnectionsOpen]);
 
+  /**
+   * 인라인 마크다운 파서
+   * 지원 형식: **볼드**, `코드`, [링크](URL)
+   */
+  const parseInlineMarkdown = (
+    text: string,
+    options?: { codeColor?: string }
+  ) => {
+    const codeColor = options?.codeColor || nodeColor;
+    const parts: React.ReactNode[] = [];
+    let key = 0;
+
+    // 정규식으로 마크다운 패턴 매칭
+    const regex = /(\*\*(.+?)\*\*)|(`([^`]+)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      // 매치 전 일반 텍스트
+      if (match.index > lastIndex) {
+        parts.push(text.slice(lastIndex, match.index));
+      }
+
+      if (match[1]) {
+        // **볼드**
+        parts.push(
+          <strong
+            key={key++}
+            style={{ color: isDark ? "#fff" : "#111", fontWeight: 600 }}
+          >
+            {match[2]}
+          </strong>
+        );
+      } else if (match[3]) {
+        // `코드`
+        parts.push(
+          <code
+            key={key++}
+            style={{
+              background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
+              color: codeColor,
+              padding: "1px 6px",
+              borderRadius: "4px",
+              fontSize: "0.9em",
+              fontFamily: "monospace",
+            }}
+          >
+            {match[4]}
+          </code>
+        );
+      } else if (match[5]) {
+        // [링크](URL)
+        parts.push(
+          <a
+            key={key++}
+            href={match[7]}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: codeColor,
+              textDecoration: "underline",
+              textUnderlineOffset: "2px",
+            }}
+          >
+            {match[6]}
+          </a>
+        );
+      }
+
+      lastIndex = regex.lastIndex;
+    }
+
+    // 남은 텍스트
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
+
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(() => {
@@ -1977,7 +2057,7 @@ export function Modal() {
                       {details.coreFeatures.map((feature, idx) => (
                         <li
                           key={idx}
-                          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg"
+                          className="flex items-start gap-2 text-sm font-medium px-3 py-2 rounded-lg"
                           style={{
                             background: isDark
                               ? "rgba(255,255,255,0.05)"
@@ -1985,7 +2065,14 @@ export function Modal() {
                             color: isDark ? "rgba(255,255,255,0.9)" : "#1f2937",
                           }}
                         >
-                          <span className="text-cyan-400">✓</span> {feature}
+                          <span className="text-cyan-400 shrink-0 mt-[2px]">
+                            ✓
+                          </span>
+                          <div className="flex-1 leading-relaxed">
+                            {parseInlineMarkdown(feature, {
+                              codeColor: "#22d3ee",
+                            })}
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -2543,7 +2630,11 @@ export function Modal() {
                           }}
                         >
                           <span className="mt-1.5 w-1 h-1 rounded-full bg-cyan-400/50 shrink-0" />
-                          <span>{item}</span>
+                          <span>
+                            {parseInlineMarkdown(item, {
+                              codeColor: "#22d3ee",
+                            })}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -2644,7 +2735,9 @@ export function Modal() {
                                 fontWeight: hasMetric ? 500 : 400,
                               }}
                             >
-                              {item}
+                              {parseInlineMarkdown(item, {
+                                codeColor: "#a78bfa",
+                              })}
                             </span>
                           </div>
                         );
@@ -2736,7 +2829,9 @@ export function Modal() {
                                   : "#4b5563",
                               }}
                             >
-                              {challenge.problem}
+                              {parseInlineMarkdown(challenge.problem, {
+                                codeColor: "#f87171",
+                              })}
                             </p>
                           </div>
 
@@ -2768,7 +2863,9 @@ export function Modal() {
                                   : "#1f2937",
                               }}
                             >
-                              {challenge.solution}
+                              {parseInlineMarkdown(challenge.solution, {
+                                codeColor: "#4ade80",
+                              })}
                             </p>
                           </div>
                         </div>
@@ -2847,7 +2944,9 @@ export function Modal() {
                             color: isDark ? "rgba(255,255,255,0.8)" : "#374151",
                           }}
                         >
-                          {learning.content}
+                          {parseInlineMarkdown(learning.content, {
+                            codeColor: "#facc15",
+                          })}
                         </p>
                       </div>
                     ))}
@@ -3033,7 +3132,9 @@ export function Modal() {
                               >
                                 {row.map((cell, cIdx) => (
                                   <td key={cIdx} className="px-4 py-3">
-                                    {cell}
+                                    {typeof cell === "string"
+                                      ? parseInlineMarkdown(cell)
+                                      : cell}
                                   </td>
                                 ))}
                               </tr>
