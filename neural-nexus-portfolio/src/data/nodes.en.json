@@ -203,7 +203,8 @@
           "🔄 **Hover Prefetching & Deduplication**: Prefetch on mouse enter + block duplicate requests with `pendingPrefetches` Map",
           "💾 **Stale-While-Revalidate Caching**: Show cache immediately → Update in background → Seamlessly update UI",
           "🌙 **FOUC-Free Dark Mode**: Inject theme class at HTML parsing stage to completely block white flash",
-          "🌐 **Namespace-Split i18n**: Separate translation files into common/chat/profile to load only necessary resources"
+          "🌐 **Namespace-Split i18n**: Separate translation files into common/chat/profile to load only necessary resources",
+          "📱 **Fully Responsive Design**: **Optimized UX** across mobile/tablet/desktop. Supports both **touch gestures** and **mouse interactions**"
         ],
         "techStackDocs": [
           {
@@ -536,7 +537,8 @@
           "🖱️ **Dual Ref Hover Handling**: Overcome **event lag between WebGL Mesh and DOM Label**. **10ms debounce** prevents focus loss",
           "📊 **Zustand Transient Update**: Minimize React re-renders in **60fps loop**. Mutate animation vars directly via `useRef` to **prevent frame drops**",
           "🔗 **BFS Indirect Path Finding**: Visualize hidden connections between filtered nodes via **BFS**. Render as **dotted lines** to maintain context",
-          "📱 **Swipe Angle Detection**: Compare vertical/horizontal delta to **accurately distinguish scroll vs node traversal**. Improved mobile UX"
+          "📱 **Swipe Angle Detection**: Compare vertical/horizontal delta to **accurately distinguish scroll vs node traversal**. Improved mobile UX",
+          "🖥️ **Fully Responsive 3D Interface**: Supports both mobile **touch gestures** and desktop **mouse interactions**. **Auto-adjusts camera distance/FOV** per screen size"
         ],
         "techStackDocs": [
           {
