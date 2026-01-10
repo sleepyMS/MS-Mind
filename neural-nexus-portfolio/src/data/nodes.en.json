@@ -125,7 +125,7 @@
           {
             "id": "project-chatbot",
             "title": "KangNaengBot (Frontend)",
-            "desc": "A university AI chatbot service achieving 0ms perceived latency by overcoming LLM response delays",
+            "desc": "A university AI chatbot service achieving **0ms perceived latency** and featuring **AI Timetable Generation** via API-First development",
             "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
           },
           {
@@ -184,7 +184,7 @@
         "skill-i18next"
       ],
       "details": {
-        "description": "A frontend project for Gangnam University's AI chatbot service, focusing on **UX Engineering** to overcome the inevitable LLM response delay (1~5s). By implementing Optimistic UI and SWR patterns, I achieved **native app-level responsiveness with 0ms perceived latency**, transcending physical network limitations.",
+        "description": "A frontend project for Gangnam University's AI chatbot service, focusing on **UX Engineering** to overcome the inevitable LLM response delay (1~5s). By implementing **Optimistic UI** and **SWR patterns**, I achieved **native app-level responsiveness with 0ms perceived latency**. Recently added **AI Timetable Generation System** to automatically create **Optimal Schedules** from natural language input.",
         "technologies": [
           "React",
           "TypeScript",
@@ -195,11 +195,15 @@
           "i18next"
         ],
         "coreFeatures": [
-          "⚡ Optimistic UI Chat: Pre-reflect UI before API response + 5 auto-retries + rollback on failure for '0ms wait' experience",
-          "🔄 Hover Prefetching + Request Deduplication: Prefetch on mouse enter + block duplicate requests with pendingPrefetches Map",
-          "💾 Stale-While-Revalidate Caching: Show cache immediately → Update in background → Seamlessly update UI if current session",
-          "🌙 FOUC-Free Dark Mode: Inject theme class at HTML parsing stage to completely block white flash",
-          "🌐 Namespace-Split i18n: Separate translation files into common/chat/profile to load only necessary resources"
+          "📅 **AI Timetable Creation**: Generate optimal schedules from natural language using **NLP** & **Backtracking Algorithm**",
+          "⚡ **Client-Side Filtering**: Instant **0ms** filtering response by separating raw data and processed view, eliminating network latency",
+          "📱 **Dynamic Grid System**: **Responsive Timetable Grid** that auto-adjusts cell sizes based on time range (09:00~22:00) using **CSS Grid**",
+          "🎠 **Carousel View**: Intuitive **Swipe Interaction** to compare multiple generated schedule options",
+          "⚡ **Optimistic UI Chat**: Pre-reflect UI before API response + 5 auto-retries + rollback on failure for '**0ms wait**' experience",
+          "🔄 **Hover Prefetching & Deduplication**: Prefetch on mouse enter + block duplicate requests with `pendingPrefetches` Map",
+          "💾 **Stale-While-Revalidate Caching**: Show cache immediately → Update in background → Seamlessly update UI",
+          "🌙 **FOUC-Free Dark Mode**: Inject theme class at HTML parsing stage to completely block white flash",
+          "🌐 **Namespace-Split i18n**: Separate translation files into common/chat/profile to load only necessary resources"
         ],
         "techStackDocs": [
           {
@@ -232,67 +236,115 @@
         "blogLink": "https://me-in-journey.tistory.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95",
         "features": [
           {
+            "title": "AI Schedule Generation System (NLP-Powered)",
+            "items": [
+              "Natural Language Processing: Parse conditions like 'No classes on Friday' or 'Lunch break at 12' and request generation to backend **AI Agent**.",
+              "Client-Side Filtering: `applyFilters()` processes cached schedule data in memory. **Zero network latency** when toggling empty days or time slots.",
+              "Dynamic Grid: Automatically calculates start/end times of courses to render **Optimized Grid Layout** via **CSS Grid**. Supports complex time slots."
+            ]
+          },
+          {
             "title": "Optimistic UI & Error Recovery (Zero-Latency)",
             "items": [
-              "Instant Feedback: Pre-commit local message state using `set` in `useChatStore.ts` before API call. User perceives 'sent' immediately.",
-              "Smart Rollback: Rollback optimistic message with `messages.slice(0, -1)` on network failure. Initialize as empty array if new session to maintain consistency.",
-              "Auto-Retry (Transparent Resilience): Auto-retry 5 times at 500ms intervals for empty AI responses. Temporary network errors or AI server delays are recovered without user awareness."
+              "Instant Feedback: Pre-commit local message state using `set` in `useChatStore.ts` before API call. User perceives **'sent' immediately**.",
+              "Smart Rollback: **Rollback optimistic message** with `messages.slice(0, -1)` on network failure. Initialize as empty array if new session to maintain consistency.",
+              "Auto-Retry (Transparent Resilience): **Auto-retry 5 times** at 500ms intervals for empty AI responses. Temporary network errors or AI server delays are recovered **without user awareness**."
             ]
           },
           {
             "title": "Intelligent Session Prefetching (SWR Pattern)",
             "items": [
-              "Hover Prefetch: Background load message list on mouse enter with `prefetchSession()`. Instant display (0ms) from cache on click.",
-              "Request Deduplication: Block duplicate requests for same session using `pendingPrefetches` Map. Reuse existing Promise if already in progress.",
-              "Stale-While-Revalidate: Show cache immediately, then update latest data in background. Seamlessly update UI if it matches current session."
+              "Hover Prefetch: Background load message list on mouse enter with `prefetchSession()`. **Instant display (0ms)** from cache on click.",
+              "Request Deduplication: Block duplicate requests for same session using `pendingPrefetches` Map. **Reuse existing Promise** if already in progress.",
+              "Stale-While-Revalidate: **Show cache immediately**, then update latest data in background. **Seamlessly update UI** if it matches current session."
             ]
           },
           {
             "title": "Secure Token Rotation (Lock & Queue Patterns)",
             "items": [
-              "Centralized Handling: Detect 401 Unauthorized response in Axios Interceptor and trigger auto-logout + redirect.",
-              "Guest Mode: Chat available with temporary user_id without login. Store user_id in Zustand upon session creation for subsequent requests."
+              "Centralized Handling: Detect 401 Unauthorized response in **Axios Interceptor** and trigger **auto-logout + redirect**.",
+              "Guest Mode: Chat available with temporary `user_id` without login. Store `user_id` in **Zustand** upon session creation for subsequent requests."
             ]
           },
           {
             "title": "Seamless Theme Integration (FOUC Prevention)",
             "items": [
-              "System Sync: Subscribe to OS dark mode changes via `window.matchMedia` API to instantly sync app theme.",
-              "Block FOUC: Read local storage settings and inject class into <html> at HTML parsing stage. Theme applied before JS execution."
+              "System Sync: Subscribe to OS dark mode changes via `window.matchMedia` API to **instantly sync app theme**.",
+              "Block FOUC: Read local storage settings and **inject class into `<html>`** at **HTML parsing stage**. Theme applied **before JS execution**."
             ]
           }
         ],
         "optimizations": [
           {
+            "title": "Parallel Efficiency via API-First Development",
+            "items": [
+              "Why: Backend delays block Frontend progress, and late integration causes API mismatch.",
+              "How: Wrote `SCHEDULE_API_SPEC.md` from frontend perspective as a contract. Validated UI/UX with **Mock Service** before actual API integration.",
+              "Impact: **Parallel Development** enabled. Completed core **MVP in just one day**."
+            ]
+          },
+          {
+            "title": "Zero-Latency Client-Side Filtering",
+            "items": [
+              "Why: Server calls for every filter change cause latency + server load.",
+              "How: Separate `allSchedules` (raw) and `generatedSchedules` (view). **Filter locally** in memory.",
+              "Impact: **0ms Latency** UI updates. **Zero Network Requests**."
+            ]
+          },
+          {
+            "title": "Dynamic Timetable Grid Rendering",
+            "items": [
+              "Why: Fixed grids waste space (daytime) or cut off classes (night time).",
+              "How: Analyze `startTime`/`endTime`. Use **CSS Grid** `minmax()` to auto-size cells.",
+              "Impact: **Compact View (09-18)** for day students, **Extended View (09-22)** for night students."
+            ]
+          },
+          {
+            "title": "Optimistic UI for Schedule Generation",
+            "items": [
+              "Why: Waiting 3-5s for AI seems like 'freezing'.",
+              "How: Add message immediately, `navigate` before session creation, show analyzing indicator.",
+              "Impact: **Instant Screen Transition**. Perceived speed improved by **over 1s**."
+            ]
+          },
+          {
+            "title": "Timetable Image Download Optimization",
+            "items": [
+              "Why: Low-res screenshots look bad on social media. Dark mode backgrounds clash.",
+              "How: `html-to-image` with `pixelRatio: 2` for **Retina Display**. Force check `dark` class for background.",
+              "Impact: **High-Res PNG** export with **Theme-Adaptive Background**."
+            ]
+          },
+          {
             "title": "Achieving '0ms' Perceived Loading with Hover Prefetching",
             "items": [
               "Why: Spinners after clicking a chat room break the conversation flow.",
-              "How: Connect `prefetchSession()` to `mouseEnter` event. Map-based cache prevents duplicate requests and stores session messages.",
-              "Impact: Data is ready the moment user clicks. Provides 'instant' transition regardless of physical loading time."
+              "How: Connect `prefetchSession()` to `mouseEnter` event. **Map-based cache** prevents duplicate requests and stores session messages.",
+              "Impact: Data is **ready the moment user clicks**. Provides **'instant' transition** regardless of physical loading time."
             ]
           },
           {
             "title": "Reducing Server Load with Request Deduplication",
             "items": [
               "Why: Rapid sequential clicks → 5 identical API calls → Unnecessary network traffic + server load.",
-              "How: Check pending requests with `pendingPrefetches.get(sessionId)`. Await existing Promise instead of new request.",
-              "Impact: Limit API calls to exactly 1 even with multiple clicks on same session."
+              "How: Check pending requests with `pendingPrefetches.get(sessionId)`. **Await existing Promise** instead of new request.",
+              "Impact: Limit API calls to **exactly 1** even with multiple clicks on same session."
             ]
           },
           {
             "title": "Drastically Improving Response Speed with Optimistic UI",
             "items": [
               "Why: 1-5s delay is inevitable for LLM, and it's a primary cause of user churn.",
-              "How: Apply optimistic pattern to update UI without waiting for API response.",
-              "Impact: Reduced perceived message send time from 1-2s to 0ms."
+              "How: Apply **optimistic pattern** to update UI without waiting for API response.",
+              "Impact: Reduced perceived message send time from **1-2s to 0ms**."
             ]
           },
           {
             "title": "Bundle Optimization with Vite + Tailwind JIT",
             "items": [
               "Why: Initial loading speed directly correlates with bounce rate in mobile 3G environments.",
-              "How: Exclude unused code/styles with Vite Tree Shaking + Tailwind JIT compiler.",
-              "Impact: Minimized production bundle size, achieved FCP (First Contentful Paint) within 1.5s."
+              "How: Exclude unused code/styles with **Vite Tree Shaking** + **Tailwind JIT compiler**.",
+              "Impact: Minimized production bundle size, achieved **FCP (First Contentful Paint) within 1.5s**."
             ]
           }
         ],
@@ -302,6 +354,14 @@
             "description": "Maximized perceived performance using only frontend technologies in an LLM service where physically reducing server response speed is limited.",
             "headers": ["Strategy (Pattern)", "Metric", "Before", "After"],
             "rows": [
+              [
+                "Client-Side Filtering",
+                "Filter Response",
+                "300ms",
+                "**0ms (Instant)** ⚡"
+              ],
+              ["Dynamic Grid", "Space Efficiency", "Fixed", "**Adaptive** ⚡"],
+              ["API-First", "Dev Time", "3 Days", "**1 Day** ⚡"],
               ["Optimistic UI", "Perceived Send Time", "1~2s", "0ms ⚡"],
               [
                 "SWR + Prefetching",
@@ -326,49 +386,88 @@
         ],
         "challenges": [
           {
+            "title": "Rapid MVP with Agile & API-First",
+            "problem": "**Undefined Specs** made waterfall dev impossible. Frequent requirement changes threatened the schedule.",
+            "solution": "**Frontend-First** strategy. Prototyped with **Mock Data**, defined `SCHEDULE_API_SPEC.md` as contract. Completed **MVP in 1 Day** via parallel dev."
+          },
+          {
+            "title": "Handling Diverse Time Ranges (Dynamic Grid)",
+            "problem": "**Space Waste** for day students vs **Cut-off Classes** for night students with fixed grids.",
+            "solution": "**Dynamic Calculation** of time range. **CSS Grid** `auto-fit` and `minmax()` provide **Optimized View** for every user."
+          },
+          {
+            "title": "Visualizing Minute-Level Conflicts",
+            "problem": "**Block Scheduling** limits (1-9 blocks) couldn't handle irregular times (e.g. 06:30) or **Overlapping Courses**.",
+            "solution": "`TimeSlot` as `{start, end}`. Calculate `gridRow` in **Minutes**. Use **Flex Layout** to visualize conflicts side-by-side."
+          },
+          {
             "title": "Async State Sync vs UI State",
-            "problem": "Users perceived server delays as 'frozen' or attempted duplicate sends, breaking data consistency.",
-            "solution": "Adopted Optimistic UI pattern to Pre-commit local state without waiting for API response, ensuring both UX responsiveness and data integrity via transaction-style rollback on failure."
+            "problem": "Users perceived server delays as 'frozen' or attempted duplicate sends, breaking **data consistency**.",
+            "solution": "Adopted **Optimistic UI pattern** to **Pre-commit local state** without waiting for API response, ensuring both UX responsiveness and data integrity via **transaction-style rollback** on failure."
           },
           {
             "title": "Data Freshness vs Loading Delay (SWR Pattern)",
-            "problem": "Fetching latest data every time caused loading delays (choppy UX), while simple caching left data Stale.",
-            "solution": "Implemented SWR (Stale-While-Revalidate) strategy. Render cached data immediately (0ms) and silently Revalidate in background. Also used `Map` for Request Deduplication to block unnecessary network load."
+            "problem": "Fetching latest data every time caused **loading delays (choppy UX)**, while simple caching left data **Stale**.",
+            "solution": "Implemented **SWR (Stale-While-Revalidate)** strategy. Render cached data **immediately (0ms)** and **silently Revalidate** in background. Also used `Map` for **Request Deduplication** to block unnecessary network load."
           },
           {
             "title": "Transient Failures & Resilience",
-            "problem": "Exposing simple error messages (500) for empty LLM responses or timeouts severely degraded UX.",
-            "solution": "Implemented background Silent Retry logic. Retries up to 5 times at 500ms intervals, allowing users to see only the successful result without noticing the retry process ('AI is thinking'), enhancing trust."
+            "problem": "Exposing simple error messages (500) for empty LLM responses or timeouts **severely degraded UX**.",
+            "solution": "Implemented background **Silent Retry logic**. Retries up to **5 times at 500ms intervals**, allowing users to see only the successful result without noticing the retry process ('AI is thinking'), enhancing trust."
           },
           {
             "title": "Fragmented Auth State Management",
-            "problem": "Handling 401 errors and token expiration individually in each component led to code duplication and security holes from missed exceptions.",
-            "solution": "Centralized auth error handling using Axios Interceptors. Batch detect token expiration at entry/exit points and handle auto-logout/redirect, completely separating business logic from system concerns."
+            "problem": "Handling 401 errors and token expiration individually in each component led to **code duplication and security holes** from missed exceptions.",
+            "solution": "Centralized auth error handling using **Axios Interceptors**. Batch detect token expiration at entry/exit points and handle **auto-logout/redirect**, completely separating **business logic from system concerns**."
           }
         ],
         "learnings": [
           {
+            "title": "Power of API-First Development",
+            "content": "**Contract-based Development** enables **Parallel Work**. Minimized conflicts and accelerated **MVP Delivery**. Crucial Agile mindset for startups."
+          },
+          {
+            "title": "UX Benefits of Client-Side Processing",
+            "content": "Handling frequent actions like filtering on client-side achieves **0ms Reactivity**. **Separation of Data & View** eliminates **Network Cost**."
+          },
+          {
             "title": "UX is Performance (Perceived Performance)",
-            "content": "Physical loading time can't be zero, but Optimistic UI and Prefetching can make the 'felt' wait time zero. I learned that improving perceived performance impacts user satisfaction more than actual performance tuning."
+            "content": "Physical loading time can't be zero, but **Optimistic UI** and **Prefetching** can make the 'felt' wait time zero. I learned that improving **perceived performance** impacts user satisfaction more than actual performance tuning."
           },
           {
             "title": "Leveraging Map Data Structures",
-            "content": "`messageCache` and `pendingPrefetches` using Maps allow concise implementation of caching and deduplication with O(1) lookups. Maps also ensure reference stability during insertion/deletion compared to objects."
+            "content": "`messageCache` and `pendingPrefetches` using **Maps** allow concise implementation of **caching and deduplication** with **O(1) lookups**. Maps also ensure **reference stability** during insertion/deletion compared to objects."
           },
           {
             "title": "The Power of Declarative Abstraction",
-            "content": "Abstracting repetitive logic like API calls, error handling, and theme sync into Custom Hooks and Interceptors allowed UI components to focus solely on 'presentation'. Gained flexibility to modify business logic in one place."
+            "content": "Abstracting repetitive logic like API calls, error handling, and theme sync into **Custom Hooks and Interceptors** allowed UI components to focus solely on **'presentation'**. Gained flexibility to modify business logic in one place."
           },
           {
             "title": "Global Service Mindset",
-            "content": "Approaching i18n as simple translation led to maintenance hell. I deeply understood that namespace separation and scalability must be considered from the design phase, and language includes cultural contexts (date formats, word order)."
+            "content": "Approaching i18n as simple translation led to maintenance hell. I deeply understood that **namespace separation and scalability** must be considered from the design phase, and language includes **cultural contexts** (date formats, word order)."
           },
           {
             "title": "State Management: Location Matters",
-            "content": "Stored `pendingPrefetches` outside components (module scope) and `messageCache` inside Zustand. Learned that deciding state location based on re-render triggers is key to managing both performance and complexity."
+            "content": "Stored `pendingPrefetches` outside components (**module scope**) and `messageCache` inside **Zustand**. Learned that deciding state location based on **re-render triggers** is key to managing both performance and complexity."
           }
         ],
         "codeExamples": [
+          {
+            "title": "Client-Side Timetable Filtering",
+            "category": "performance",
+            "description": "Why Client-Side? Server calls for filters are slow. Filter cached `allSchedules` in memory to update `generatedSchedules` instantly by separating raw data and view.",
+            "filePath": "src/store/useScheduleStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useScheduleStore.ts",
+            "snippet": "applyFilters: () => {\n  const { allSchedules, filters } = get();\n  const { freeDays, globalExcludedSlots } = filters;\n  \n  const filtered = allSchedules.filter(schedule => {\n    // 1. Empty Days Filter: Exclude if schedule has classes on these days\n    for (const day of freeDays) {\n      if (schedule.courses.some(c => c.slots.some(s => s.day === day))) {\n        return false;\n      }\n    }\n    // 2. Excluded Times Filter: Exclude if overlaps with globalExcludedSlots\n    for (const course of schedule.courses) {\n      for (const slot of course.slots) {\n        if (isSlotExcluded(slot, globalExcludedSlots)) return false;\n      }\n    }\n    return true;\n  });\n  \n  set({ generatedSchedules: filtered });\n}"
+          },
+          {
+            "title": "Dynamic Grid Time Range Calculation",
+            "category": "ux-engineering",
+            "description": "Why Dynamic? Fixed 22:00 grids waste space for day students. Analyze course start/end times to calculate optimal range and render adaptively via CSS Grid.",
+            "filePath": "src/components/schedule/ScheduleGrid.tsx",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/components/schedule/ScheduleGrid.tsx",
+            "snippet": "// Calculate Dynamic Time Range\nconst getTimeRange = (courses: Course[]) => {\n  let minHour = 9, maxHour = 18; // Default: Day classes\n  \n  courses.forEach(course => {\n    course.slots.forEach(slot => {\n      const startHour = parseInt(slot.startTime.split(':')[0]);\n      const endHour = parseInt(slot.endTime.split(':')[0]);\n      minHour = Math.min(minHour, startHour);\n      maxHour = Math.max(maxHour, endHour);\n    });\n  });\n  \n  // Extend to 22:00 if night classes exist (> 18:00)\n  if (maxHour > 18) maxHour = 22;\n  \n  return { minHour, maxHour };\n};\n\n// Calculate CSS Grid Cell Position (in minutes)\nconst getGridRow = (time: string, minHour: number) => {\n  const [h, m] = time.split(':').map(Number);\n  return (h - minHour) * 60 + m;\n};"
+          },
           {
             "title": "Optimistic UI + Auto Retry + Rollback",
             "category": "performance",

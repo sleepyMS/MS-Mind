@@ -110,7 +110,7 @@
           {
             "id": "project-chatbot",
             "title": "KangNaengBot (Frontend)",
-            "desc": "LLM 응답 지연을 극복한 체감 속도 0ms의 교내 AI 챗봇 서비스",
+            "desc": "자연어로 최적의 시간표를 생성하고, LLM 응답 지연을 극복한 체감 속도 0ms의 교내 AI 챗봇 서비스",
             "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
           },
           {
@@ -169,7 +169,7 @@
         "skill-i18next"
       ],
       "details": {
-        "description": "강남대학교 AI 챗봇 서비스의 프론트엔드 프로젝트로, LLM의 필연적인 응답 지연(1~5초)을 극복하는 **UX 엔지니어링**에 집중했습니다. 낙관적 업데이트(Optimistic UI)와 SWR 패턴을 도입하여, 물리적 네트워크 한계를 넘어 **체감 지연 시간 0ms의 네이티브 앱 수준 반응성**을 달성했습니다.",
+        "description": "강남대학교 AI 챗봇 서비스의 프론트엔드 프로젝트입니다. **자연어 입력만으로 최적의 수업 시간표를 자동 생성**하는 AI 시간표 시스템을 구축하고, LLM의 필연적인 응답 지연(1~5초)을 극복하는 **UX 엔지니어링**에 집중했습니다. 낙관적 업데이트(Optimistic UI), SWR 패턴, 클라이언트 사이드 필터링을 도입하여 **체감 지연 시간 0ms의 네이티브 앱 수준 반응성**을 달성했습니다.",
         "technologies": [
           "React",
           "TypeScript",
@@ -180,6 +180,10 @@
           "i18next"
         ],
         "coreFeatures": [
+          "🤖 AI 시간표 생성: 자연어로 과목 요청 → RAG 기반 파싱 → 충돌 없는 조합 탐색 → 최적 시간표 제시 (API-First 개발로 하루 만에 MVP 완성)",
+          "📊 클라이언트 사이드 필터링: 공강 요일/제외 시간대 필터를 API 재호출 없이 메모리에서 즉시 적용 (0ms 지연)",
+          "📐 동적 시간표 그리드: 주간(09:00~18:00) / 야간(09:00~22:00) 학생별 최적화된 뷰 자동 렌더링 + 분 단위 충돌 시각화",
+          "🎠 캐러셀 뷰 + 저장/불러오기: 여러 시간표 조합을 좌우 스와이프로 비교, 마음에 드는 시간표를 이름 지정 후 보관",
           "⚡ Optimistic UI Chat: API 응답 전 UI 선반영 + 5회 자동 재시도 + 실패 시 롤백으로 '0ms 대기' 경험 제공",
           "🔄 Hover Prefetching + Request Deduplication: 마우스 진입 시 프리페치 + pendingPrefetches Map으로 중복 요청 차단",
           "💾 Stale-While-Revalidate 캐싱: 캐시 즉시 표시 → 백그라운드 갱신 → 현재 세션이면 UI 업데이트하는 3단계 전략",
@@ -217,6 +221,16 @@
         "blogLink": "https://me-in-journey.tistory.com/entry/React-AI-%EC%B1%97%EB%B4%87%EC%9D%98-%EC%B2%B4%EA%B0%90-%EC%86%8D%EB%8F%84%EB%A5%BC-%EB%86%92%EC%9D%B8-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%97%AC%EC%A0%95",
         "features": [
           {
+            "title": "AI 시간표 생성 시스템 (Schedule Generation System)",
+            "items": [
+              "자연어 기반 과목 인식: '알고리즘, 데이터베이스 넣어줘'와 같은 자연어 입력을 AI가 파싱하여 과목 자동 인식. useScheduleStore에서 상태 머신(idle→parsing→generating→complete) 패턴으로 관리.",
+              "클라이언트 사이드 필터링: allSchedules(원본)와 generatedSchedules(필터 결과) 분리 관리. 공강 요일/제외 시간대 필터 변경 시 applyFilters()로 로컬 메모리에서 즉시 처리 (API 호출 0건).",
+              "동적 시간표 그리드: 과목들의 startTime/endTime 분석하여 주간(09:00~18:00) 또는 야간(09:00~22:00) 그리드 자동 조절. CSS Grid의 minmax()로 셀 크기 적응형 렌더링.",
+              "분 단위 충돌 시각화: TimeSlot을 { start: 'HH:MM', end: 'HH:MM' } 형태로 정의. gridRowStart/gridRowEnd 분 단위 계산으로 정확한 위치 배치. 충돌 시 flex 레이아웃으로 타일 병렬 표시.",
+              "컴포넌트 아키텍처: ScheduleCanvas(메인 컨테이너) → ScheduleGrid(시각화) + ScheduleCarousel(네비게이션) + FilterPanel(필터) + CourseDetailModal(상세) + SavedScheduleList(보관함)"
+            ]
+          },
+          {
             "title": "Optimistic UI & Error Recovery (Zero-Latency)",
             "items": [
               "Instant Feedback: `useChatStore.ts`의 `sendMessage` 함수에서 API 호출 전 `set`으로 로컬 메시지 상태를 선행 업데이트. 사용자는 '전송됨'을 즉시 인지합니다.",
@@ -249,19 +263,59 @@
         ],
         "optimizations": [
           {
+            "title": "API-First 개발로 병렬 작업 효율화",
+            "items": [
+              "Why: 백엔드 개발 대기 시 프론트엔드 개발이 지연되고, 통합 시 API 불일치로 충돌이 발생합니다.",
+              "How: 프론트엔드 관점에서 [SCHEDULE_API_SPEC.md](https://github.com/sleepyMS/KangNaengBot-FE/blob/main/docs/SCHEDULE_API_SPEC.md)를 상세히 작성하여 백엔드에 전달. **Mock 서비스**로 UI/UX 선 검증 후 실제 API 연동.",
+              "Impact: 프론트엔드와 백엔드 **병렬 개발** 가능. API 명세서가 '계약서' 역할을 하여 **하루 만에 핵심 MVP 완성**."
+            ]
+          },
+          {
+            "title": "클라이언트 사이드 시간표 필터링으로 네트워크 비용 제거",
+            "items": [
+              "Why: 필터 변경마다 API 호출 시 네트워크 지연으로 UX 저하 + 서버 부하 증가.",
+              "How: `allSchedules`(원본)와 `generatedSchedules`(필터 결과) 분리 관리. `applyFilters()`에서 공강 요일/제외 시간대를 **로컬 메모리에서 즉시 필터링**.",
+              "Impact: 필터 적용 즉시(**0ms 지연**) UI 업데이트. **네트워크 요청 0건**으로 서버 부하 완전 제거."
+            ]
+          },
+          {
+            "title": "동적 시간표 그리드로 화면 활용도 극대화",
+            "items": [
+              "Why: 고정 22시 그리드는 주간 학생에게 공간 낭비, 18시 고정은 야간 학생 수업 잘림.",
+              "How: 과목들의 `startTime`/`endTime` 분석하여 최소~최대 범위 산출. **CSS Grid** `minmax()`로 셀 높이 자동 조절.",
+              "Impact: 주간 학생에게는 **컴팩트 뷰(09:00~18:00)**, 야간 학생에게는 **확장 뷰(09:00~22:00)** 자동 제공."
+            ]
+          },
+          {
+            "title": "시간표 생성 낙관적 UI로 체감 속도 1초 이상 단축",
+            "items": [
+              "Why: 시간표 생성 API 응답 대기 시간(수 초) 동안 화면이 멈춰 보이는 문제.",
+              "How: 사용자 입력 즉시 `addMessage`로 대화방에 메시지 추가, 세션 생성 전 `navigate`로 화면 전환, '분석 중...' 로딩 인디케이터 표시.",
+              "Impact: 사용자 입력 → **화면 전환 즉시**. 체감 반응 속도 **1초 이상 단축**."
+            ]
+          },
+          {
+            "title": "시간표 이미지 다운로드 최적화",
+            "items": [
+              "Why: 저해상도 캡처는 공유 시 가독성 저하, 다크모드 무시 시 배경색 불일치.",
+              "How: `html-to-image`의 `pixelRatio: 2`로 **Retina 대응**. `document.documentElement.classList.contains('dark')` 체크 후 배경색 자동 설정.",
+              "Impact: **고해상도 PNG** 저장, 다크/라이트 모드별 최적화된 이미지 생성. **토스트로 성공/실패 피드백** 제공."
+            ]
+          },
+          {
             "title": "Hover Prefetching으로 체감 로딩 '0ms' 달성",
             "items": [
               "Why: 채팅방 클릭 후 데이터 로드까지의 스피너도 대화 흐름을 끊습니다.",
-              "How: `mouseEnter` 이벤트에 `prefetchSession()` 연결. Map 기반 캐시로 중복 요청 방지하고 세션별 메시지 저장.",
-              "Impact: 사용자가 클릭하는 순간 이미 데이터 준비 완료. 물리적 로딩 시간과 무관하게 '즉시' 전환되는 체감 성능 제공."
+              "How: `mouseEnter` 이벤트에 `prefetchSession()` 연결. **Map 기반 캐시**로 중복 요청 방지하고 세션별 메시지 저장.",
+              "Impact: 사용자가 클릭하는 순간 **이미 데이터 준비 완료**. 물리적 로딩 시간과 무관하게 **'즉시' 전환**되는 체감 성능 제공."
             ]
           },
           {
             "title": "Request Deduplication으로 서버 부하 절감",
             "items": [
               "Why: 빠른 연속 클릭으로 동일 API 5회 호출 → 불필요한 네트워크 트래픽 + 서버 부하.",
-              "How: `pendingPrefetches.get(sessionId)`로 진행 중인 요청 확인. 있으면 새 요청 대신 기존 Promise await.",
-              "Impact: 동일 세션 다중 클릭 시에도 API 호출 단 1회로 제한."
+              "How: `pendingPrefetches.get(sessionId)`로 진행 중인 요청 확인. 있으면 새 요청 대신 **기존 Promise await**.",
+              "Impact: 동일 세션 다중 클릭 시에도 **API 호출 단 1회**로 제한."
             ]
           },
           {
@@ -292,6 +346,24 @@
               "After"
             ],
             "rows": [
+              [
+                "Client-Side Filtering",
+                "시간표 필터 적용 시간",
+                "API 호출 필요",
+                "0ms (메모리 처리) ⚡"
+              ],
+              [
+                "동적 그리드",
+                "화면 활용도",
+                "고정 22시 낭비",
+                "주간/야간 최적화 ⚡"
+              ],
+              [
+                "API-First 개발",
+                "MVP 개발 기간",
+                "백엔드 대기",
+                "하루 만에 완성 ⚡"
+              ],
               ["Optimistic UI", "메시지 전송 체감 시간", "1~2초", "0ms ⚡"],
               [
                 "SWR + Prefetching",
@@ -316,49 +388,88 @@
         ],
         "challenges": [
           {
+            "title": "기획 부재 상황에서의 빠른 MVP 개발 (Agile & API-First)",
+            "problem": "시간표 생성 기능은 **기획이 완전히 정해지지 않은 상태**에서 개발을 시작해야 했습니다. 백엔드 개발자와의 소통 지연, 요구사항의 빈번한 변경으로 인해 전통적인 폭포수 방식으로는 개발 일정을 맞추기 어려웠습니다.",
+            "solution": "**프론트엔드 우선 개발(Frontend-First)** 전략을 채택했습니다. 가설 단위로 기능을 빠르게 프로토타이핑하고 **Mock 데이터로 UI/UX를 선 검증**한 후, `SCHEDULE_API_SPEC.md`를 상세히 작성하여 백엔드에 전달했습니다. 이를 통해 양측이 동시에 개발을 진행하여 **하루 만에 핵심 MVP를 완성**했습니다."
+          },
+          {
+            "title": "다양한 사용자 시간대 대응 (동적 시간표 그리드)",
+            "problem": "대학 강의는 주간 수업(09:00~18:00)과 야간 수업(18:00~22:00)으로 나뉩니다. 모든 사용자에게 22시까지 전체 그리드를 보여주면 주간 학생에게는 **공간 낭비**, 반대로 야간 학생에게 18시까지만 보여주면 **수업이 잘리는** 문제가 있었습니다.",
+            "solution": "시간표에 포함된 과목들의 `startTime`/`endTime`을 분석하여 가장 이른 시작 시간과 가장 늦은 종료 시간을 **동적으로 계산**합니다. **CSS Grid**의 `auto-fit`과 `minmax()`를 활용하여 시간대 수에 따라 셀 크기가 적절히 조절되도록 구현하여, 모든 사용자에게 **최적화된 시간표 뷰**를 제공합니다."
+          },
+          {
+            "title": "시간표 충돌 시각화 및 분 단위 처리",
+            "problem": "기존 '1~9교시' 기반 시스템은 **06:30~07:45 같은 반 교시 수업**이나 비정형 시간대를 표현할 수 없었습니다. 또한 2개 이상의 과목이 같은 시간대에 겹치는 **충돌 상황을 어떻게 시각화할지** 고민이 필요했습니다.",
+            "solution": "`TimeSlot` 타입을 `{ start: 'HH:MM', end: 'HH:MM' }` 형태로 정의하여 **어떤 시간대든 표현 가능**하게 했습니다. 그리드 렌더링 시 `gridRowStart`/`gridRowEnd`를 **분 단위로 계산**하여 정확한 위치에 과목 타일을 배치하고, 충돌 시 **flex 레이아웃으로 타일을 나란히 배치**하여 충돌 상황을 명확히 보여줍니다."
+          },
+          {
             "title": "비동기 데이터와 UI 상태의 괴리 (Async State Sync)",
-            "problem": "서버 응답 지연 시 사용자가 '멈춤'으로 인지하거나 중복 전송을 시도하여 데이터 일관성이 깨지는 문제가 있었습니다.",
-            "solution": "낙관적 UI(Optimistic UI) 패턴을 도입하여 API 응답 대기 없이 로컬 상태를 선행 업데이트(Pre-commit)하고, 실패 시에만 롤백하는 트랜잭션 방식으로 UX 반응성과 데이터 무결성을 동시에 확보했습니다."
+            "problem": "서버 응답 지연 시 사용자가 **'멈춤'으로 인지**하거나 **중복 전송을 시도**하여 데이터 일관성이 깨지는 문제가 있었습니다.",
+            "solution": "**낙관적 UI(Optimistic UI)** 패턴을 도입하여 API 응답 대기 없이 로컬 상태를 **선행 업데이트(Pre-commit)**하고, 실패 시에만 **롤백**하는 트랜잭션 방식으로 UX 반응성과 데이터 무결성을 동시에 확보했습니다."
           },
           {
             "title": "데이터 최신성 동기화와 로딩 지연 (SWR Pattern)",
-            "problem": "세션 전환 시마다 로딩이 발생하여 UX가 끊기거나, 단순 캐싱 사용 시 데이터가 낡은(Stale) 상태로 남는 동기화 딜레마가 있었습니다.",
-            "solution": "SWR(Stale-While-Revalidate) 전략을 직접 구현했습니다. 캐시된 데이터를 즉시(0ms) 렌더링하고, 백그라운드에서 조용히 최신 데이터를 갱신(Revalidate)합니다. 또한 `Map`을 활용한 요청 중복 제거(Deduplication)로 불필요한 네트워크 부하를 차단했습니다."
+            "problem": "세션 전환 시마다 로딩이 발생하여 **UX가 끊기거나**, 단순 캐싱 사용 시 데이터가 **낡은(Stale) 상태로 남는** 동기화 딜레마가 있었습니다.",
+            "solution": "**SWR(Stale-While-Revalidate)** 전략을 직접 구현했습니다. 캐시된 데이터를 **즉시(0ms) 렌더링**하고, 백그라운드에서 조용히 최신 데이터를 갱신(Revalidate)합니다. 또한 `Map`을 활용한 **요청 중복 제거(Deduplication)**로 불필요한 네트워크 부하를 차단했습니다."
           },
           {
             "title": "일시적 장애와 복원력(Transparent Resilience) 확보",
-            "problem": "LLM 응답이 비어있거나 타임아웃이 발생할 때, 단순 에러 메시지(500)를 노출하면 사용자 경험이 크게 저하되었습니다.",
-            "solution": "백그라운드 자동 재시도(Silent Retry) 로직을 구현했습니다. 500ms 간격으로 최대 5회 재시도하며, 사용자는 재시도 과정을 인지하지 못하고('AI 생각 중') 성공된 결과만 볼 수 있게 하여 서비스 신뢰도를 높였습니다."
+            "problem": "LLM 응답이 비어있거나 타임아웃이 발생할 때, **단순 에러 메시지(500)를 노출**하면 사용자 경험이 크게 저하되었습니다.",
+            "solution": "**백그라운드 자동 재시도(Silent Retry)** 로직을 구현했습니다. 500ms 간격으로 **최대 5회 재시도**하며, 사용자는 재시도 과정을 인지하지 못하고('AI 생각 중') 성공된 결과만 볼 수 있게 하여 **서비스 신뢰도를 높였습니다**."
           },
           {
             "title": "인증 상태 관리의 파편화와 유지보수성",
-            "problem": "각 컴포넌트에서 401 Unauthorized 에러와 토큰 만료를 개별적으로 처리하다 보니 코드가 중복되고, 예외 케이스 누락으로 보안 구멍이 발생했습니다.",
-            "solution": "Axios Interceptor를 도입하여 인증 에러 핸들링을 중앙화(Centralization)했습니다. 입출구 단계에서 토큰 만료를 일괄 감지하고 자동 로그아웃/리다이렉트를 처리하여 비즈니스 로직과 시스템 관심사를 완벽히 분리했습니다."
+            "problem": "각 컴포넌트에서 **401 Unauthorized 에러와 토큰 만료를 개별적으로 처리**하다 보니 코드가 중복되고, 예외 케이스 누락으로 보안 구멍이 발생했습니다.",
+            "solution": "**Axios Interceptor**를 도입하여 인증 에러 핸들링을 **중앙화(Centralization)**했습니다. 입출구 단계에서 토큰 만료를 일괄 감지하고 **자동 로그아웃/리다이렉트**를 처리하여 비즈니스 로직과 시스템 관심사를 완벽히 분리했습니다."
           }
         ],
         "learnings": [
           {
+            "title": "API-First 개발의 힘",
+            "content": "기획이 불확실한 상황에서도 API 명세서를 **'계약서'로 선행 작성**하면, 프론트엔드와 백엔드가 **병렬로 개발**할 수 있습니다. Mock 데이터로 UI/UX를 먼저 검증하고, 명세서 기반으로 통합하니 **충돌이 최소화**되고 **하루 만에 MVP**를 완성할 수 있었습니다. 이는 스타트업 환경에서 필수적인 애자일 마인드셋입니다."
+          },
+          {
+            "title": "클라이언트 사이드 처리의 UX 이점",
+            "content": "필터링처럼 빈번하게 변경되는 로직은 서버에 맡기지 않고 클라이언트에서 처리하면 **0ms 반응성**을 달성할 수 있습니다. 원본 데이터(`allSchedules`)와 가공 데이터(`generatedSchedules`)를 분리 관리하면, **API 재호출 없이도 즉각적인 UI 업데이트**가 가능합니다. **네트워크 비용 제거**는 덤입니다."
+          },
+          {
             "title": "UX가 곧 성능이다 (Perceived Performance)",
-            "content": "물리적 로딩 시간을 0으로 만들 수는 없지만, 낙관적 UI와 프리페칭으로 사용자가 '느끼는' 대기 시간을 0으로 만들 수 있습니다. 실제 성능 개선보다 체감 성능 개선이 사용자 만족도에 더 큰 영향을 미친다는 것을 배웠습니다."
+            "content": "물리적 로딩 시간을 0으로 만들 수는 없지만, **낙관적 UI와 프리페칭**으로 사용자가 '느끼는' 대기 시간을 **0으로 만들 수 있습니다**. 실제 성능 개선보다 **체감 성능 개선이 사용자 만족도에 더 큰 영향**을 미친다는 것을 배웠습니다."
           },
           {
             "title": "Map 자료구조의 활용",
-            "content": "`messageCache: Map<string, MessageItem[]>`과 `pendingPrefetches: Map<string, Promise>`처럼 Map을 활용하면 O(1) 조회로 캐싱과 중복 방지를 간결하게 구현할 수 있습니다. 객체 대신 Map을 쓰면 삽입/삭제 시 참조 안정성도 확보됩니다."
+            "content": "`messageCache: Map<string, MessageItem[]>`와 `pendingPrefetches: Map<string, Promise>`처럼 Map을 활용하면 **O(1) 조회**로 캐싱과 중복 방지를 간결하게 구현할 수 있습니다. 객체 대신 Map을 쓰면 **삽입/삭제 시 참조 안정성**도 확보됩니다."
           },
           {
             "title": "선언적 추상화의 힘",
-            "content": "API 호출, 에러 처리, 테마 동기화 같은 반복 로직을 Custom Hook과 Interceptor로 추상화하니, UI 컴포넌트는 오직 '표현'에만 집중할 수 있었습니다. 비즈니스 로직 변경 시에도 한 곳만 수정하면 되는 유연함을 얻었습니다."
+            "content": "API 호출, 에러 처리, 테마 동기화 같은 반복 로직을 **Custom Hook과 Interceptor로 추상화**하니, UI 컴포넌트는 오직 **'표현'에만 집중**할 수 있었습니다. 비즈니스 로직 변경 시에도 **한 곳만 수정하면 되는 유연함**을 얻었습니다."
           },
           {
             "title": "글로벌 서비스에 대한 마인드셋",
-            "content": "i18n을 단순 번역으로 접근했다가 유지보수 지옥을 맛보았습니다. 초기 설계 단계부터 네임스페이스 분리와 확장성을 고려해야 하며, 언어는 단순한 텍스트가 아니라 문화적 맥락(날짜 포맷, 어순 등)을 포함한다는 것을 깊이 이해하게 되었습니다."
+            "content": "i18n을 단순 번역으로 접근했다가 **유지보수 지옥**을 맛보았습니다. 초기 설계 단계부터 **네임스페이스 분리와 확장성**을 고려해야 하며, 언어는 단순한 텍스트가 아니라 **문화적 맥락(날짜 포맷, 어순 등)**을 포함한다는 것을 깊이 이해하게 되었습니다."
           },
           {
             "title": "상태 관리는 '어디에' 두느냐가 핵심",
-            "content": "`pendingPrefetches`는 컴포넌트 외부(모듈 스코프)에, `messageCache`는 Zustand 내부에 저장했습니다. 리렌더링 트리거 여부에 따라 상태의 위치를 결정하는 것이 성능과 복잡도를 모두 관리하는 핵심임을 배웠습니다."
+            "content": "`pendingPrefetches`는 **컴포넌트 외부(모듈 스코프)**에, `messageCache`는 **Zustand 내부**에 저장했습니다. **리렌더링 트리거 여부**에 따라 상태의 위치를 결정하는 것이 성능과 복잡도를 모두 관리하는 핵심임을 배웠습니다."
           }
         ],
         "codeExamples": [
+          {
+            "title": "클라이언트 사이드 시간표 필터링",
+            "category": "performance",
+            "description": "Why Client-Side? 필터 변경마다 API 호출하면 네트워크 지연으로 UX 저하. 원본(allSchedules)과 결과(generatedSchedules) 분리 후 로컬에서 즉시 필터링하여 0ms 반응성 달성.",
+            "filePath": "src/store/useScheduleStore.ts",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/store/useScheduleStore.ts",
+            "snippet": "applyFilters: () => {\n  const { allSchedules, filters } = get();\n  const { freeDays, globalExcludedSlots } = filters;\n  \n  const filtered = allSchedules.filter(schedule => {\n    // 1. 공강 요일 필터: 해당 요일에 수업 있으면 제외\n    for (const day of freeDays) {\n      if (schedule.courses.some(c => c.slots.some(s => s.day === day))) {\n        return false;\n      }\n    }\n    // 2. 제외 시간대 필터: globalExcludedSlots와 겹치면 제외\n    for (const course of schedule.courses) {\n      for (const slot of course.slots) {\n        if (isSlotExcluded(slot, globalExcludedSlots)) return false;\n      }\n    }\n    return true;\n  });\n  \n  set({ generatedSchedules: filtered });\n}"
+          },
+          {
+            "title": "동적 시간표 그리드 시간 범위 계산",
+            "category": "ux-engineering",
+            "description": "Why Dynamic? 고정 22시 그리드는 주간 학생에게 공간 낭비. 과목들의 시작/종료 시간을 분석하여 최적 범위 산출 후 CSS Grid로 적응형 렌더링.",
+            "filePath": "src/components/schedule/ScheduleGrid.tsx",
+            "githubLink": "https://github.com/sleepyMS/KangNaengBot-FE/blob/main/src/components/schedule/ScheduleGrid.tsx",
+            "snippet": "// 동적 시간 범위 계산\nconst getTimeRange = (courses: Course[]) => {\n  let minHour = 9, maxHour = 18; // 기본값: 주간 수업\n  \n  courses.forEach(course => {\n    course.slots.forEach(slot => {\n      const startHour = parseInt(slot.startTime.split(':')[0]);\n      const endHour = parseInt(slot.endTime.split(':')[0]);\n      minHour = Math.min(minHour, startHour);\n      maxHour = Math.max(maxHour, endHour);\n    });\n  });\n  \n  // 야간 수업(18:00 이후)이 있으면 22시까지 확장\n  if (maxHour > 18) maxHour = 22;\n  \n  return { minHour, maxHour };\n};\n\n// CSS Grid 셀 위치 계산 (분 단위)\nconst getGridRow = (time: string, minHour: number) => {\n  const [h, m] = time.split(':').map(Number);\n  return (h - minHour) * 60 + m;\n};"
+          },
           {
             "title": "Optimistic UI + 자동 재시도 + 롤백",
             "category": "performance",
