@@ -180,15 +180,15 @@
           "i18next"
         ],
         "coreFeatures": [
-          "🤖 AI 시간표 생성: 자연어로 과목 요청 → RAG 기반 파싱 → 충돌 없는 조합 탐색 → 최적 시간표 제시 (API-First 개발로 하루 만에 MVP 완성)",
-          "📊 클라이언트 사이드 필터링: 공강 요일/제외 시간대 필터를 API 재호출 없이 메모리에서 즉시 적용 (0ms 지연)",
-          "📐 동적 시간표 그리드: 주간(09:00~18:00) / 야간(09:00~22:00) 학생별 최적화된 뷰 자동 렌더링 + 분 단위 충돌 시각화",
-          "🎠 캐러셀 뷰 + 저장/불러오기: 여러 시간표 조합을 좌우 스와이프로 비교, 마음에 드는 시간표를 이름 지정 후 보관",
-          "⚡ Optimistic UI Chat: API 응답 전 UI 선반영 + 5회 자동 재시도 + 실패 시 롤백으로 '0ms 대기' 경험 제공",
-          "🔄 Hover Prefetching + Request Deduplication: 마우스 진입 시 프리페치 + pendingPrefetches Map으로 중복 요청 차단",
-          "💾 Stale-While-Revalidate 캐싱: 캐시 즉시 표시 → 백그라운드 갱신 → 현재 세션이면 UI 업데이트하는 3단계 전략",
-          "🌙 FOUC-Free Dark Mode: HTML 파싱 단계에서 테마 클래스 주입하여 흰 화면 깜빡임 원천 차단",
-          "🌐 Namespace-Split i18n: common/chat/profile로 번역 파일 분리, 필요한 리소스만 로딩하여 초기 번들 절감"
+          "🤖 **AI 시간표 생성**: 자연어로 과목 요청 → **RAG 기반 파싱** → 충돌 없는 조합 탐색 → 최적 시간표 제시 (**API-First 개발로 하루 MVP 완성**)",
+          "📊 **클라이언트 사이드 필터링**: 공강 요일/제외 시간대 필터를 API 재호출 없이 메모리에서 **즉시 적용 (0ms 지연)**",
+          "📐 **동적 시간표 그리드**: 주간(09:00~18:00) / 야간(09:00~22:00) 학생별 **최적화된 뷰 자동 렌더링** + **분 단위 충돌 시각화**",
+          "🎠 **캐러셀 뷰** + **저장/불러오기**: 여러 시간표 조합을 좌우 스와이프로 비교, 마음에 드는 시간표를 이름 지정 후 보관",
+          "⚡ **Optimistic UI Chat**: API 응답 전 **UI 선반영** + **5회 자동 재시도** + 실패 시 **롤백**으로 **'0ms 대기' 경험** 제공",
+          "🔄 **Hover Prefetching** + **Request Deduplication**: 마우스 진입 시 **프리페치** + `pendingPrefetches` **Map**으로 **중복 요청 차단**",
+          "💾 **Stale-While-Revalidate 캐싱**: 캐시 **즉시 표시** → 백그라운드 갱신 → 현재 세션이면 **UI 업데이트**하는 **3단계 전략**",
+          "🌙 **FOUC-Free Dark Mode**: HTML 파싱 단계에서 **테마 클래스 주입**하여 **흰 화면 깜빡임 원천 차단**",
+          "🌐 **Namespace-Split i18n**: `common/chat/profile`로 번역 파일 분리, **필요한 리소스만 로딩**하여 초기 번들 절감"
         ],
         "techStackDocs": [
           {
@@ -529,16 +529,16 @@
       "label": "Neural Portfolio",
       "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
       "details": {
-        "description": "지금 보고 계신 포트폴리오입니다! 정적인 사이트맵 대신 프로젝트들을 상호 연결된 뉴런으로 시각화한 3D 신경망 기반 포트폴리오입니다. 단순히 '예쁜 3D'가 아닌, '끊김 없는 60fps 경험'과 '직관적인 탐색 UX'를 핵심 과제로 두고, d3-force 물리 엔진, Custom Easing 애니메이션, Dual Ref 이벤트 처리 등 엔지니어링 깊이를 더했습니다.",
+        "description": "지금 보고 계신 포트폴리오입니다! 정적인 사이트맵 대신 프로젝트들을 상호 연결된 뉴런으로 시각화한 **3D 신경망 기반 포트폴리오**입니다. 단순히 '예쁜 3D'가 아닌, **'끊김 없는 60fps 경험'**과 **'직관적인 탐색 UX'**를 핵심 과제로 두고, `d3-force` 물리 엔진, **Custom Easing 애니메이션**, **Dual Ref 이벤트 처리** 등 엔지니어링 깊이를 더했습니다.",
         "link": "https://github.com/sleepyMS/MS-Mind",
         "coreFeatures": [
-          "⚡ 300-tick Warm-up: 물리 엔진 초기화 시 발산(Explosion) 현상 방지. 렌더링 전 동기 실행으로 '균형 잡힌 신경망' 즉시 표시",
-          "🎥 Custom Cubic Easing Camera: 라이브러리 없이 easeInOutCubic 수학 공식 직접 구현. sceneRotation 역연산으로 항상 노드 정면 응시",
-          "🔄 180° Theme Rotation: 테마 전환 시 전체 씬 180° 회전 애니메이션 + Bloom/Vignette 동적 보간으로 '우주→하늘' 서사 표현",
-          "🖱️ Dual Ref Hover Handling: WebGL Mesh와 DOM Label 이벤트 시차 극복. 10ms 디바운스로 포커스 유실 방지",
-          "📊 Zustand Transient Update: 60fps 루프에서 React 리렌더링 최소화. useRef로 애니메이션 변수 직접 변이하여 프레임 드랍 방지",
-          "🔗 BFS 간접 연결 경로 탐색: 필터링된 노드 사이의 숨겨진 연결을 BFS로 탐색하여 점선으로 시각화. 관계 맥락 유지",
-          "📱 스와이프 각도 감지: 수직/수평 이동량 비교로 세로 스크롤과 노드 순회 스와이프를 정확히 구분. 모바일 UX 개선"
+          "⚡ **300-tick Warm-up**: 물리 엔진 초기화 시 **발산(Explosion) 현상 방지**. 렌더링 전 동기 실행으로 '균형 잡힌 신경망' **즉시 표시**",
+          "🎥 **Custom Cubic Easing Camera**: 라이브러리 없이 `easeInOutCubic` 수학 공식 직접 구현. `sceneRotation` 역연산으로 항상 노드 **정면 응시**",
+          "🔄 **180° Theme Rotation**: 테마 전환 시 전체 씬 **180° 회전 애니메이션** + **Bloom/Vignette 동적 보간**으로 '우주→하늘' 서사 표현",
+          "🖱️ **Dual Ref Hover Handling**: WebGL Mesh와 DOM Label **이벤트 시차 극복**. **10ms 디바운스**로 포커스 유실 방지",
+          "📊 **Zustand Transient Update**: **60fps 루프**에서 React 리렌더링 최소화. `useRef`로 애니메이션 변수 직접 변이하여 **프레임 드랍 방지**",
+          "🔗 **BFS 간접 연결 경로 탐색**: 필터링된 노드 사이의 숨겨진 연결을 **BFS**로 탐색하여 **점선으로 시각화**. 관계 맥락 유지",
+          "📱 **스와이프 각도 감지**: 수직/수평 이동량 비교로 세로 스크롤과 노드 순회 스와이프를 **정확히 구분**. 모바일 UX 개선"
         ],
         "techStackDocs": [
           {
@@ -566,88 +566,88 @@
           {
             "title": "BFS 기반 간접 연결 경로 탐색",
             "items": [
-              "Why: 카테고리 필터로 중간 노드가 숨겨지면 관련 노드들의 연결 관계가 끊어져 보이는 UX 문제 발생.",
-              "How: `findConnectedVisibleNodes()` 함수에서 BFS 알고리즘으로 숨겨진 노드를 통해 연결된 visible 노드 쌍 탐색. Queue 기반 레벨 순회로 최단 경로 보장.",
-              "Impact: 필터 적용 시에도 노드 간 관계가 점선으로 유지되어 정보 손실 없이 맥락 파악 가능."
+              "Why: 카테고리 필터로 중간 노드가 숨겨지면 **관련 노드들의 연결 관계가 끊어져 보이는 UX 문제** 발생.",
+              "How: `findConnectedVisibleNodes()` 함수에서 **BFS 알고리즘**으로 숨겨진 노드를 통해 연결된 visible 노드 쌍 탐색. **Queue 기반 레벨 순회**로 최단 경로 보장.",
+              "Impact: 필터 적용 시에도 노드 간 관계가 **점선으로 유지**되어 정보 손실 없이 맥락 파악 가능."
             ]
           },
           {
             "title": "Ref 기반 60fps 애니메이션 루프",
             "items": [
-              "Why: useFrame 내에서 setState를 호출하면 60fps × React Reconciler = 프레임 드랍.",
-              "How: `animationRef.current.progress += delta`로 ref를 직접 변이. camera.position도 lerpVectors()로 직접 조작. 완료 시에만 setIsAnimating(false) 호출.",
-              "Impact: React 개입 없이 끊김 없는 60fps 애니메이션 보장."
+              "Why: `useFrame` 내에서 `setState`를 호출하면 **60fps × React Reconciler = 프레임 드랍**.",
+              "How: `animationRef.current.progress += delta`로 **ref를 직접 변이**. `camera.position`도 `lerpVectors()`로 직접 조작. 완료 시에만 `setIsAnimating(false)` 호출.",
+              "Impact: React 개입 없이 **끊김 없는 60fps 애니메이션 보장**."
             ]
           },
           {
             "title": "물리 엔진 300회 사전 연산",
             "items": [
-              "Why: 물리 엔진이 안정화될 때까지 노드들이 요동치는(Jittering) 시각적 노이즈는 사용자 첫인상을 망칩니다.",
-              "How: `for (let i = 0; i < 300; i++) simulation.tick()` 동기 루프로 렌더링 전 300회 선행 연산. useMemo로 메모이제이션하여 재계산 방지.",
-              "Impact: 사용자는 즉시 '안정된 신경망'을 마주하여 첫인상 완성도를 높였습니다."
+              "Why: 물리 엔진이 안정화될 때까지 노드들이 요동치는(**Jittering**) 시각적 노이즈는 사용자 **첫인상을 망칩니다**.",
+              "How: `for (let i = 0; i < 300; i++) simulation.tick()` **동기 루프**로 렌더링 전 **300회 선행 연산**. `useMemo`로 메모이제이션하여 재계산 방지.",
+              "Impact: 사용자는 즉시 **'안정된 신경망'**을 마주하여 첫인상 완성도를 높였습니다."
             ]
           },
           {
             "title": "씬 회전 오프셋 역연산",
             "items": [
-              "Why: 씬이 회전한 상태에서 단순 좌표 이동은 카메라가 노드의 측면/후면을 비춥니다.",
-              "How: `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`으로 카메라 오프셋을 씬 회전에 맞춰 역회전.",
-              "Impact: 씬이 어떻게 회전해 있든 카메라는 항상 노드의 '정면'을 응시합니다."
+              "Why: 씬이 회전한 상태에서 단순 좌표 이동은 **카메라가 노드의 측면/후면을 비춤**.",
+              "How: `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`으로 **카메라 오프셋을 씬 회전에 맞춰 역회전**.",
+              "Impact: 씬이 어떻게 회전해 있든 카메라는 **항상 노드의 '정면'을 응시**합니다."
             ]
           },
           {
             "title": "WebGL-DOM 이중 Ref 이벤트 처리",
             "items": [
-              "Why: WebGL Mesh와 DOM Label은 서로 다른 이벤트 루프를 타서 빠른 마우스 이동 시 hover 상태가 유실됩니다.",
-              "How: meshHoverRef, labelHoverRef를 별도 관리하고, mouseLeave 시 10ms setTimeout 후 둘 다 false면 hover 해제.",
-              "Impact: 기술적 한계로 인한 UI 깜빡임을 극복하고 매끄러운 포커싱 경험 제공."
+              "Why: WebGL Mesh와 DOM Label은 **서로 다른 이벤트 루프**를 타서 빠른 마우스 이동 시 **hover 상태가 유실**됩니다.",
+              "How: `meshHoverRef`, `labelHoverRef`를 **별도 관리**하고, `mouseLeave` 시 **10ms `setTimeout`** 후 둘 다 false면 hover 해제.",
+              "Impact: 기술적 한계로 인한 **UI 깜빡임을 극복**하고 매끌러운 포커싱 경험 제공."
             ]
           },
           {
             "title": "모바일 스와이프 각도 감지",
             "items": [
-              "Why: 세로 스크롤 시도 시 수평 스와이프가 민감하게 발동되어 의도치 않은 노드 전환 발생.",
-              "How: touchStartY, touchEndY 상태 추가. `deltaY > deltaX`면 스크롤로 판단하여 노드 순회 무시. 터치 종료 시에도 최종 방향 재확인.",
-              "Impact: 세로 스크롤과 수평 스와이프가 명확히 구분되어 모바일 터치 UX 대폭 개선."
+              "Why: 세로 스크롤 시도 시 수평 스와이프가 **민감하게 발동**되어 의도치 않은 노드 전환 발생.",
+              "How: `touchStartY`, `touchEndY` 상태 추가. `deltaY > deltaX`면 **스크롤로 판단**하여 노드 순회 무시. 터치 종료 시에도 최종 방향 재확인.",
+              "Impact: 세로 스크롤과 수평 스와이프가 **명확히 구분**되어 모바일 터치 UX 대폭 개선."
             ]
           },
           {
             "title": "거리 기반 적응형 모달 딜레이",
             "items": [
-              "Why: 1초 고정 딜레이는 가까운 노드에서는 느리고, 먼 노드에서는 즉시 열려 몰입감을 해칩니다.",
-              "How: `delay = Math.min(distance * 15, 800)` 공식으로 거리에 비례한 지연 시간 적용. 아주 가까우면 75ms 만에 즉시 반응.",
-              "Impact: 근거리 탐색 시 앱이 훨씬 '빠릿하다'고 느끼게 만들었습니다."
+              "Why: **1초 고정 딜레이**는 가까운 노드에서는 느리고, 먼 노드에서는 즉시 열려 몰입감을 해칩.",
+              "How: `delay = Math.min(distance * 15, 800)` 공식으로 **거리에 비례한 지연 시간** 적용. 아주 가까우면 **75ms 만에 즉시 반응**.",
+              "Impact: 근거리 탐색 시 **앱이 훨씬 '빠릿하다'고 느껴짐**."
             ]
           },
           {
             "title": "연결 노드 라벨 하이라이팅",
             "items": [
-              "Why: 복잡한 신경망에서 내가 선택한 노드가 어떤 스킬과 연결되었는지 파악하기 어렵습니다.",
-              "How: `isHighlighted` 상태를 전파하여, 프로젝트 노드 호버 시 연결된 모든 스킬 노드의 라벨을 재귀적으로 노출.",
-              "Impact: 사용자가 노드 간의 관계를 직관적으로 파악할 수 있게 되었습니다."
+              "Why: 복잡한 신경망에서 **내가 선택한 노드가 어떤 스킬과 연결되었는지** 파악하기 어려움.",
+              "How: `isHighlighted` 상태를 전파하여, 프로젝트 노드 호버 시 연결된 **모든 스킬 노드의 라벨을 재귀적으로 노출**.",
+              "Impact: 사용자가 노드 간의 관계를 **직관적으로 파악**할 수 있게 되었습니다."
             ]
           }
         ],
         "challenges": [
           {
             "title": "3D 좌표계와 카메라 오리엔테이션 동기화",
-            "problem": "테마 전환 시 씬이 180° 회전한 상태에서, 노드 클릭 시 카메라가 노드의 뒤통수를 비추는 치명적 UX 결함이 발생했습니다.",
-            "solution": "단순 이동 대신 '시선(LookAt)'을 제어했습니다. 현재 sceneRotation을 읽어 카메라 오프셋 벡터를 같은 각도로 회전시켜, 씬의 회전 상태와 무관하게 항상 노드 정면을 바라보도록 수학적으로 보정했습니다."
+            "problem": "테마 전환 시 씬이 **180° 회전**한 상태에서, 노드 클릭 시 카메라가 **노드의 뒤통수를 비추는 치명적 UX 결함**이 발생했습니다.",
+            "solution": "단순 이동 대신 **'시선(LookAt)'을 제어**했습니다. 현재 `sceneRotation`을 읽어 **카메라 오프셋 벡터를 같은 각도로 회전**시켜, 씬의 회전 상태와 무관하게 항상 노드 정면을 바라보도록 **수학적으로 보정**했습니다."
           },
           {
             "title": "WebGL + DOM 하이브리드 렌더링의 이벤트 소실",
-            "problem": "HTML 라벨은 DOM 요소이므로 WebGL mouseleave 이벤트와 미세한 시차가 존재합니다. Mesh에서 Label로 마우스 이동 시 0.01초 동안 'hover 없음' 상태가 되어 깜빡이는 UX 결함이 발생했습니다.",
-            "solution": "React 비동기 업데이트를 신뢰하는 대신, useRef로 Mesh/Label hover 상태를 즉시(Synchronous) 캡처하고, 10ms setTimeout 후 '둘 다 false면 hover 해제'하는 Dual Ref 패턴을 고안했습니다."
+            "problem": "HTML 라벨은 DOM 요소이므로 WebGL `mouseleave` 이벤트와 **미세한 시차**가 존재합니다. Mesh에서 Label로 마우스 이동 시 **0.01초 동안 'hover 없음' 상태**가 되어 깜빡이는 UX 결함이 발생했습니다.",
+            "solution": "React 비동기 업데이트를 신뢰하는 대신, `useRef`로 Mesh/Label hover 상태를 **즉시(Synchronous) 캐프처**하고, **10ms `setTimeout`** 후 '둘 다 false면 hover 해제'하는 **Dual Ref 패턴**을 고안했습니다."
           },
           {
             "title": "테마별 Post-processing 밸런싱",
-            "problem": "다크 모드에서 아름다운 Bloom 효과가 라이트 모드에서는 화면 전체를 하얗게 날려버리는(Whiteout) 시각적 문제를 일으켰습니다.",
-            "solution": "테마 전환은 단순 색상 변경이 아니라 '빛의 물리적 특성'이 바뀌는 것입니다. theme 상태에 따라 Bloom의 threshold, intensity를 동적으로 조절하고, THREE.MathUtils.lerp()로 부드럽게 보간하여 어떤 조명 환경에서도 가독성과 심미성을 유지했습니다."
+            "problem": "다크 모드에서 아름다운 **Bloom 효과**가 라이트 모드에서는 화면 전체를 하얗게 날려버리는(**Whiteout**) 시각적 문제를 일으켰습니다.",
+            "solution": "테마 전환은 단순 색상 변경이 아니라 **'빛의 물리적 특성'이 바뀌는 것**입니다. theme 상태에 따라 **Bloom의 threshold, intensity를 동적으로 조절**하고, `THREE.MathUtils.lerp()`로 부드럽게 보간하여 어떤 조명 환경에서도 가독성과 심미성을 유지했습니다."
           },
           {
             "title": "물리 엔진 초기 발산(Explosion) 현상",
-            "problem": "d3-force 시뮬레이션 시작 시 노드들이 랜덤 위치에서 폭발적으로 흩어졌다가 서서히 안정화되는데, 이 과정이 사용자에게 노출되면 '불안정한 앱'으로 인식됩니다.",
-            "solution": "렌더링 전에 동기적으로 300회 tick()을 실행하여 시뮬레이션을 '사전에 완료'시킵니다. 사용자는 이미 안정화된 레이아웃만 보게 되어 첫인상의 완성도를 높였습니다."
+            "problem": "`d3-force` 시뮬레이션 시작 시 노드들이 **랜덤 위치에서 폭발적으로 흩어졌다가 서서히 안정화**되는데, 이 과정이 사용자에게 노출되면 **'불안정한 앱'으로 인식**됩니다.",
+            "solution": "렌더링 전에 **동기적으로 300회 `tick()`을 실행**하여 시뮬레이션을 '사전에 완료'시킵니다. 사용자는 **이미 안정화된 레이아웃만 보게 되어** 첫인상의 완성도를 높였습니다."
           },
           {
             "title": "노드 상세보기 vs 전체 맥락 유지",
@@ -729,7 +729,7 @@
         "learnings": [
           {
             "title": "라이브러리 그 이상의 엔지니어링",
-            "content": "d3-force나 R3F를 API대로 사용하는 것을 넘어, 물리 엔진 초기화 시점(Warm-up)을 직접 제어하고 수학 공식(Cubic Easing)을 애니메이션 루프에 주입하는 등 '블랙박스'를 열고 커스터마이징할 때 비로소 진정한 퀄리티가 나온다는 것을 배웠습니다."
+            "content": "`d3-force`나 `R3F`를 API대로 사용하는 것을 넘어, **물리 엔진 초기화 시점(Warm-up)**을 직접 제어하고 **수학 공식(Cubic Easing)**을 애니메이션 루프에 주입하는 등 **'블랙박스'를 열고 커스터마이징**할 때 비로소 진정한 퀄리티가 나온다는 것을 배웠습니다."
           },
           {
             "title": "3D 인터페이스의 정보 밀도와 Subtraction의 미학",
@@ -745,11 +745,11 @@
           },
           {
             "title": "감각으로 전달되는 성능 최적화",
-            "content": "사용자는 코드를 보지 않지만, 10ms의 hover 지연과 60fps의 카메라 움직임에서 '완성도'를 느낍니다. Dual Ref 패턴과 Transient Update 같은 최적화가 단순 기술 과시가 아닌, 사용자에게 '매끄럽고 기분 좋은 경험'을 선사하는 핵심 UX 요소임을 깨달았습니다."
+            "content": "사용자는 코드를 보지 않지만, **10ms의 hover 지연**과 **60fps의 카메라 움직임**에서 '완성도'를 느낍니다. **Dual Ref 패턴**과 **Transient Update** 같은 최적화가 단순 기술 과시가 아닌, 사용자에게 **'매끌럽고 기분 좋은 경험'**을 선사하는 핵심 UX 요소임을 깨달았습니다."
           },
           {
             "title": "그래프 알고리즘의 실전 적용",
-            "content": "대학에서 배운 BFS 알고리즘이 실제 프로덕트에서 '필터링된 노드 간 관계 유지'라는 UX 문제를 해결하는 핵심 도구가 되었습니다. CS 기초 지식이 단순 면접용을 넘어, 사용자 경험을 개선하는 실질적 무기가 된다는 것을 체감했습니다."
+            "content": "대학에서 배운 **BFS 알고리즘**이 실제 프로덕트에서 **'필터링된 노드 간 관계 유지'**라는 UX 문제를 해결하는 핵심 도구가 되었습니다. **CS 기초 지식**이 단순 면접용을 넘어, **사용자 경험을 개선하는 실질적 무기**가 된다는 것을 체감했습니다."
           },
           {
             "title": "터치 제스처의 '의도' 해석",

@@ -527,16 +527,16 @@
       "label": "Neural Portfolio",
       "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
       "details": {
-        "description": "The portfolio you are viewing now! A 3D neural network-based portfolio visualizing interconnected projects instead of a static sitemap. Focusing on 'seamless 60fps experience' and 'intuitive navigation UX' rather than just 'pretty 3D', I incorporated engineering depth such as d3-force physics engine, Custom Cubic Easing animations, and Dual Ref event handling.",
+        "description": "The portfolio you are viewing now! A **3D neural network-based portfolio** visualizing interconnected projects instead of a static sitemap. Focusing on **'seamless 60fps experience'** and **'intuitive navigation UX'** rather than just 'pretty 3D', I incorporated engineering depth such as `d3-force` physics engine, **Custom Cubic Easing animations**, and **Dual Ref event handling**.",
         "link": "https://github.com/sleepyMS/MS-Mind",
         "coreFeatures": [
-          "⚡ 300-tick Warm-up: Prevent explosion on physics init. Pre-calculate synchronously before render for 'balanced neural network' start",
-          "🎥 Custom Cubic Easing Camera: Implemented easeInOutCubic math manually without libs. Reverse-calculate sceneRotation to always face node front",
-          "🔄 180° Theme Rotation: 180° scene rotation animation on theme switch + dynamic interpolation of Bloom/Vignette expressing 'Space→Sky' narrative",
-          "🖱️ Dual Ref Hover Handling: Overcome event lag between WebGL Mesh and DOM Label. 10ms debounce prevents focus loss",
-          "📊 Zustand Transient Update: Minimize React re-renders in 60fps loop. Mutate animation vars directly via useRef to prevent frame drops",
-          "🔗 BFS Indirect Path Finding: Visualize hidden connections between filtered nodes via BFS. Maintain context",
-          "📱 Swipe Angle Detection: Compare vertical/horizontal delta to distinguish scroll vs node traversal. Improved mobile UX"
+          "⚡ **300-tick Warm-up**: Prevent **explosion on physics init**. Pre-calculate synchronously before render for **'balanced neural network' instant start**",
+          "🎥 **Custom Cubic Easing Camera**: Implemented `easeInOutCubic` math manually without libs. Reverse-calculate `sceneRotation` to always **face node front**",
+          "🔄 **180° Theme Rotation**: **180° scene rotation animation** on theme switch + **dynamic interpolation of Bloom/Vignette** expressing 'Space→Sky' narrative",
+          "🖱️ **Dual Ref Hover Handling**: Overcome **event lag between WebGL Mesh and DOM Label**. **10ms debounce** prevents focus loss",
+          "📊 **Zustand Transient Update**: Minimize React re-renders in **60fps loop**. Mutate animation vars directly via `useRef` to **prevent frame drops**",
+          "🔗 **BFS Indirect Path Finding**: Visualize hidden connections between filtered nodes via **BFS**. Render as **dotted lines** to maintain context",
+          "📱 **Swipe Angle Detection**: Compare vertical/horizontal delta to **accurately distinguish scroll vs node traversal**. Improved mobile UX"
         ],
         "techStackDocs": [
           {
@@ -564,88 +564,88 @@
           {
             "title": "BFS Based Indirect Path Finding",
             "items": [
-              "Why: Category filters hide intermediate nodes, breaking visual connection clarity.",
-              "How: `findConnectedVisibleNodes()` uses BFS to find connected visible node pairs through hidden nodes. Guarantees shortest path via level traversal.",
-              "Impact: Maintains context by visualizing relationships as dotted lines even when filters are applied."
+              "Why: Category filters hide intermediate nodes, **breaking visual connection clarity**.",
+              "How: `findConnectedVisibleNodes()` uses **BFS** to find connected visible node pairs through hidden nodes. Guarantees **shortest path via level traversal**.",
+              "Impact: Maintains context by **visualizing relationships as dotted lines** even when filters are applied."
             ]
           },
           {
             "title": "Ref Based 60fps Animation Loop",
             "items": [
-              "Why: setState inside useFrame = 60fps × React Reconciler = Frame Drop.",
-              "How: Directly mutate ref with `animationRef.current.progress += delta`. Manipulate camera.position with lerpVectors(). Call setIsAnimating(false) only upon completion.",
-              "Impact: Guarantees seamless 60fps animation without React interference."
+              "Why: `setState` inside `useFrame` = **60fps × React Reconciler = Frame Drop**.",
+              "How: **Directly mutate ref** with `animationRef.current.progress += delta`. Manipulate `camera.position` with `lerpVectors()`. Call `setIsAnimating(false)` **only upon completion**.",
+              "Impact: Guarantees **seamless 60fps animation** without React interference."
             ]
           },
           {
             "title": "Physics Engine 300-tick Warm-up",
             "items": [
-              "Why: Visual noise of nodes jittering until physics stabilization ruins first impressions.",
-              "How: Execute 300 ticks of simulation synchronously via `for` loop before rendering. Memoize to prevent re-calculation.",
-              "Impact: User faces an instantly 'stabilized neural network', enhancing polish."
+              "Why: Visual noise of nodes **jittering until physics stabilization** ruins first impressions.",
+              "How: Execute **300 ticks synchronously** via `for` loop before rendering. **Memoize** to prevent re-calculation.",
+              "Impact: User faces an instantly **'stabilized neural network'**, enhancing polish."
             ]
           },
           {
             "title": "Inverse Scene Rotation Calculation",
             "items": [
-              "Why: Simple coordinate movement when scene is rotated shows the side/back of nodes.",
-              "How: Reverse-rotate camera offset to match scene rotation using `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`.",
-              "Impact: Camera always faces the 'front' of the node regardless of scene rotation."
+              "Why: Simple coordinate movement when scene is rotated shows **the side/back of nodes**.",
+              "How: **Reverse-rotate camera offset** to match scene rotation using `baseOffset.applyAxisAngle(new THREE.Vector3(0,1,0), sceneRotation)`.",
+              "Impact: Camera **always faces the 'front'** of the node regardless of scene rotation."
             ]
           },
           {
             "title": "WebGL-DOM Dual Ref Event Handling",
             "items": [
-              "Why: WebGL Mesh and DOM Label have different event loops, causing hover loss during fast movement.",
-              "How: Manage meshHoverRef and labelHoverRef separately. Clear hover only if both are false after 10ms setTimeout.",
-              "Impact: Overcome technical limitations to provide flicker-free, smooth focusing experience."
+              "Why: WebGL Mesh and DOM Label have **different event loops**, causing **hover loss during fast movement**.",
+              "How: Manage `meshHoverRef` and `labelHoverRef` **separately**. Clear hover only if **both are false after 10ms `setTimeout`**.",
+              "Impact: Overcome technical limitations to provide **flicker-free, smooth focusing experience**."
             ]
           },
           {
             "title": "Mobile Swipe Angle Detection",
             "items": [
-              "Why: Sensitive horizontal swipe triggers during vertical scroll caused unintended node traversal.",
-              "How: Track touchStartY/EndY. If `deltaY > deltaX`, judge as scroll and ignore node traversal. Re-check final direction on touch end.",
-              "Impact: Clearly distinguishes vertical scroll from horizontal swipe, drastically improving mobile UX."
+              "Why: Sensitive horizontal swipe **triggers during vertical scroll** caused unintended node traversal.",
+              "How: Track `touchStartY`/`EndY`. If `deltaY > deltaX`, **judge as scroll** and ignore node traversal. Re-check final direction on touch end.",
+              "Impact: **Clearly distinguishes** vertical scroll from horizontal swipe, **drastically improving mobile UX**."
             ]
           },
           {
             "title": "Distance-Based Adaptive Modal Delay",
             "items": [
-              "Why: Fixed 1s delay is slow for near nodes and too fast for far nodes, breaking immersion.",
-              "How: Apply delay proportional to distance: `delay = Math.min(distance * 15, 800)`. Instant reaction (75ms) for very close nodes.",
-              "Impact: Makes the app feel much 'snappier' during short-distance navigation."
+              "Why: **Fixed 1s delay** is slow for near nodes and too fast for far nodes, breaking immersion.",
+              "How: Apply delay **proportional to distance**: `delay = Math.min(distance * 15, 800)`. **Instant reaction (75ms)** for very close nodes.",
+              "Impact: Makes the app feel much **'snappier'** during short-distance navigation."
             ]
           },
           {
             "title": "Connected Node Label Highlighting",
             "items": [
-              "Why: Hard to grasp connections in a complex network.",
-              "How: Propagate `isHighlighted` state to recursively reveal labels of all skill nodes connected to a hovered project node.",
-              "Impact: Users can intuitively grasp relationships between nodes."
+              "Why: **Hard to grasp connections** in a complex network.",
+              "How: Propagate `isHighlighted` state to **recursively reveal labels** of all skill nodes connected to a hovered project node.",
+              "Impact: Users can **intuitively grasp relationships** between nodes."
             ]
           }
         ],
         "challenges": [
           {
             "title": "3D Coordinate & Camera Orientation Sync",
-            "problem": "Clicking a node when the scene was rotated 180° caused the camera to view the back of the node.",
-            "solution": "Controlled 'LookAt' instead of just movement. Read current sceneRotation and rotated camera offset vector by the same angle to mathematically ensure it always faces the node front."
+            "problem": "Clicking a node when the scene was **rotated 180°** caused the camera to **view the back of the node**.",
+            "solution": "Controlled **'LookAt'** instead of just movement. Read current `sceneRotation` and **rotated camera offset vector by the same angle** to **mathematically ensure it always faces the node front**."
           },
           {
             "title": "Event Loss in WebGL + DOM Hybrid Rendering",
-            "problem": "HTML labels are DOM elements, creating a gap from WebGL mouseleave events. Moving mouse from Mesh to Label caused a 0.01s 'no hover' state, causing flickering.",
-            "solution": "Devised Dual Ref pattern: Capture Mesh/Label hover state synchronously via useRef, and clear hover only if 'both are false' after 10ms setTimeout, instead of relying on async React updates."
+            "problem": "HTML labels are DOM elements, creating a gap from WebGL `mouseleave` events. Moving mouse from Mesh to Label caused a **0.01s 'no hover' state**, causing **flickering**.",
+            "solution": "Devised **Dual Ref pattern**: Capture Mesh/Label hover state **synchronously via `useRef`**, and clear hover only if **'both are false' after 10ms `setTimeout`**, instead of relying on async React updates."
           },
           {
             "title": "Balancing Post-processing per Theme",
-            "problem": "Beautiful Bloom in Dark Mode caused Whiteout in Light Mode.",
-            "solution": "Theme switch changes 'physical properties of light'. Dynamically adjusted Bloom threshold/intensity based on theme and interpolated with THREE.MathUtils.lerp() to maintain readability and aesthetics in any lighting."
+            "problem": "Beautiful **Bloom in Dark Mode** caused **Whiteout in Light Mode**.",
+            "solution": "Theme switch changes **'physical properties of light'**. Dynamically adjusted **Bloom threshold/intensity** based on theme and interpolated with `THREE.MathUtils.lerp()` to maintain readability and aesthetics in any lighting."
           },
           {
             "title": "Physics Engine Initial Explosion",
-            "problem": "d3-force simulation starts with nodes exploding from random positions, looking unstable.",
-            "solution": "Run 300 ticks() synchronously before render to 'pre-complete' simulation. User only sees the stabilized layout."
+            "problem": "`d3-force` simulation starts with nodes **exploding from random positions**, looking **unstable**.",
+            "solution": "Run **300 `tick()` synchronously before render** to 'pre-complete' simulation. User **only sees the stabilized layout**."
           },
           {
             "title": "Node Detail vs Context Maintenance",
@@ -727,7 +727,7 @@
         "learnings": [
           {
             "title": "Engineering Beyond Libraries",
-            "content": "I learned that true quality comes from opening the 'black box' and customizing it—controlling physics engine warm-up, injecting math formulas into animation loops—rather than just using APIs as provided."
+            "content": "I learned that **true quality comes from opening the 'black box'** and customizing it—controlling **physics engine warm-up**, injecting **math formulas into animation loops**—rather than just using APIs as provided."
           },
           {
             "title": "Information Density in 3D & Aesthetics of Subtraction",
@@ -743,11 +743,11 @@
           },
           {
             "title": "Optimization Felt Through Senses",
-            "content": "Users don't see code, but they feel 'polish' in 10ms hover delays and 60fps movement. Learned that optimizations like Dual Ref pattern and Transient Updates are core UX elements that provide a 'smooth, pleasant experience', not just technical showing off."
+            "content": "Users don't see code, but they feel 'polish' in **10ms hover delays** and **60fps movement**. Learned that optimizations like **Dual Ref pattern** and **Transient Updates** are **core UX elements** that provide a **'smooth, pleasant experience'**, not just technical showing off."
           },
           {
             "title": "Practical Application of Graph Algorithms",
-            "content": "BFS algorithm learned in college became a key tool solving the 'maintain filtered node relationships' UX problem. Experienced CS fundamentals becoming practical weapons for UX improvement."
+            "content": "**BFS algorithm** learned in college became a key tool solving the **'maintain filtered node relationships'** UX problem. Experienced **CS fundamentals becoming practical weapons** for UX improvement."
           },
           {
             "title": "Interpreting Touch Gesture 'Intent'",

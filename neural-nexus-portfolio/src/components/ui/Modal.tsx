@@ -122,9 +122,10 @@ export function Modal() {
    */
   const parseInlineMarkdown = (
     text: string,
-    options?: { codeColor?: string }
+    options?: { codeColor?: string; boldCode?: boolean }
   ) => {
     const codeColor = options?.codeColor || nodeColor;
+    const boldCode = options?.boldCode || false;
     const parts: React.ReactNode[] = [];
     let key = 0;
 
@@ -142,30 +143,37 @@ export function Modal() {
       if (match[1]) {
         // **볼드**
         parts.push(
-          <strong
-            key={key++}
-            style={{ color: isDark ? "#fff" : "#111", fontWeight: 600 }}
-          >
+          <strong key={key++} style={{ color: codeColor, fontWeight: 700 }}>
             {match[2]}
           </strong>
         );
       } else if (match[3]) {
-        // `코드`
-        parts.push(
-          <code
-            key={key++}
-            style={{
-              background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
-              color: codeColor,
-              padding: "1px 6px",
-              borderRadius: "4px",
-              fontSize: "0.9em",
-              fontFamily: "monospace",
-            }}
-          >
-            {match[4]}
-          </code>
-        );
+        // `코드` - boldCode 옵션이 true면 볼드+색상으로 렌더링
+        if (boldCode) {
+          parts.push(
+            <strong key={key++} style={{ color: codeColor, fontWeight: 700 }}>
+              {match[4]}
+            </strong>
+          );
+        } else {
+          parts.push(
+            <code
+              key={key++}
+              style={{
+                background: isDark
+                  ? "rgba(255,255,255,0.1)"
+                  : "rgba(0,0,0,0.06)",
+                color: codeColor,
+                padding: "1px 6px",
+                borderRadius: "4px",
+                fontSize: "0.9em",
+                fontFamily: "monospace",
+              }}
+            >
+              {match[4]}
+            </code>
+          );
+        }
       } else if (match[5]) {
         // [링크](URL)
         parts.push(
@@ -2065,12 +2073,16 @@ export function Modal() {
                             color: isDark ? "rgba(255,255,255,0.9)" : "#1f2937",
                           }}
                         >
-                          <span className="text-cyan-400 shrink-0 mt-[2px]">
+                          <span
+                            className="shrink-0 mt-[2px]"
+                            style={{ color: nodeColor }}
+                          >
                             ✓
                           </span>
                           <div className="flex-1 leading-relaxed">
                             {parseInlineMarkdown(feature, {
-                              codeColor: "#22d3ee",
+                              codeColor: nodeColor,
+                              boldCode: true,
                             })}
                           </div>
                         </li>
