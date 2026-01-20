@@ -143,11 +143,15 @@
             ]
           }
         ],
-        "awards": [
+        "publications": [
           {
-            "date": "2024.11",
-            "title": "ACK 2024 학술대회 최우수 논문상",
-            "issuer": "한국정보과학회"
+            "date": "2025",
+            "title": "LSTM 기반 고가·저가 예측 모델을 활용한 암호화폐 선물거래 시스템",
+            "journal": "Journal of Platform Technology (JPT)",
+            "volume": "vol.13, no.4, pp. 31-39",
+            "doi": "10.23023/JPT.2025.13.4.031",
+            "issuer": "아이씨티플랫폼학회",
+            "indexed": "KCI 등재"
           }
         ]
       },

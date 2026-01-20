@@ -158,11 +158,15 @@
             ]
           }
         ],
-        "awards": [
+        "publications": [
           {
-            "date": "Nov 2024",
-            "title": "ACK 2024 Conference Best Paper Award",
-            "issuer": "Korean Institute of Information Scientists and Engineers"
+            "date": "2025",
+            "title": "Cryptocurrency Futures Trading System Utilizing an LSTM-based High and Low Price Prediction Model",
+            "journal": "Journal of Platform Technology (JPT)",
+            "volume": "vol.13, no.4, pp. 31-39",
+            "doi": "10.23023/JPT.2025.13.4.031",
+            "issuer": "ICT Platform Society",
+            "indexed": "KCI Indexed"
           }
         ]
       },
