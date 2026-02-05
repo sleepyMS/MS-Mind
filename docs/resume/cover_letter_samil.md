@@ -141,7 +141,38 @@ Google Antigravity와 MCP 도구(Context7, Sequential Thinking)를 연동하여 
 
 ---
 
-## 7. 입사 지원 동기
+## 7. 주요경력 및 앞으로 이루고 싶은 Vision
+
+### [주요경력]
+
+**1. Cortex - AI 기반 퀀트 투자 플랫폼 (1인 풀스택 개발)**
+
+개인 투자자를 위한 데이터 기반 퀀트 투자 및 자동매매 플랫폼을 설계부터 배포까지 독자적으로 개발했습니다.
+
+- **Backend**: FastAPI, SQLAlchemy, Alembic, Celery, Redis, PostgreSQL, TimescaleDB
+- **Frontend**: React, Next.js, TypeScript, Tailwind CSS, Zustand, TanStack Query
+- **AI/ML**: PyTorch, ONNX Runtime, Optuna TPE 베이지안 최적화, Triple Barrier 라벨링
+- **핵심 성과**: 벡터 연산으로 백테스팅 98% 성능 향상(45초→0.8초), CPU/IO 워커 분리로 실시간 매매 안정성 확보, 복식부기 크레딧 시스템으로 완전한 감사 추적성 구현
+- **특허출원 진행 중**: AI 로직 블록 시스템(노코드 환경에서 복합 투자 전략 구성, 이중 모드 신호 평가 엔진)
+
+**2. 강냉봇 - AI 시간표 생성 챗봇 (프론트엔드 및 LLM RAG 시스템 담당)**
+
+대학생을 위한 AI 시간표 생성 챗봇의 프론트엔드와 RAG 시스템을 담당했습니다.
+
+- **Frontend**: React, Next.js, TypeScript, Optimistic UI, Lock & Queue 패턴
+- **LLM RAG**: 대학 강의 데이터 기반 검색 증강 생성 파이프라인 설계
+
+### [앞으로 이루고 싶은 Vision]
+
+**"복잡한 도메인 로직을 우아한 시스템으로 녹여내는 아키텍트"**가 되고 싶습니다.
+
+단기적으로는 삼일회계법인에서 **회계·감사 도메인의 복잡한 비즈니스 로직**을 이해하고, 이를 안정적이고 확장 가능한 시스템으로 구현하는 경험을 쌓고 싶습니다. 특히 Cortex에서 구현한 복식부기 시스템, 데이터 정합성 보장, 감사 추적 경험을 회계법인의 실제 시스템에 적용하며 도메인 전문성을 키우고 싶습니다.
+
+장기적으로는 **기술적 의견을 제시하고 팀의 기술적 방향성을 이끄는 리더**로 성장하고 싶습니다. "왜 이 기술을 선택했는가", "어떤 트레이드오프를 감수했는가"를 명확히 설명하고, 팀원들과 함께 최적의 솔루션을 찾아가는 엔지니어가 되겠습니다.
+
+---
+
+## 8. 입사 지원 동기
 
 삼일회계법인이 **웹 애플리케이션의 프론트엔드와 백엔드 전 과정을 다루는 풀스택 개발자**를 찾고 있다는 점이 저의 경험과 정확히 일치합니다.
 
@@ -151,7 +182,7 @@ Google Antigravity와 MCP 도구(Context7, Sequential Thinking)를 연동하여 
 
 ---
 
-## 8. 핵심 기술 스택
+## 9. 핵심 기술 스택
 
 | 분류          | 기술                                                              |
 | ------------- | ----------------------------------------------------------------- |
@@ -164,7 +195,7 @@ Google Antigravity와 MCP 도구(Context7, Sequential Thinking)를 연동하여 
 
 ---
 
-## 9. 관련 프로젝트
+## 10. 관련 프로젝트
 
 - **[Cortex](https://github.com/sleepyMS/Cortex)**: AI 기반 퀀트 투자·자동매매 플랫폼 (1인 풀스택 개발)
 - **[강냉봇](https://github.com/sleepyMS/KangNaengBot-FE)**: AI 시간표 생성 챗봇 (프론트엔드 + RAG 시스템 담당)
