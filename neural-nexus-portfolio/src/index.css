@@ -51,7 +51,6 @@
 [data-theme="light"] {
   /* 배경 - 하늘색 그라데이션 */
   --bg-primary: #87ceeb;
-  /* 사이드바 등 UI 배경: 깔끔한 화이트/글래스 톤으로 수정 */
   --bg-secondary: rgba(255, 255, 255, 0.85);
   --bg-tertiary: rgba(240, 248, 255, 0.9);
 
@@ -106,13 +105,23 @@ body,
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background 0.5s ease, color 0.3s ease;
+  transition:
+    background 0.5s ease,
+    color 0.3s ease;
 }
 
 /* Custom scrollbar for modal */
@@ -159,10 +168,14 @@ canvas {
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 20px var(--color-primary), 0 0 40px var(--color-primary);
+    box-shadow:
+      0 0 20px var(--color-primary),
+      0 0 40px var(--color-primary);
   }
   50% {
-    box-shadow: 0 0 30px var(--color-primary), 0 0 60px var(--color-secondary);
+    box-shadow:
+      0 0 30px var(--color-primary),
+      0 0 60px var(--color-secondary);
   }
 }
 
