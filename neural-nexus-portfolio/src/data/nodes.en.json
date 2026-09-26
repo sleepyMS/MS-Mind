@@ -5,16 +5,17 @@
       "type": "main",
       "label": "Min Seok",
       "connections": [
+        "project-slow-brain-fast-hands",
+        "project-design-tool",
+        "skill-ai-development",
         "project-chatbot",
         "project-portfolio",
-        "project-processing",
         "project-cortex",
-        "project-cortex-fe",
         "project-paper-lstm",
         "project-paper-tft"
       ],
       "details": {
-        "description": "Hello! I'm Min Seok Choi, a 'Digital Architect' who builds spaces (Frontend) where users feel most comfortable, adding meticulous finishing touches on top of solid systems and structural design (Backend).\n\nFrom the stability of the invisible framework to the 1-pixel details at users' fingertips, I design perfect service experiences with precision construction that tolerates no margin of error.",
+        "description": "Hello, I'm Min Seok Choi, a developer who uses AI to turn ideas into working software. I connect backend execution with user interfaces, using Codex and Claude Code for implementation, debugging, and verification.\n\nI use my local Qwen3.8 27B investment automation system, Slow Brain, Fast Hands, for personal investing. I am also building a design application using Jev.",
         "personalInfo": [
           {
             "key": "name",
@@ -39,9 +40,9 @@
         ],
         "philosophy": {
           "title": "Deep Dive & Wide View",
-          "content": "I pursue the balance between 'Deep Dive' into specific technologies and 'Wide View' of the entire system. Beyond simply writing code, I aim to be a generalist who understands business objectives and designs optimal architectures."
+          "content": "I balance a 'Deep Dive' into individual problems with a 'Wide View' of the whole system. I define the problem and constraints first, then verify and improve what I build with AI through execution and testing."
         },
-        "extendedBio": "Just as great buildings can only embrace people when built on solid foundations, I believe software can only begin to care for users when built on robust backend systems.\n\nThe frontend I envision is not just about appearances, but a process of determining the temperature of the space users inhabit through 'meticulous finishing.' This is the core of 'spatial experience (UX) design' that helps users achieve their goals most intuitively and comfortably.\n\nJust as a 1mm error threatens a building's stability, I guard against complacency in every line of code, 'constructing' digital spaces where structural stability and aesthetic comfort coexist. And I add AI technology to make these spaces transcend mere structures, becoming living organisms that anticipate and respond to user intent.",
+        "extendedBio": "I am interested in connecting repetitive tasks through software and creating interfaces that help people understand and use the results. My work on an AI chatbot, a quant platform, and a 3D portfolio brings together data processing and user experience.\n\nI am currently developing Slow Brain, Fast Hands with Codex and Claude Code. I document requirements and design decisions, then test both normal behavior and failure conditions. A separate gateway checks order limits and execution conditions when connecting local LLM tool calls to trading operations.\n\nI use the system for personal investing while continuing to verify and improve its individual features. I am also extending my experience with AI development by building a design application using Jev.",
         "profile": {
           "education": [
             {
@@ -84,7 +85,13 @@
             },
             {
               "category": "Backend",
-              "items": ["FastAPI", "NestJS", "Node.js", "Django", "Spring Boot"]
+              "items": [
+                "FastAPI",
+                "NestJS",
+                "Node.js",
+                "Django",
+                "Spring Boot"
+              ]
             },
             {
               "category": "Data & ML",
@@ -95,6 +102,16 @@
                 "TensorFlow",
                 "PyTorch",
                 "Pandas"
+              ]
+            },
+            {
+              "category": "AI & Automation",
+              "items": [
+                "Codex",
+                "Claude Code",
+                "Jev",
+                "Qwen3.8 27B",
+                "LangGraph"
               ]
             },
             {
@@ -111,31 +128,68 @@
         },
         "keyProjects": [
           {
-            "id": "project-cortex",
-            "title": "Cortex (Backend)",
-            "desc": "A quant platform that trains AI to create custom investment strategies and executes 24/7 automated trading",
-            "tech": ["FastAPI", "TimescaleDB", "Celery", "Redis"]
+            "id": "project-slow-brain-fast-hands",
+            "title": "Slow Brain, Fast Hands",
+            "desc": "Local Qwen3.8 27B investment automation, used for personal investing with ongoing feature verification and improvement",
+            "tech": [
+              "Python",
+              "LangGraph",
+              "Next.js",
+              "Qwen3.8 27B"
+            ]
           },
           {
-            "id": "project-cortex-fe",
-            "title": "Cortex (Frontend)",
-            "desc": "An all-in-one investment platform for designing AI models without coding, from backtesting to automated trading",
-            "tech": ["Next.js", "TypeScript", "Zustand", "TanStack Query"]
+            "id": "project-design-tool",
+            "title": "Design Application (In Progress)",
+            "desc": "A design application under development using Jev",
+            "tech": [
+              "Jev"
+            ]
+          },
+          {
+            "id": "project-cortex",
+            "title": "Cortex",
+            "desc": "A full-stack quant platform connecting strategy design, AI training, backtesting, automated trading, and a live dashboard",
+            "tech": [
+              "Next.js",
+              "TypeScript",
+              "FastAPI",
+              "PyTorch",
+              "Celery",
+              "TimescaleDB"
+            ]
           },
           {
             "id": "project-chatbot",
             "title": "KangNaengBot (Frontend)",
             "desc": "A university AI chatbot service achieving **0ms perceived latency** and featuring **AI Timetable Generation** via API-First development",
-            "tech": ["React", "TypeScript", "Zustand", "TailwindCSS"]
+            "tech": [
+              "React",
+              "TypeScript",
+              "Zustand",
+              "TailwindCSS"
+            ]
           },
           {
             "id": "project-portfolio",
             "title": "Neural Portfolio (Frontend)",
             "desc": "A 3D interactive portfolio exploring projects connected like neurons",
-            "tech": ["R3F", "Three.js", "d3-force", "React"]
+            "tech": [
+              "R3F",
+              "Three.js",
+              "d3-force",
+              "React"
+            ]
           }
         ],
         "researchInterests": [
+          {
+            "category": "AI Orchestration & Verification",
+            "items": [
+              "Separating local LLM tool calls from execution authority",
+              "Evaluating strategies with data available at the time and trading costs"
+            ]
+          },
           {
             "category": "Time Series Forecasting",
             "items": [
@@ -171,6 +225,161 @@
         ]
       },
       "color": "#00ffff"
+    },
+    {
+      "id": "project-slow-brain-fast-hands",
+      "type": "project",
+      "category": "ai-ml",
+      "label": "Slow Brain, Fast Hands",
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-nextjs",
+        "skill-typescript",
+        "skill-ai-development",
+        "skill-local-llm",
+        "skill-langgraph"
+      ],
+      "details": {
+        "description": "A personal investment automation system connecting market data collection, strategy research and backtesting, order controls, and operational monitoring. A local Qwen3.8 27B model calls tools, while a separate gateway checks order limits and execution conditions.\n\nDeveloped with Codex and Claude Code and used for personal investing. Its outputs include data collectors, a backtesting engine, a tool gateway, and a web console, with ongoing verification and improvement of individual features.",
+        "technologies": [
+          "Python",
+          "LangGraph",
+          "Qwen3.8 27B",
+          "Next.js",
+          "TypeScript",
+          "SQLite"
+        ],
+        "coreFeatures": [
+          "Analysis and research through local LLM tool calls",
+          "Backtesting with point-in-time data and trading costs",
+          "A tool gateway that checks order limits and execution conditions",
+          "A web console for research progress, evaluation results, and system status"
+        ],
+        "features": [
+          {
+            "title": "Data Collection and Strategy Evaluation",
+            "items": [
+              "Point-in-time queries restrict evaluation to information available at each decision time",
+              "Backtesting includes fees, slippage, and the t+1-open execution convention",
+              "Strategy candidates and evaluation results are recorded to trace the research process"
+            ]
+          },
+          {
+            "title": "Execution Controls and Operational UI",
+            "items": [
+              "Gateway checks for order limits, execution conditions, and duplicate requests",
+              "Exchange key management through macOS Keychain and emergency stop controls",
+              "A web console for research and optimization progress and system status"
+            ]
+          },
+          {
+            "title": "AI Development and Current Status",
+            "items": [
+              "Codex and Claude Code support implementation, debugging, tests, and documentation",
+              "Local Qwen3.8 27B is connected to the system tool call flow",
+              "Used for personal investing while execution paths and automation coverage are verified and improved"
+            ]
+          }
+        ],
+        "techStackDocs": [
+          {
+            "name": "Qwen3.8 27B + LangGraph",
+            "description": "Connects local model tool calls with orchestration workflows."
+          },
+          {
+            "name": "Python + SQLite",
+            "description": "Supports data collection, backtesting, order controls, and persistence of research and operational state."
+          },
+          {
+            "name": "Next.js + TypeScript",
+            "description": "Provides a console that reads research progress and operational state through the gateway."
+          }
+        ],
+        "challenges": [
+          {
+            "title": "Connecting AI Decisions to Execution",
+            "problem": "Connecting model tool calls to orders required an execution boundary for invalid requests and limit violations.",
+            "solution": "Routed order requests through a tool gateway that checks limits, execution conditions, and duplicate requests in code."
+          },
+          {
+            "title": "Preventing Future Information in Strategy Evaluation",
+            "problem": "Assuming currently available data was known in the past, or omitting trading costs, makes evaluation unreliable.",
+            "solution": "Used point-in-time queries based on publication and observation times, with trading costs and the t+1-open execution convention."
+          }
+        ],
+        "learnings": [
+          {
+            "title": "Verify AI Development Through Execution",
+            "content": "Document requirements and design decisions, then verify missing data, duplicate requests, and communication failures alongside normal behavior."
+          },
+          {
+            "title": "Track Implementation and Operational Evidence",
+            "content": "Record implementation and verification scope for each feature, and turn problems observed during use into follow-up improvements."
+          }
+        ]
+      },
+      "color": "#10b981"
+    },
+    {
+      "id": "project-design-tool",
+      "type": "project",
+      "category": "creative",
+      "label": "Design Application (In Progress)",
+      "connections": [
+        "me"
+      ],
+      "details": {
+        "description": "A design application I am building using Jev. This ongoing project extends my experience with AI development into design software.",
+        "technologies": [
+          "Jev"
+        ],
+        "coreFeatures": [
+          "Design application under development",
+          "Development using Jev"
+        ]
+      },
+      "color": "#f59e0b"
+    },
+    {
+      "id": "skill-ai-development",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Codex / Claude Code",
+      "connections": [
+        "me",
+        "project-slow-brain-fast-hands"
+      ],
+      "details": {
+        "description": "I use Codex and Claude Code for implementation, debugging, tests, and documentation based on defined requirements and design decisions. I verify the results through execution."
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "skill-local-llm",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Qwen3.8 27B",
+      "connections": [
+        "project-slow-brain-fast-hands"
+      ],
+      "details": {
+        "description": "Connects local Qwen3.8 27B to tool calls in an investment automation system. Model requests go through gateway checks for limits and execution conditions."
+      },
+      "color": "#06b6d4"
+    },
+    {
+      "id": "skill-langgraph",
+      "type": "skill",
+      "skillCategory": "framework",
+      "label": "LangGraph",
+      "connections": [
+        "project-slow-brain-fast-hands"
+      ],
+      "details": {
+        "description": "Builds orchestration flows that connect local LLM tool calls and research tasks."
+      },
+      "color": "#8b5cf6"
     },
     {
       "id": "project-chatbot",
@@ -357,7 +566,12 @@
           {
             "title": "Quantitative UX Improvement Metrics",
             "description": "Maximized perceived performance using only frontend technologies in an LLM service where physically reducing server response speed is limited.",
-            "headers": ["Strategy (Pattern)", "Metric", "Before", "After"],
+            "headers": [
+              "Strategy (Pattern)",
+              "Metric",
+              "Before",
+              "After"
+            ],
             "rows": [
               [
                 "Client-Side Filtering",
@@ -365,9 +579,24 @@
                 "300ms",
                 "**0ms (Instant)** ⚡"
               ],
-              ["Dynamic Grid", "Space Efficiency", "Fixed", "**Adaptive** ⚡"],
-              ["API-First", "Dev Time", "3 Days", "**1 Day** ⚡"],
-              ["Optimistic UI", "Perceived Send Time", "1~2s", "0ms ⚡"],
+              [
+                "Dynamic Grid",
+                "Space Efficiency",
+                "Fixed",
+                "**Adaptive** ⚡"
+              ],
+              [
+                "API-First",
+                "Dev Time",
+                "3 Days",
+                "**1 Day** ⚡"
+              ],
+              [
+                "Optimistic UI",
+                "Perceived Send Time",
+                "1~2s",
+                "0ms ⚡"
+              ],
               [
                 "SWR + Prefetching",
                 "Session Switch Loading",
@@ -530,7 +759,12 @@
       "type": "project",
       "category": "frontend",
       "label": "Neural Portfolio",
-      "connections": ["me", "skill-threejs", "skill-react", "skill-gsap"],
+      "connections": [
+        "me",
+        "skill-threejs",
+        "skill-react",
+        "skill-gsap"
+      ],
       "details": {
         "description": "The portfolio you are viewing now! A **3D neural network-based portfolio** visualizing interconnected projects instead of a static sitemap. Focusing on **'seamless 60fps experience'** and **'intuitive navigation UX'** rather than just 'pretty 3D', I incorporated engineering depth such as `d3-force` physics engine, **Custom Cubic Easing animations**, and **Dual Ref event handling**.",
         "link": "https://github.com/sleepyMS/MS-Mind",
@@ -772,26 +1006,14 @@
       "color": "#c026d3"
     },
     {
-      "id": "project-processing",
-      "type": "project",
-      "category": "creative",
-      "label": "Processing Games",
-      "connections": ["me", "skill-processing", "skill-arduino"],
-      "details": {
-        "description": "Interactive game collection created with Processing. Connected hardware and software using Arduino joystick controls.",
-        "trouble": "Syncing Arduino input with game state and handling various game modes was difficult.",
-        "shooting": "Built a modular input system abstracting hardware control across all game modes.",
-        "lesson": "Hardware-software integration requires careful consideration of timing and state management.",
-        "technologies": ["Processing", "Arduino", "Java"]
-      },
-      "color": "#10b981"
-    },
-    {
       "id": "skill-react",
       "type": "skill",
       "skillCategory": "framework",
       "label": "React 19",
-      "connections": ["project-chatbot", "project-portfolio"],
+      "connections": [
+        "project-chatbot",
+        "project-portfolio"
+      ],
       "details": {
         "description": "UI library developed by Meta, supporting functional components with Hooks. Provides efficient rendering via declarative UI paradigm and Virtual DOM, suitable for large-scale apps with features like Concurrent Mode and Server Components."
       },
@@ -802,7 +1024,10 @@
       "type": "skill",
       "skillCategory": "language",
       "label": "TypeScript",
-      "connections": ["project-chatbot", "project-cortex-fe"],
+      "connections": [
+        "project-chatbot",
+        "project-cortex"
+      ],
       "details": {
         "description": "Superset of JavaScript by Microsoft, catching errors at compile time via static type checking. Improves stability and maintainability of large apps with strong type systems like interfaces, generics, and unions."
       },
@@ -813,7 +1038,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "Three.js / R3F",
-      "connections": ["project-portfolio"],
+      "connections": [
+        "project-portfolio"
+      ],
       "details": {
         "description": "WebGL-based 3D graphics library for high-quality 3D experiences in browsers. Declaratively integrable with React via R3F, supporting advanced graphics like custom shaders, post-processing, and physics engine integration."
       },
@@ -824,7 +1051,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "GSAP",
-      "connections": ["project-portfolio"],
+      "connections": [
+        "project-portfolio"
+      ],
       "details": {
         "description": "GreenSock Animation Platform, the most powerful JavaScript animation library for the web. Implements smooth, optimized animations via hardware acceleration, timeline sequencing, and ScrollTrigger."
       },
@@ -835,7 +1064,10 @@
       "type": "skill",
       "skillCategory": "language",
       "label": "Python",
-      "connections": ["project-cortex", "project-paper-lstm"],
+      "connections": [
+        "project-cortex",
+        "project-paper-lstm"
+      ],
       "details": {
         "description": "General-purpose programming language widely used in data analysis, machine learning, and backend development."
       },
@@ -846,40 +1078,22 @@
       "type": "skill",
       "skillCategory": "framework",
       "label": "FastAPI",
-      "connections": ["project-cortex"],
+      "connections": [
+        "project-cortex"
+      ],
       "details": {
         "description": "High-performance asynchronous web framework based on Python, providing automatic API documentation and type hint support."
       },
       "color": "#8b5cf6"
     },
     {
-      "id": "skill-processing",
-      "type": "skill",
-      "skillCategory": "language",
-      "label": "Processing",
-      "connections": ["project-processing"],
-      "details": {
-        "description": "Programming language and IDE for visual arts and creative coding developed by MIT Media Lab. Based on Java, it simplifies creation of interactive graphics, animations, and data visualizations."
-      },
-      "color": "#3b82f6"
-    },
-    {
-      "id": "skill-arduino",
-      "type": "skill",
-      "skillCategory": "tool",
-      "label": "Arduino",
-      "connections": ["project-processing"],
-      "details": {
-        "description": "Open-source hardware platform and microcontroller prototyping board. Controls sensors, motors, LEDs, widely used in IoT and interactive installations."
-      },
-      "color": "#f97316"
-    },
-    {
       "id": "skill-vite",
       "type": "skill",
       "skillCategory": "tool",
       "label": "Vite",
-      "connections": ["project-chatbot"],
+      "connections": [
+        "project-chatbot"
+      ],
       "details": {
         "description": "Next-generation frontend build tool providing lightning-fast dev server via ES Modules and HMR. Generates optimized production builds via Rollup, supporting frameworks like React, Vue, Svelte."
       },
@@ -890,7 +1104,10 @@
       "type": "skill",
       "skillCategory": "framework",
       "label": "TailwindCSS",
-      "connections": ["project-chatbot", "project-cortex-fe"],
+      "connections": [
+        "project-chatbot",
+        "project-cortex"
+      ],
       "details": {
         "description": "Utility-first CSS framework for rapid styling via predefined classes. JIT compiler generates minimal CSS by including only used classes, ideal for consistent design systems."
       },
@@ -901,7 +1118,10 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "Zustand",
-      "connections": ["project-chatbot", "project-cortex-fe"],
+      "connections": [
+        "project-chatbot",
+        "project-cortex"
+      ],
       "details": {
         "description": "Lightweight, fast React state management library. Less boilerplate than Redux, lower learning curve, and intuitive hook-based API. Handles complex nested state easily with Immer."
       },
@@ -912,7 +1132,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "Axios",
-      "connections": ["project-chatbot"],
+      "connections": [
+        "project-chatbot"
+      ],
       "details": {
         "description": "Promise-based HTTP client for browser and Node.js. Features interceptors, auto JSON transformation, cancellation, and timeouts for robust API communication."
       },
@@ -923,7 +1145,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "i18next",
-      "connections": ["project-chatbot"],
+      "connections": [
+        "project-chatbot"
+      ],
       "details": {
         "description": "Most widely used JS internationalization framework. Provides comprehensive features like resource management, pluralization, language detection, and lazy loading. Integrates with React, Vue, etc."
       },
@@ -932,8 +1156,8 @@
     {
       "id": "project-cortex",
       "type": "project",
-      "category": "backend",
-      "label": "Cortex-Backend",
+      "category": "ai-ml",
+      "label": "Cortex",
       "connections": [
         "me",
         "skill-python",
@@ -943,10 +1167,16 @@
         "skill-timescaledb",
         "skill-docker",
         "skill-postgresql",
-        "project-cortex-fe"
+        "skill-nextjs",
+        "skill-typescript",
+        "skill-tailwind",
+        "skill-zustand",
+        "skill-react-query",
+        "skill-recharts",
+        "skill-websocket"
       ],
       "details": {
-        "description": "A data-driven quant investment and automated trading platform for individual investors. The key challenge was not just building a CRUD API, but 'reliably processing real-time financial operations while querying millions of time-series data points in milliseconds'. I applied enterprise-grade architecture including physical separation of CPU/IO workers, Bayesian optimization, and a double-entry credit system.",
+        "description": "A full-stack quant investment platform connecting strategy design, AI model training, backtesting, optimization, and automated trading in one workflow for individual investors.\n\nI built both the Next.js strategy builder, charts, and live dashboard, and the FastAPI data processing, training, backtesting, and job queues. The implementation spans the user interface, time-series storage, asynchronous computation, and live progress updates.",
         "technologies": [
           "FastAPI",
           "PyTorch",
@@ -957,15 +1187,22 @@
           "TimescaleDB",
           "PostgreSQL",
           "Docker",
-          "Python 3.11"
+          "Python 3.11",
+          "Next.js 14 (App Router)",
+          "TypeScript 5",
+          "Tailwind CSS",
+          "Zustand + Immer",
+          "TanStack Query v5",
+          "React Hook Form + Zod",
+          "Lightweight Charts",
+          "Recharts",
+          "WebSocket"
         ],
         "coreFeatures": [
-          "🤖 AI Prediction Pipeline: GRU/LSTM based time-series classification (BUY/HOLD/SELL), Triple Barrier labeling, Autotuning hyperparameters with Optuna TPE, 30% inference speedup via PyTorch→ONNX conversion",
-          "⚡ Vectorized Backtesting: Reduced 1-year backtest from 45s to 0.8s (98% reduction) using NumPy/Pandas. Generator-based step-by-step execution allows intermediate Pruning via Optuna",
-          "🔧 Physical Separation of CPU/IO Workers: Segregated cpu_queue (prefork) and io_queue (gevent) to guarantee millisecond-level order execution even during heavy backtesting",
-          "📊 TimescaleDB Time-Series Optimization: Auto-chunk partitioning for hundreds of millions of OHLCV records. Composite index (ticker, time DESC) maintains query performance",
-          "💰 Double-Entry Credit System: Separation of Ledger (Creation) and Transaction (Consumption). Priority FIFO algorithm (Expiring → Free → Paid). Integrated history query via UNION ALL",
-          "🧠 WFO + Optuna Bayesian Optimization: Expanding Window split, TPE sampler focuses on promising parameters, MedianPruner early-stops bottom 50% trails"
+          "One workflow from a no-code strategy builder to backtesting, optimization, and automated trading",
+          "GRU/LSTM training, Triple Barrier labeling, and an ONNX inference pipeline",
+          "Separate Celery CPU/I/O queues and time-series processing with TimescaleDB",
+          "A Next.js dashboard with WebSocket progress, charts, and optimization results"
         ],
         "techStackDocs": [
           {
@@ -991,6 +1228,30 @@
           {
             "name": "Docker",
             "description": "Why Single Image? Adopted a strategy where API server, CPU worker, and I/O worker share the same codebase but use different execution commands (CMD). This reduced build time and solved version mismatch issues."
+          },
+          {
+            "name": "Next.js 14 (App Router)",
+            "description": "Why App Router? For a quant platform, dashboard code splitting and layout sharing are more important than SEO. Separated auth/non-auth layouts via Route Groups and improved FCP by 40% via dynamic import of 150KB chart libraries."
+          },
+          {
+            "name": "TypeScript + Discriminated Unions",
+            "description": "Why Union Types? Had to handle 7 logic blocks (Comparison, Crossover, State, TrendSignal, Channel, Divergence, Pattern) as a single type. Implemented automatic type inference via Discriminated Union on 'type' field, preventing runtime errors at compile time."
+          },
+          {
+            "name": "Zustand + Immer",
+            "description": "Why not Redux? Redux boilerplate is excessive for updating nested tree structures (blocks[].children[].children[]...). Used Immer for automatic immutability and implemented findAndModify utility to update only target nodes, reducing code by 70%."
+          },
+          {
+            "name": "TanStack Query v5",
+            "description": "Why Query over SWR? Needed complex cache manipulation. Implemented hybrid pattern: direct UI update via setQueryData on WebSocket message without API re-fetch, and full re-fetch via invalidateQueries only upon completion."
+          },
+          {
+            "name": "React Hook Form + Zod",
+            "description": "Why not Formik? Formik triggers full re-render on dynamic forms with 50+ condition blocks. Used useFieldArray to update only individual fields and Zod schema for type-safe validation of nested objects."
+          },
+          {
+            "name": "Lightweight Charts",
+            "description": "Why not D3/Recharts? Rendering tens of thousands of candles via SVG freezes the browser. Selected TradingView's Canvas-based library but avoided Virtual DOM overhead via React state separation and Imperative Update pattern."
           }
         ],
         "link": "https://github.com/sleepyMS/Cortex",
@@ -1069,6 +1330,54 @@
               "FastAPI server subscribes to channel and pushes to WebSocket client immediately upon receipt",
               "Provides smooth Progress UI without Polling and reduces server load"
             ]
+          },
+          {
+            "title": "Lock & Queue based Seamless Auth System",
+            "items": [
+              "Problem: 5 concurrent API calls on dashboard entry -> 5 401s -> 5 refresh requests -> Server detects as token theft -> Force Logout.",
+              "Solution: Introduced Lock & Queue via Axios Interceptor. Only first 401 attempts refresh; others wait in Promise Queue.",
+              "Result: Reduced refresh requests by 80% and provided seamless UX where users don't notice expiration."
+            ]
+          },
+          {
+            "title": "Encapsulated Chart Manager Hook",
+            "items": [
+              "Complexity: Multi-pane chart timeline sync, Bollinger/Keltner Channels, Ichimoku Clouds, Crosshair Legend sync, Theme switching.",
+              "Technique: Managed chart instances via useRef (Imperative Update) instead of React State, responsive via ResizeObserver.",
+              "Result: 50% faster chart loading, 60fps scrolling, zero memory leaks."
+            ]
+          },
+          {
+            "title": "Recursive No-Code Strategy Builder",
+            "items": [
+              "Challenge: Visually constructing complex logic like IF (A AND (B OR C)) without coding.",
+              "Implementation: Defined 7 logic blocks via Discriminated Union, infinite nesting via recursive components.",
+              "Zustand findAndModify: Optimized to O(N) by updating only target node via ID instead of full tree traversal."
+            ]
+          },
+          {
+            "title": "Custom Parallel Coordinates Visualization (ParallelCoordinatesChart)",
+            "items": [
+              "Goal: Visualize thousands of optimization Trials to find optimal parameter ranges at a glance.",
+              "Technique: Direct SVG rendering, data caching via useMemo, performance guarantee via top 300 sampling.",
+              "UX: Score-based color/opacity gradient, parameter details on hover."
+            ]
+          },
+          {
+            "title": "Parallel Data Fetching + Progressive Loading",
+            "items": [
+              "Pattern: Independent queries for [Core Info], [Chart Data], [Trade Logs] on Backtesting Detail page.",
+              "UX: Independent Skeleton UI per section, instant display of core metrics while chart loads (Non-blocking).",
+              "Tech: Controlled query order via TanStack Query 'enabled' option."
+            ]
+          },
+          {
+            "title": "Clear Separation of Server/Client State",
+            "items": [
+              "Principle: Select tool based on 'Source' and 'Frequency' of data.",
+              "Server State (TanStack Query): API Data (Backtest, User) - Caching, Revalidation, Error Handling.",
+              "Client State (Zustand): UI State (DarkMode, Sidebar) - Instant reflection, LocalStorage sync."
+            ]
           }
         ],
         "optimizations": [
@@ -1119,6 +1428,46 @@
               "How: Batch insertion of dictionary lists using SQLAlchemy `bulk_insert_mappings()`. Single transaction without ORM overhead.",
               "Impact: Reduced Trial save time from 30s to 2s (15x reduction)."
             ]
+          },
+          {
+            "title": "50% Chart Performance Boost via Imperative Update",
+            "items": [
+              "Why: Lightweight Charts manipulates Canvas directly; React State changes caused full chart recreation & GC spikes.",
+              "How: Manage chart instance via useRef, call series.setData() directly bypassing React Reconciler.",
+              "Impact: Candle loading 2s→1s, FPS 30→60, Memory usage reduced 40%."
+            ]
+          },
+          {
+            "title": "Large Scale Data Caching via useMemo",
+            "items": [
+              "Why: Sorting/Sampling/Normalizing thousands of trials on every render caused UI lag in Parallel Coordinates.",
+              "How: Cached preprocessing results via useMemo, re-calculating only when trials array reference changes.",
+              "Impact: Render time 300ms→50ms, smooth hover interaction."
+            ]
+          },
+          {
+            "title": "80% Server Load Reduction via Debounced API",
+            "items": [
+              "Why: Instant chart preview update on every condition change in Strategy Builder triggered dozens of API calls/sec.",
+              "How: Applied 500ms setTimeout debounce, cancelling duplicate requests via useEffect cleanup.",
+              "Impact: Indicator calc API calls reduced to 1/10, saving server costs."
+            ]
+          },
+          {
+            "title": "Lazy Loading Chart Libs via next/dynamic",
+            "items": [
+              "Why: Lightweight Charts (~80KB) + Recharts (~70KB) = 150KB in initial bundle delayed FCP.",
+              "How: Split chart components via next/dynamic, loading only when entering viewport.",
+              "Impact: Initial bundle size reduced by 150KB, FCP improved 40%."
+            ]
+          },
+          {
+            "title": "Form Performance Optimization via React.memo + Isolation",
+            "items": [
+              "Why: Single field change in 50-block dynamic form triggered full re-render.",
+              "How: Isolated input components with React.memo, used useFieldArray to update only individual fields.",
+              "Impact: 0ms typing lag even with 50 blocks, memory usage reduced 30%."
+            ]
           }
         ],
         "challenges": [
@@ -1151,6 +1500,26 @@
             "title": "Untraceable Credit Deductions",
             "problem": "Simple `user.credit_balance -= amount` made it impossible to track 'where the credit came from and where it went'. Significant business risk for refunds or audits.",
             "solution": "Applied Double-Entry principles. Separated `CreditLedger` (creation) and `CreditTransaction` (consumption), utilizing `CreditTransactionDetail` to track deduction per ledger. Implemented FIFO priority algorithm (Expiring → Event → Paid) and `UNION ALL` API for integrated history."
+          },
+          {
+            "title": "Fatal Race Condition: 5-fold 401 Error",
+            "problem": "5 concurrent API calls (Profile/Strategy/Backtest/Credit/Notif) on dashboard entry. Token expiry caused 5 401s and independent refreshes, leading server to invalidate session due to 'concurrent refresh' security check.",
+            "solution": "Implemented Lock & Queue in Axios Interceptor. 'isRefreshing' flag ensures single refresh attempt; others wait in Promise Queue. Retry all queued requests with new token in batch via processQueue()."
+          },
+          {
+            "title": "React vs Canvas: Paradigm Conflict",
+            "problem": "Lightweight Charts manipulates Canvas; managing chart data via React State caused destruction/recreation of chart instance, leading to flickering, memory leaks, and frame drops.",
+            "solution": "Applied Imperative Update pattern. Managed chart/series via useRef, called series.setData() directly. Encapsulated cleanup logic in useChartIndicatorManager hook."
+          },
+          {
+            "title": "Two Sources of Truth: Form vs Global State Async",
+            "problem": "Zustand store couldn't keep up with React Hook Form's fast typing; Save button sent old data to server. Sync via useEffect caused infinite loops.",
+            "solution": "Separation of Concerns. React Hook Form manages local state during input; handleSubmit pushes final value to Zustand only on Save. Implemented dual isDirty tracking (Form vs Store) for unsaved changes dialog."
+          },
+          {
+            "title": "Type Safety in Complex Nested Structures",
+            "problem": "Strategy Builder allows infinite nesting of 7 logic block types. Runtime 'Cannot read property' errors were frequent due to differing fields.",
+            "solution": "Leveraged TypeScript Discriminated Unions. Added 'type' field to all blocks (ComparisonLogic | CrossoverLogic...). switch(block.type) enabled automatic field inference, blocking invalid field access at compile time."
           }
         ],
         "learnings": [
@@ -1177,6 +1546,26 @@
           {
             "title": "Optimization Without Measurement is Guesswork",
             "content": "Thought 'Indexes on everything' was the answer, but profiling showed bottlenecks were only in Charts and Large Forms. Experienced the engineering principle that optimization should be based on 'Measurement', not 'Guesswork'."
+          },
+          {
+            "title": "Understanding Library Abstraction Levels",
+            "content": "Direct DOM manipulation libs like Lightweight Charts conflict with React's Virtual DOM. Learned to explicitly sync library lifecycle (Init->Update->Cleanup) with React's, not just use inside useEffect. Applicable to D3/Three.js integration."
+          },
+          {
+            "title": "Criteria for State Management Selection",
+            "content": "'Data Source' is key. Server data needs caching/revalidation -> TanStack Query. Client UI state needs instant updates -> Zustand. This principle eliminated 'where to put state' dilemmas."
+          },
+          {
+            "title": "True Value of Type Systems",
+            "content": "Beyond autocomplete, TypeScript is a tool to 'pull runtime errors to compile time' via Discriminated Unions. Investing time in type design for complex domains dramatically reduces debugging time."
+          },
+          {
+            "title": "Appropriate Level of Abstraction",
+            "content": "Tried to split everything into custom hooks, making code tracing harder. Learned that for high cohesion, 1000+ line complex logic like useChartIndicatorManager suits a hook, but simple API calls are better inside components."
+          },
+          {
+            "title": "Optimization After Measurement",
+            "content": "Thought 'React.memo everything' was right, but Chrome DevTools showed bottlenecks were only in Charts and Large Forms. Experienced the engineering principle that optimization should be based on 'Measurement', not 'Guesswork'."
           }
         ],
         "codeExamples": [
@@ -1299,129 +1688,7 @@
             "filePath": "backend/app/services/credit_service.py",
             "githubLink": "https://github.com/sleepyMS/Cortex/blob/main/backend/app/services/credit_service.py",
             "snippet": "gains_query = select(Ledger.created_at, Ledger.initial_amount.label('amount'), ...)\nusages_query = select(Transaction.created_at, (-Transaction.amount).label('amount'), ...)\n\n# DB Combine + Sort + Page\nunified = union_all(gains_query, usages_query).alias('unified')\nfinal = select(unified).order_by(desc(unified.c.created_at)).offset(offset).limit(limit)"
-          }
-        ]
-      },
-      "color": "#f97316"
-    },
-    {
-      "id": "skill-celery",
-      "type": "skill",
-      "skillCategory": "library",
-      "label": "Celery",
-      "connections": ["project-cortex"],
-      "details": {
-        "description": "Distributed task queue system processing CPU-bound and I/O-bound tasks asynchronously."
-      },
-      "color": "#ec4899"
-    },
-    {
-      "id": "skill-redis",
-      "type": "skill",
-      "skillCategory": "database",
-      "label": "Redis",
-      "connections": ["project-cortex"],
-      "details": {
-        "description": "In-memory data store used as Message Broker and for Pub/Sub real-time communication."
-      },
-      "color": "#14b8a6"
-    },
-    {
-      "id": "skill-timescaledb",
-      "type": "skill",
-      "skillCategory": "database",
-      "label": "TimescaleDB",
-      "connections": ["project-cortex"],
-      "details": {
-        "description": "PostgreSQL-based time-series database optimized for handling massive OHLCV data."
-      },
-      "color": "#14b8a6"
-    },
-    {
-      "id": "skill-docker",
-      "type": "skill",
-      "skillCategory": "tool",
-      "label": "Docker",
-      "connections": ["project-cortex"],
-      "details": {
-        "description": "Ensures container-based application deployment and environment consistency."
-      },
-      "color": "#f97316"
-    },
-    {
-      "id": "skill-postgresql",
-      "type": "skill",
-      "skillCategory": "database",
-      "label": "PostgreSQL",
-      "connections": ["project-cortex"],
-      "details": {
-        "description": "Relational database used for storing user, strategy, and backtest data, and as a shared storage for Optuna Studies."
-      },
-      "color": "#14b8a6"
-    },
-    {
-      "id": "project-cortex-fe",
-      "type": "project",
-      "category": "frontend",
-      "label": "Cortex-Frontend",
-      "connections": [
-        "me",
-        "project-cortex",
-        "skill-nextjs",
-        "skill-typescript",
-        "skill-tailwind",
-        "skill-zustand",
-        "skill-react-query",
-        "skill-recharts",
-        "skill-websocket"
-      ],
-      "details": {
-        "description": "The frontend of an all-in-one quant platform where individual investors can design trading strategies without coding, verify them via backtesting, and connect to automated trading. Beyond simple UI implementation, the key challenge was 'making complex financial algorithms designable by non-developers'. To achieve this, I applied enterprise-grade architecture such as recursive tree structure rendering, a 1000+ line chart manager hook, and a Lock & Queue pattern authentication system.",
-        "technologies": [
-          "Next.js 14 (App Router)",
-          "TypeScript 5",
-          "Tailwind CSS",
-          "Zustand + Immer",
-          "TanStack Query v5",
-          "React Hook Form + Zod",
-          "Lightweight Charts",
-          "Recharts",
-          "WebSocket"
-        ],
-        "coreFeatures": [
-          "🔐 Lock & Queue based Silent Auth Refresh: Resolved Race Condition where 5 concurrent API calls caused token expiration, reducing traffic by 80% via single refresh",
-          "📈 Chart Manager Hook: Multi-chart timeline synchronization, complex indicator rendering (Bollinger Bands/Ichimoku), 50% performance boost via Imperative Update",
-          "🧠 Recursive No-Code Strategy Builder: Type-safe handling of 7 logic blocks (Comparison/Crossover/State/Channel etc.) using Discriminated Union type system",
-          "📊 Custom Parallel Coordinates Chart: Direct SVG rendering of thousands of Trial results, real-time interaction with 300 lines via useMemo optimization",
-          "⚡ WebSocket → Query Cache Direct Sync: Instant UI update without API re-calls, significantly reducing network traffic"
-        ],
-        "techStackDocs": [
-          {
-            "name": "Next.js 14 (App Router)",
-            "description": "Why App Router? For a quant platform, dashboard code splitting and layout sharing are more important than SEO. Separated auth/non-auth layouts via Route Groups and improved FCP by 40% via dynamic import of 150KB chart libraries."
           },
-          {
-            "name": "TypeScript + Discriminated Unions",
-            "description": "Why Union Types? Had to handle 7 logic blocks (Comparison, Crossover, State, TrendSignal, Channel, Divergence, Pattern) as a single type. Implemented automatic type inference via Discriminated Union on 'type' field, preventing runtime errors at compile time."
-          },
-          {
-            "name": "Zustand + Immer",
-            "description": "Why not Redux? Redux boilerplate is excessive for updating nested tree structures (blocks[].children[].children[]...). Used Immer for automatic immutability and implemented findAndModify utility to update only target nodes, reducing code by 70%."
-          },
-          {
-            "name": "TanStack Query v5",
-            "description": "Why Query over SWR? Needed complex cache manipulation. Implemented hybrid pattern: direct UI update via setQueryData on WebSocket message without API re-fetch, and full re-fetch via invalidateQueries only upon completion."
-          },
-          {
-            "name": "React Hook Form + Zod",
-            "description": "Why not Formik? Formik triggers full re-render on dynamic forms with 50+ condition blocks. Used useFieldArray to update only individual fields and Zod schema for type-safe validation of nested objects."
-          },
-          {
-            "name": "Lightweight Charts",
-            "description": "Why not D3/Recharts? Rendering tens of thousands of candles via SVG freezes the browser. Selected TradingView's Canvas-based library but avoided Virtual DOM overhead via React state separation and Imperative Update pattern."
-          }
-        ],
-        "codeExamples": [
           {
             "title": "Lock & Queue 토큰 갱신 시스템",
             "category": "auth",
@@ -1471,153 +1738,83 @@
             "snippet": "// 폼 상태와 Zustand 상태의 독립적 Dirty 체크\nconst isZustandDirty = useMemo(() => {\n  if (!initialStrategyRef.current) {\n    return strategyState.longEntryRules?.blocks?.length > 0;\n  }\n  return JSON.stringify(strategyState.longEntryRules) !== \n         JSON.stringify(initialStrategyRef.current.longEntryRules);\n}, [strategyState]);\n\n// 규칙 변경 시 500ms 디바운스 후 차트 프리뷰 업데이트\nconst [debouncedRules, setDebouncedRules] = useState(currentRules);\nuseEffect(() => {\n  const timer = setTimeout(() => setDebouncedRules(currentRules), 500);\n  return () => clearTimeout(timer);\n}, [currentRules]);\n\n// 디바운스된 규칙으로 지표/시그널 데이터 페칭\nconst { data: indicatorData } = useQuery({\n  queryKey: ['indicators', chartTicker, chartTimeframe, indicatorConfigs],\n  queryFn: ({ signal }) => fetchIndicatorData(..., signal),\n  enabled: !!ohlcvData && indicatorConfigs.length > 0,\n});"
           }
         ],
-        "link": "https://github.com/sleepyMS/Cortex",
-        "deployLink": "https://cortex-five-eosin.vercel.app/",
-        "features": [
-          {
-            "title": "Lock & Queue based Seamless Auth System",
-            "items": [
-              "Problem: 5 concurrent API calls on dashboard entry -> 5 401s -> 5 refresh requests -> Server detects as token theft -> Force Logout.",
-              "Solution: Introduced Lock & Queue via Axios Interceptor. Only first 401 attempts refresh; others wait in Promise Queue.",
-              "Result: Reduced refresh requests by 80% and provided seamless UX where users don't notice expiration."
-            ]
-          },
-          {
-            "title": "Encapsulated Chart Manager Hook",
-            "items": [
-              "Complexity: Multi-pane chart timeline sync, Bollinger/Keltner Channels, Ichimoku Clouds, Crosshair Legend sync, Theme switching.",
-              "Technique: Managed chart instances via useRef (Imperative Update) instead of React State, responsive via ResizeObserver.",
-              "Result: 50% faster chart loading, 60fps scrolling, zero memory leaks."
-            ]
-          },
-          {
-            "title": "Recursive No-Code Strategy Builder",
-            "items": [
-              "Challenge: Visually constructing complex logic like IF (A AND (B OR C)) without coding.",
-              "Implementation: Defined 7 logic blocks via Discriminated Union, infinite nesting via recursive components.",
-              "Zustand findAndModify: Optimized to O(N) by updating only target node via ID instead of full tree traversal."
-            ]
-          },
-          {
-            "title": "Custom Parallel Coordinates Visualization (ParallelCoordinatesChart)",
-            "items": [
-              "Goal: Visualize thousands of optimization Trials to find optimal parameter ranges at a glance.",
-              "Technique: Direct SVG rendering, data caching via useMemo, performance guarantee via top 300 sampling.",
-              "UX: Score-based color/opacity gradient, parameter details on hover."
-            ]
-          },
-          {
-            "title": "Parallel Data Fetching + Progressive Loading",
-            "items": [
-              "Pattern: Independent queries for [Core Info], [Chart Data], [Trade Logs] on Backtesting Detail page.",
-              "UX: Independent Skeleton UI per section, instant display of core metrics while chart loads (Non-blocking).",
-              "Tech: Controlled query order via TanStack Query 'enabled' option."
-            ]
-          },
-          {
-            "title": "Clear Separation of Server/Client State",
-            "items": [
-              "Principle: Select tool based on 'Source' and 'Frequency' of data.",
-              "Server State (TanStack Query): API Data (Backtest, User) - Caching, Revalidation, Error Handling.",
-              "Client State (Zustand): UI State (DarkMode, Sidebar) - Instant reflection, LocalStorage sync."
-            ]
-          }
-        ],
-        "optimizations": [
-          {
-            "title": "50% Chart Performance Boost via Imperative Update",
-            "items": [
-              "Why: Lightweight Charts manipulates Canvas directly; React State changes caused full chart recreation & GC spikes.",
-              "How: Manage chart instance via useRef, call series.setData() directly bypassing React Reconciler.",
-              "Impact: Candle loading 2s→1s, FPS 30→60, Memory usage reduced 40%."
-            ]
-          },
-          {
-            "title": "Large Scale Data Caching via useMemo",
-            "items": [
-              "Why: Sorting/Sampling/Normalizing thousands of trials on every render caused UI lag in Parallel Coordinates.",
-              "How: Cached preprocessing results via useMemo, re-calculating only when trials array reference changes.",
-              "Impact: Render time 300ms→50ms, smooth hover interaction."
-            ]
-          },
-          {
-            "title": "80% Server Load Reduction via Debounced API",
-            "items": [
-              "Why: Instant chart preview update on every condition change in Strategy Builder triggered dozens of API calls/sec.",
-              "How: Applied 500ms setTimeout debounce, cancelling duplicate requests via useEffect cleanup.",
-              "Impact: Indicator calc API calls reduced to 1/10, saving server costs."
-            ]
-          },
-          {
-            "title": "Lazy Loading Chart Libs via next/dynamic",
-            "items": [
-              "Why: Lightweight Charts (~80KB) + Recharts (~70KB) = 150KB in initial bundle delayed FCP.",
-              "How: Split chart components via next/dynamic, loading only when entering viewport.",
-              "Impact: Initial bundle size reduced by 150KB, FCP improved 40%."
-            ]
-          },
-          {
-            "title": "Form Performance Optimization via React.memo + Isolation",
-            "items": [
-              "Why: Single field change in 50-block dynamic form triggered full re-render.",
-              "How: Isolated input components with React.memo, used useFieldArray to update only individual fields.",
-              "Impact: 0ms typing lag even with 50 blocks, memory usage reduced 30%."
-            ]
-          }
-        ],
-        "challenges": [
-          {
-            "title": "Fatal Race Condition: 5-fold 401 Error",
-            "problem": "5 concurrent API calls (Profile/Strategy/Backtest/Credit/Notif) on dashboard entry. Token expiry caused 5 401s and independent refreshes, leading server to invalidate session due to 'concurrent refresh' security check.",
-            "solution": "Implemented Lock & Queue in Axios Interceptor. 'isRefreshing' flag ensures single refresh attempt; others wait in Promise Queue. Retry all queued requests with new token in batch via processQueue()."
-          },
-          {
-            "title": "React vs Canvas: Paradigm Conflict",
-            "problem": "Lightweight Charts manipulates Canvas; managing chart data via React State caused destruction/recreation of chart instance, leading to flickering, memory leaks, and frame drops.",
-            "solution": "Applied Imperative Update pattern. Managed chart/series via useRef, called series.setData() directly. Encapsulated cleanup logic in useChartIndicatorManager hook."
-          },
-          {
-            "title": "Two Sources of Truth: Form vs Global State Async",
-            "problem": "Zustand store couldn't keep up with React Hook Form's fast typing; Save button sent old data to server. Sync via useEffect caused infinite loops.",
-            "solution": "Separation of Concerns. React Hook Form manages local state during input; handleSubmit pushes final value to Zustand only on Save. Implemented dual isDirty tracking (Form vs Store) for unsaved changes dialog."
-          },
-          {
-            "title": "Type Safety in Complex Nested Structures",
-            "problem": "Strategy Builder allows infinite nesting of 7 logic block types. Runtime 'Cannot read property' errors were frequent due to differing fields.",
-            "solution": "Leveraged TypeScript Discriminated Unions. Added 'type' field to all blocks (ComparisonLogic | CrossoverLogic...). switch(block.type) enabled automatic field inference, blocking invalid field access at compile time."
-          }
-        ],
-        "learnings": [
-          {
-            "title": "Understanding Library Abstraction Levels",
-            "content": "Direct DOM manipulation libs like Lightweight Charts conflict with React's Virtual DOM. Learned to explicitly sync library lifecycle (Init->Update->Cleanup) with React's, not just use inside useEffect. Applicable to D3/Three.js integration."
-          },
-          {
-            "title": "Criteria for State Management Selection",
-            "content": "'Data Source' is key. Server data needs caching/revalidation -> TanStack Query. Client UI state needs instant updates -> Zustand. This principle eliminated 'where to put state' dilemmas."
-          },
-          {
-            "title": "True Value of Type Systems",
-            "content": "Beyond autocomplete, TypeScript is a tool to 'pull runtime errors to compile time' via Discriminated Unions. Investing time in type design for complex domains dramatically reduces debugging time."
-          },
-          {
-            "title": "Appropriate Level of Abstraction",
-            "content": "Tried to split everything into custom hooks, making code tracing harder. Learned that for high cohesion, 1000+ line complex logic like useChartIndicatorManager suits a hook, but simple API calls are better inside components."
-          },
-          {
-            "title": "Optimization After Measurement",
-            "content": "Thought 'React.memo everything' was right, but Chrome DevTools showed bottlenecks were only in Charts and Large Forms. Experienced the engineering principle that optimization should be based on 'Measurement', not 'Guesswork'."
-          }
-        ]
+        "deployLink": "https://cortex-five-eosin.vercel.app/"
       },
-      "color": "#c026d3"
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "skill-celery",
+      "type": "skill",
+      "skillCategory": "library",
+      "label": "Celery",
+      "connections": [
+        "project-cortex"
+      ],
+      "details": {
+        "description": "Distributed task queue system processing CPU-bound and I/O-bound tasks asynchronously."
+      },
+      "color": "#ec4899"
+    },
+    {
+      "id": "skill-redis",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "Redis",
+      "connections": [
+        "project-cortex"
+      ],
+      "details": {
+        "description": "In-memory data store used as Message Broker and for Pub/Sub real-time communication."
+      },
+      "color": "#14b8a6"
+    },
+    {
+      "id": "skill-timescaledb",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "TimescaleDB",
+      "connections": [
+        "project-cortex"
+      ],
+      "details": {
+        "description": "PostgreSQL-based time-series database optimized for handling massive OHLCV data."
+      },
+      "color": "#14b8a6"
+    },
+    {
+      "id": "skill-docker",
+      "type": "skill",
+      "skillCategory": "tool",
+      "label": "Docker",
+      "connections": [
+        "project-cortex"
+      ],
+      "details": {
+        "description": "Ensures container-based application deployment and environment consistency."
+      },
+      "color": "#f97316"
+    },
+    {
+      "id": "skill-postgresql",
+      "type": "skill",
+      "skillCategory": "database",
+      "label": "PostgreSQL",
+      "connections": [
+        "project-cortex"
+      ],
+      "details": {
+        "description": "Relational database used for storing user, strategy, and backtest data, and as a shared storage for Optuna Studies."
+      },
+      "color": "#14b8a6"
     },
     {
       "id": "skill-nextjs",
       "type": "skill",
       "skillCategory": "framework",
       "label": "Next.js",
-      "connections": ["project-cortex-fe"],
+      "connections": [
+        "project-cortex"
+      ],
       "details": {
         "description": "React-based full-stack framework used for optimized web app development utilizing App Router and Server Components."
       },
@@ -1628,7 +1825,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "TanStack Query",
-      "connections": ["project-cortex-fe"],
+      "connections": [
+        "project-cortex"
+      ],
       "details": {
         "description": "Server state management library efficiently handling asynchronous data fetching, caching, and synchronization."
       },
@@ -1639,7 +1838,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "Recharts",
-      "connections": ["project-cortex-fe"],
+      "connections": [
+        "project-cortex"
+      ],
       "details": {
         "description": "React-based chart library providing reusable chart components."
       },
@@ -1650,7 +1851,9 @@
       "type": "skill",
       "skillCategory": "tool",
       "label": "WebSocket",
-      "connections": ["project-cortex-fe"],
+      "connections": [
+        "project-cortex"
+      ],
       "details": {
         "description": "Bi-directional real-time communication protocol used for instant UI updates like backtesting progress."
       },
@@ -1661,7 +1864,12 @@
       "type": "project",
       "category": "ai-ml",
       "label": "LSTM_Crypto_Paper-AI",
-      "connections": ["me", "skill-python", "skill-lstm", "skill-tensorflow"],
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-lstm",
+        "skill-tensorflow"
+      ],
       "details": {
         "description": "A KCI-indexed academic paper researching a cryptocurrency futures trading system using LSTM-based high and low price prediction models. Instead of conventional closing price-based models, I used high/low data to achieve substantial return improvements in futures trading.",
         "technologies": [
@@ -1952,14 +2160,49 @@
           {
             "title": "Prediction Performance Comparison by Altcoin Data Type",
             "description": "Comparison of prediction performance between conventional closing price-based models (Basic) and proposed high/low-based models (Improved). High/low models focus on volatility prediction, resulting in slightly lower correlation and win rates but contributing to actual return improvements.",
-            "headers": ["Altcoin", "Model", "Pearson Correlation", "Win Rate"],
+            "headers": [
+              "Altcoin",
+              "Model",
+              "Pearson Correlation",
+              "Win Rate"
+            ],
             "rows": [
-              ["ETH", "Basic Data", "0.973", "80.1%"],
-              ["ETH", "Improved Data", "0.946", "77.9%"],
-              ["XRP", "Basic Data", "0.962", "72.2%"],
-              ["XRP", "Improved Data", "0.914", "69.5%"],
-              ["DOGE", "Basic Data", "0.969", "75.1%"],
-              ["DOGE", "Improved Data", "0.930", "73.6%"]
+              [
+                "ETH",
+                "Basic Data",
+                "0.973",
+                "80.1%"
+              ],
+              [
+                "ETH",
+                "Improved Data",
+                "0.946",
+                "77.9%"
+              ],
+              [
+                "XRP",
+                "Basic Data",
+                "0.962",
+                "72.2%"
+              ],
+              [
+                "XRP",
+                "Improved Data",
+                "0.914",
+                "69.5%"
+              ],
+              [
+                "DOGE",
+                "Basic Data",
+                "0.969",
+                "75.1%"
+              ],
+              [
+                "DOGE",
+                "Improved Data",
+                "0.930",
+                "73.6%"
+              ]
             ]
           },
           {
@@ -1972,9 +2215,24 @@
               "Gain"
             ],
             "rows": [
-              ["ETH", "30.78%", "37.05%", "+6.27%"],
-              ["XRP", "64.78%", "97.49%", "+32.71%"],
-              ["DOGE", "-13.19%", "32.77%", "+45.96%"]
+              [
+                "ETH",
+                "30.78%",
+                "37.05%",
+                "+6.27%"
+              ],
+              [
+                "XRP",
+                "64.78%",
+                "97.49%",
+                "+32.71%"
+              ],
+              [
+                "DOGE",
+                "-13.19%",
+                "32.77%",
+                "+45.96%"
+              ]
             ]
           },
           {
@@ -2216,7 +2474,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "LSTM",
-      "connections": ["project-paper-lstm"],
+      "connections": [
+        "project-paper-lstm"
+      ],
       "details": {
         "description": "Long Short-Term Memory network, an RNN architecture capable of learning long-term dependencies in time-series data."
       },
@@ -2227,7 +2487,9 @@
       "type": "skill",
       "skillCategory": "framework",
       "label": "TensorFlow",
-      "connections": ["project-paper-lstm"],
+      "connections": [
+        "project-paper-lstm"
+      ],
       "details": {
         "description": "Open-source deep learning framework developed by Google, used for building and training neural network models."
       },
@@ -2238,7 +2500,9 @@
       "type": "skill",
       "skillCategory": "library",
       "label": "Transformer",
-      "connections": ["project-paper-tft"],
+      "connections": [
+        "project-paper-tft"
+      ],
       "details": {
         "description": "Deep learning architecture based on Self-Attention mechanism, showing excellent performance in time-series forecasting and NLP."
       },
@@ -2249,7 +2513,9 @@
       "type": "skill",
       "skillCategory": "framework",
       "label": "PyTorch",
-      "connections": ["project-paper-tft"],
+      "connections": [
+        "project-paper-tft"
+      ],
       "details": {
         "description": "Open-source deep learning framework developed by Facebook, providing dynamic calculation graphs and an intuitive API."
       },

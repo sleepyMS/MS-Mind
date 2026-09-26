@@ -1,84 +1,91 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Scene } from "./components/canvas/Scene";
-import { Modal } from "./components/ui/Modal";
 import { Tooltip } from "./components/ui/Tooltip";
-import { LoadingScreen } from "./components/ui/LoadingScreen";
 import { NodeFilter } from "./components/ui/NodeFilter";
 import { SidePanel } from "./components/ui/SidePanel";
 import { MiniMap } from "./components/ui/MiniMap";
 import { ThemeSwitcher } from "./components/ui/ThemeSwitcher";
 import { ControlsGuide } from "./components/ui/ControlsGuide";
 import { FloatingContactButton } from "./components/ui/FloatingContactButton";
+import { FeatureBoundary } from "./components/ui/FeatureBoundary";
+import { SceneStatus } from "./components/ui/SceneStatus";
 import { useAppStore } from "./stores/useAppStore";
 import "./index.css";
 
-/**
- * Neural Nexus Portfolio
- * 살아있는 뇌의 신경망 컨셉 3D 포트폴리오
- */
-function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const { setLoading, theme } = useAppStore();
-  const { t } = useTranslation();
+const Scene = lazy(() => import("./components/canvas/Scene").then((module) => ({ default: module.Scene })));
+const Modal = lazy(() => import("./components/ui/Modal").then((module) => ({ default: module.Modal })));
 
-  // HTML 요소에 data-theme 속성 설정 (CSS 변수 테마 적용)
+function DetailStatus({ failed = false }: { failed?: boolean }) {
+  const { t } = useTranslation();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const close = () => {
+    useAppStore.setState({ isModalOpen: false, activeNode: null, cameraTarget: null });
+  };
+  useEffect(() => {
+    const opener = document.activeElement;
+    closeButtonRef.current?.focus({ preventScroll: true });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || event.key === "Tab") {
+        event.preventDefault();
+        if (event.key === "Escape") close();
+        else closeButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if ((opener instanceof HTMLElement || opener instanceof SVGElement) && opener.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, []);
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm">
+      <div role="dialog" aria-modal="true" aria-labelledby="detail-status" className="rounded-2xl bg-[var(--bg-secondary)] p-6 text-center">
+        <p id="detail-status" role={failed ? "alert" : "status"}>{t(failed ? "app.detailUnavailable" : "app.detailLoading")}</p>
+        <button ref={closeButtonRef} className="mt-4 rounded-lg border border-[var(--glass-border)] px-4 py-2" onClick={close}>{t("modal.close")}</button>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const theme = useAppStore((state) => state.theme);
+  const isModalOpen = useAppStore((state) => state.isModalOpen);
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.resolvedLanguage || i18n.language;
+    document.title = t("app.pageTitle");
+    document.querySelector('meta[name="description"]')?.setAttribute("content", t("app.description"));
+  }, [i18n.language, i18n.resolvedLanguage, t]);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-    setLoading(false);
-  };
-
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[var(--bg-primary)]">
-      {/* 로딩 스크린 - 항상 렌더링하되 내부에서 애니메이션 처리 */}
-      <LoadingScreen onComplete={handleLoadingComplete} minDuration={2500} />
-
-      {/* 3D 씬 */}
-      <Scene />
-
-      {/* UI 오버레이 */}
-      <Modal />
+    <main className="relative h-dvh w-full overflow-hidden bg-[var(--bg-primary)]">
+      <FeatureBoundary fallback={<SceneStatus failed />}>
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+        <SceneStatus />
+      </FeatureBoundary>
+      <h1 className="sr-only">{t("app.pageTitle")}</h1>
       <Tooltip />
       <ThemeSwitcher />
       <NodeFilter />
       <SidePanel />
       <MiniMap />
       <FloatingContactButton />
-
-      {/* 컨트롤 가이드 */}
-      {!isLoading && <ControlsGuide />}
-
-      {/* 타이틀 - 데스크톱에서만 표시 */}
-      <div
-        className={`
-          hidden md:block fixed top-6 left-6 pointer-events-none
-          transition-all duration-700 ease-out delay-100
-          ${
-            isLoading
-              ? "opacity-0 scale-90 -translate-y-4"
-              : "opacity-100 scale-100 translate-y-0"
-          }
-        `}
-      >
-        <div className="flex items-center gap-3">
-          <img
-            src="/logo.png"
-            alt="Neural Nexus Logo"
-            className="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]"
-          />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
-            {t("app.title")}
-          </h1>
-        </div>
-        <p className="text-sm mt-1 text-[var(--text-tertiary)]">
-          {t("app.subtitle")}
-        </p>
-      </div>
-    </div>
+      <ControlsGuide />
+      {isModalOpen && (
+        <FeatureBoundary fallback={<DetailStatus failed />}>
+          <Suspense fallback={<DetailStatus />}>
+            <Modal />
+          </Suspense>
+        </FeatureBoundary>
+      )}
+    </main>
   );
 }
 

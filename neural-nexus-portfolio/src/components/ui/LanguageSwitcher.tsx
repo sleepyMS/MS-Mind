@@ -28,7 +28,7 @@ export function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { theme } = useAppStore();
+  const theme = useAppStore((state) => state.theme);
   const isDark = theme === "dark";
   const [hoveredLang, setHoveredLang] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);

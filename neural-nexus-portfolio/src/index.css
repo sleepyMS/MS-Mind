@@ -24,8 +24,8 @@
   /* 텍스트 */
   --text-primary: rgba(255, 255, 255, 0.9);
   --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-tertiary: rgba(255, 255, 255, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.3);
+  --text-tertiary: rgba(255, 255, 255, 0.68);
+  --text-muted: rgba(255, 255, 255, 0.6);
 
   /* 노드 색상 */
   --color-main: #00ffff;
@@ -67,7 +67,7 @@
   --text-primary: #1e3a5f;
   --text-secondary: #2c5282;
   --text-tertiary: #4a6fa5;
-  --text-muted: #7a9cc6;
+  --text-muted: #46678f;
 
   /* 노드/버튼 색상 - 가시성 높은 잉크/프린트 색상 */
   --color-main: #0077be;
@@ -381,4 +381,15 @@ canvas {
 
 .animate-floating {
   animation: floating 2s ease-in-out infinite;
+}
+
+/* HTML navigation remains available while the optional 3D scene loads. */
+.scene-status { position: fixed; z-index: 10; bottom: 24px; left: 50%; transform: translateX(-50%); max-width: min(80vw, 480px); padding: 10px 16px; border-radius: 12px; background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; text-align: center; }
+.scene-status-dot { display: inline-block; margin-right: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); animation: pulse 1.5s ease-in-out infinite; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
+@media (max-width: 767px) {
+  .scene-status { bottom: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }

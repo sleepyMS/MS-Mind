@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useAppStore } from "../../stores/useAppStore";
@@ -10,6 +10,7 @@ interface ConnectionLineProps {
   color?: string;
   isHighlighted?: boolean;
   isDashed?: boolean; // 간접 연결선 (점선)
+  reducedMotion?: boolean;
 }
 
 /**
@@ -17,19 +18,23 @@ interface ConnectionLineProps {
  * 노드 사이를 전기 펄스 효과로 연결하는 쉐이더 라인
  * isDashed=true인 경우 간접 연결을 나타내는 점선 효과
  */
-export function ConnectionLine({
+export const ConnectionLine = memo(function ConnectionLine({
   start,
   end,
   color = "#00ffff",
   isHighlighted = false,
   isDashed = false,
+  reducedMotion = false,
 }: ConnectionLineProps) {
-  const { theme } = useAppStore();
+  const theme = useAppStore((state) => state.theme);
   const themeColor = useMemo(() => getThemeColor(color, theme), [color, theme]);
   const isDark = theme === "dark";
+  const lineRef = useRef<
+    THREE.Line<THREE.BufferGeometry, THREE.ShaderMaterial>
+  >(null);
 
   // 결정론적(deterministic) 곡선 생성
-  const lineObject = useMemo(() => {
+  const geometry = useMemo(() => {
     const startVec = new THREE.Vector3(...start);
     const endVec = new THREE.Vector3(...end);
 
@@ -77,15 +82,16 @@ export function ConnectionLine({
     }
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 
-    // 라이트 모드용 기본 오파시티 설정 (더 진하게)
-    const baseOpacity = isDark ? (isDashed ? 0.4 : 0.6) : isDashed ? 0.6 : 0.8;
+    return geometry;
+  }, [start, end]);
 
+  const lineObject = useMemo(() => {
     // 쉐이더 머티리얼
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color(themeColor) },
-        uOpacity: { value: baseOpacity },
+        uColor: { value: new THREE.Color() },
+        uOpacity: { value: 0 },
         uPulseSpeed: { value: isDashed ? 1.0 : 2.0 },
         uIsDashed: { value: isDashed ? 1.0 : 0.0 },
       },
@@ -139,27 +145,40 @@ export function ConnectionLine({
       transparent: true,
       depthWrite: false,
       // 라이트 모드에서는 NormalBlending을 사용하여 배경에 묻히지 않게 함
-      blending: isDark ? THREE.AdditiveBlending : THREE.NormalBlending,
+      blending: THREE.AdditiveBlending,
     });
 
-    return new THREE.Line(geometry, material);
-  }, [start, end, themeColor, isDashed, isDark]);
+    // Geometry is attached through R3F props, so moving endpoints preserves
+    // this line and its shader rather than creating a new material per drag.
+    return new THREE.Line(undefined, material);
+  }, [isDashed]);
 
-  // 쉐이더 애니메이션 업데이트
+  const appearance = `${themeColor}:${isDark}:${isDashed}`;
+  const appliedAppearance = useRef("");
+
+  // primitive 자원은 R3F가 자동 해제하지 않으므로 소유 컴포넌트가 정리한다.
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(() => () => lineObject.material.dispose(), [lineObject]);
+
+  // 프레임 변화는 씬에 부착된 라인의 머티리얼에만 적용한다.
   useFrame((state) => {
-    const material = lineObject.material as THREE.ShaderMaterial;
-    if (material.uniforms) {
-      material.uniforms.uTime.value = state.clock.elapsedTime;
-      // 색상 업데이트 (테마 변경 시 반영)
-      material.uniforms.uColor.value.set(themeColor);
+    const material = lineRef.current?.material;
+    if (material) {
+      material.uniforms.uTime.value = reducedMotion ? 0 : state.clock.elapsedTime;
+      if (appliedAppearance.current !== appearance) {
+        material.uniforms.uColor.value.set(themeColor);
+        material.uniforms.uOpacity.value = isDark ? (isDashed ? 0.4 : 0.6) : isDashed ? 0.6 : 0.8;
+        material.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        appliedAppearance.current = appearance;
+      }
 
       const baseOpacity = isDark
         ? isDashed
           ? 0.35
           : 0.5
         : isDashed
-        ? 0.55
-        : 0.75; // 라이트 모드에서는 더 진하게
+          ? 0.55
+          : 0.75; // 라이트 모드에서는 더 진하게
 
       const targetOpacity = isHighlighted ? 1.0 : baseOpacity;
       material.uniforms.uOpacity.value = THREE.MathUtils.lerp(
@@ -170,5 +189,5 @@ export function ConnectionLine({
     }
   });
 
-  return <primitive object={lineObject} />;
-}
+  return <primitive ref={lineRef} object={lineObject} geometry={geometry} />;
+});

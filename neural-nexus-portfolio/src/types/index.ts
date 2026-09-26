@@ -169,7 +169,6 @@ export interface AppState {
   visibleCategories: ProjectCategory[]; // 표시할 카테고리 필터
   isSidePanelOpen: boolean; // 사이드 패널 열림 상태
   isLoading: boolean; // 로딩 상태
-  loadingProgress: number; // 로딩 진행률 (0-100)
   searchQuery: string; // 검색어
   theme: ThemeType; // 테마 (다크/라이트)
   isThemeTransitioning: boolean; // 테마 전환 애니메이션 중
@@ -190,7 +189,6 @@ export interface AppState {
   resetCategoryFilter: () => void;
   setSidePanelOpen: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
-  setLoadingProgress: (progress: number) => void;
   setSearchQuery: (query: string) => void;
   setTheme: (theme: ThemeType) => void;
   toggleTheme: () => void;

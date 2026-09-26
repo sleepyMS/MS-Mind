@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { useAppStore } from "../../stores/useAppStore";
 
@@ -6,8 +7,8 @@ import { useAppStore } from "../../stores/useAppStore";
  * Bloom과 Vignette로 시네마틱한 느낌 연출
  * 라이트 모드에서는 Bloom 강도를 줄여 과도한 밝기 방지
  */
-export function PostProcessing() {
-  const { theme } = useAppStore();
+export const PostProcessing = memo(function PostProcessing() {
+  const theme = useAppStore((state) => state.theme);
   const isDark = theme === "dark";
 
   return (
@@ -24,4 +25,4 @@ export function PostProcessing() {
       <Vignette offset={0.3} darkness={isDark ? 0.6 : 0.2} />
     </EffectComposer>
   );
-}
+});

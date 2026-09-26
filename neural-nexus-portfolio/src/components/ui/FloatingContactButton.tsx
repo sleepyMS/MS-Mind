@@ -1,17 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { lazy, Suspense, useId, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
-import { ContactForm } from "./ContactForm";
+import { ContactFallback } from "./ContactFallback";
+import { FeatureBoundary } from "./FeatureBoundary";
+
+const ContactForm = lazy(() =>
+  import("./ContactForm").then((module) => ({ default: module.ContactForm }))
+);
 
 /**
  * 화면 우하단에 표시되는 플로팅 연락 버튼
  * 클릭 시 연락 폼 팝오버 표시
  */
 export function FloatingContactButton() {
-  const { theme, isModalOpen } = useAppStore();
+  const theme = useAppStore((state) => state.theme);
   const { t } = useTranslation();
   const isDark = theme === "dark";
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+  const popoverId = useId();
   const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -36,30 +43,46 @@ export function FloatingContactButton() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen) popoverRef.current?.focus();
+  }, [isOpen]);
+
   // ESC로 닫기
   useEffect(() => {
+    if (!isOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
+        e.preventDefault();
         setIsOpen(false);
+        buttonRef.current?.focus();
       }
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [isOpen]);
 
-  // 모달이 열리면 연락 폼 닫기
+  // 외부 스토어의 모달 열기 이벤트에 맞춰 연락 폼을 닫는다.
   useEffect(() => {
-    if (isModalOpen) {
-      setIsOpen(false);
-    }
-  }, [isModalOpen]);
+    return useAppStore.subscribe((state, previousState) => {
+      if (state.isModalOpen && !previousState.isModalOpen) {
+        setIsOpen(false);
+      }
+    });
+  }, []);
 
   return (
     <>
       {/* 플로팅 버튼 */}
       <button
         ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={popoverId}
+        aria-haspopup="dialog"
+        onClick={() => {
+          setHasOpened(true);
+          setIsOpen((open) => !open);
+        }}
         className={`
           fixed bottom-6 left-6 md:left-auto md:right-52 z-20
           w-14 h-14 rounded-full
@@ -110,12 +133,18 @@ export function FloatingContactButton() {
       {/* 연락 폼 팝오버 */}
       <div
         ref={popoverRef}
+        id={popoverId}
+        role="dialog"
+        aria-labelledby={`${popoverId}-title`}
+        aria-hidden={!isOpen}
+        inert={!isOpen}
+        tabIndex={-1}
         className={`
           fixed bottom-24 left-6 md:left-auto md:right-52 ${
             isOpen ? "z-50" : "z-20"
           }
           w-[min(360px,calc(100vw-48px))]
-          rounded-2xl overflow-hidden
+          rounded-2xl overflow-y-auto max-h-[calc(100dvh-120px)] outline-none
           transition-all duration-300 origin-bottom-left md:origin-bottom-right
           ${
             isOpen
@@ -124,6 +153,7 @@ export function FloatingContactButton() {
           }
         `}
         style={{
+          visibility: isOpen ? "visible" : "hidden",
           background: isDark
             ? "rgba(15, 15, 25, 0.95)"
             : "rgba(255, 255, 255, 0.98)",
@@ -172,6 +202,7 @@ export function FloatingContactButton() {
             </div>
             <div>
               <h3
+                id={`${popoverId}-title`}
                 className="text-lg font-bold"
                 style={{
                   color: isDark ? "rgba(255,255,255,0.95)" : "rgba(0,0,0,0.9)",
@@ -182,7 +213,7 @@ export function FloatingContactButton() {
               <p
                 className="text-xs"
                 style={{
-                  color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.45)",
+                  color: "var(--text-secondary)",
                 }}
               >
                 {t("contact.header.subtitle")}
@@ -193,7 +224,13 @@ export function FloatingContactButton() {
 
         {/* 폼 */}
         <div className="px-6 py-5">
-          <ContactForm isDark={isDark} nodeColor={nodeColor} />
+          {hasOpened && (
+            <FeatureBoundary fallback={<ContactFallback />}>
+              <Suspense fallback={<p role="status" className="text-sm" style={{ color: "var(--text-secondary)" }}>{t("contact.loading")}</p>}>
+                <ContactForm isDark={isDark} nodeColor={nodeColor} isActive={isOpen} />
+              </Suspense>
+            </FeatureBoundary>
+          )}
         </div>
 
         {/* 푸터 */}
@@ -206,29 +243,13 @@ export function FloatingContactButton() {
               : "1px solid rgba(0,0,0,0.05)",
           }}
         >
-          <svg
-            className="w-3.5 h-3.5"
-            style={{
-              color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)",
-            }}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
           <span
             className="text-xs"
             style={{
-              color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)",
+              color: "var(--text-muted)",
             }}
           >
-            {t("contact.footer.privacy")}
+            {t("contact.footer.note")}
           </span>
         </div>
       </div>

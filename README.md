@@ -14,6 +14,12 @@
 
 ## ✨ Features
 
+### 최신 프로젝트와 AI 활용 경험
+
+- **느린 뇌, 빠른 손**: 로컬 Qwen3.8 27B를 활용한 투자 자동화. 데이터 수집, 비용을 반영한 전략 평가, 주문 게이트웨이, 운영 콘솔을 구현해 개인 투자에 활용하며 기능별 검증과 개선을 진행합니다.
+- **디자인 프로그램 (구현 중)**: Jev를 활용한 디자인 도구 개발 경험을 소개합니다.
+- Codex·Claude Code를 활용한 설계·구현·오류 분석·검증 경험을 한국어와 영어 프로필, 프로젝트, 기술 노드에 반영했습니다.
+
 ### 🌐 3D 뉴런 네트워크 시각화
 
 - **d3-force-3d** 물리 엔진으로 노드들이 자연스럽게 배치
@@ -114,7 +120,7 @@ neural-nexus-portfolio/
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.12+ (`neural-nexus-portfolio/.nvmrc`: 22)
 - npm or pnpm
 
 ### Installation
@@ -123,6 +129,9 @@ neural-nexus-portfolio/
 # 저장소 클론
 git clone https://github.com/sleepyMS/MS-Mind.git
 cd MS-Mind/neural-nexus-portfolio
+
+# nvm을 사용하는 경우 프로젝트 Node 버전 선택
+nvm use
 
 # 의존성 설치
 npm install
@@ -136,6 +145,12 @@ npm run dev
 ```bash
 # 프로덕션 빌드
 npm run build
+
+# 데이터 연결, 탐색 순서, 레이아웃 경계 검사
+npm test
+
+# 코드 검사
+npm run lint
 
 # 빌드 결과 미리보기
 npm run preview
@@ -234,6 +249,7 @@ npm run preview
 | [🏗️ Architecture](./docs/ARCHITECTURE.md)         | 시스템 아키텍처, 데이터 흐름, 상태 관리 구조                |
 | [🧩 Components](./docs/COMPONENTS.md)             | Canvas/UI 컴포넌트 상세 레퍼런스                            |
 | [🤝 Contributing](./CONTRIBUTING.md)              | 기여 가이드, 커밋 컨벤션, PR 프로세스                       |
+| [검증 기록 (2026-09-26)](./docs/VERIFICATION-2026-09-26.md) | 콘텐츠 최신화·구조 개선의 자동 검사와 브라우저 확인 |
 
 ---
 
@@ -258,3 +274,10 @@ MIT License
 <p align="center">
   Made with ❤️ by <a href="https://github.com/sleepyMS">sleepyMS</a>
 </p>
+
+### 2026-09-26 품질 개선
+
+- 3D 그래프 중심의 탐색을 유지하고 모바일·키보드 접근성 개선
+- 3D·상세 화면·연락 폼의 지연 로딩과 기능별 실패 격리
+- 그래프 계산·모달 탭·이벤트 수명을 분리하고 필요한 상태만 구독
+- 검증 결과와 번들 비교: [검증 기록](docs/VERIFICATION-2026-09-26.md)

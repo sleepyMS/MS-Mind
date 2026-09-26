@@ -21,7 +21,7 @@
 
 ### 필수 요구사항
 
-- Node.js 18+
+- Node.js 22.12+ (`.nvmrc` 참조)
 - npm 또는 pnpm
 - Git
 
@@ -52,6 +52,7 @@ npm run dev
 | `npm run dev`     | 개발 서버 실행     |
 | `npm run build`   | 프로덕션 빌드      |
 | `npm run lint`    | ESLint 검사        |
+| `npm test`        | 데이터·탐색·레이아웃 회귀 검사 |
 | `npm run preview` | 빌드 결과 미리보기 |
 
 ---

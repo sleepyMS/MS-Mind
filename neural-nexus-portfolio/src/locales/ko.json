@@ -1,8 +1,13 @@
 {
   "app": {
     "title": "Neural Nexus",
-    "subtitle": "인터랙티브 포트폴리오",
-    "loading": "포트폴리오 로딩 중..."
+    "subtitle": "AI · 풀스택 개발 포트폴리오",
+    "loading": "3D 그래프 준비 중…",
+    "pageTitle": "최민석 | AI · 풀스택 개발 포트폴리오",
+    "description": "최민석의 개발 포트폴리오. AI를 활용한 소프트웨어 개발, 로컬 LLM 투자 자동화, 웹 서비스와 디자인 프로그램 구현 경험을 소개합니다.",
+    "sceneUnavailable": "3D 그래프를 표시할 수 없습니다. 프로젝트 목록에서 계속 탐색할 수 있습니다.",
+    "detailLoading": "상세 내용을 불러오는 중…",
+    "detailUnavailable": "상세 내용을 불러오지 못했습니다. 네트워크를 확인한 뒤 새로고침해주세요."
   },
   "sidebar": {
     "title": "노드 탐색",
@@ -11,7 +16,9 @@
     "totalNodes": "총 {{count}}개의 노드",
     "aria": {
       "open": "패널 열기",
-      "close": "패널 닫기"
+      "close": "패널 닫기",
+      "search": "프로젝트와 기술 검색",
+      "clearSearch": "검색어 지우기"
     }
   },
   "tooltip": {
@@ -111,7 +118,9 @@
       "major": "전공",
       "contact": "연락처",
       "email": "이메일"
-    }
+    },
+    "techColumn": "기술",
+    "reasonColumn": "선정 이유"
   },
   "filter": {
     "show": "보기",
@@ -131,7 +140,7 @@
       "subtitle": "궁금한 점이나 제안이 있으시면 메시지를 남겨주세요!"
     },
     "footer": {
-      "privacy": "이메일은 안전하게 보호됩니다"
+      "note": "입력한 이메일 주소로 답변드립니다."
     },
     "form": {
       "email": "이메일 *",
@@ -159,7 +168,10 @@
       "messageRequired": "메시지를 입력해주세요"
     },
     "success": "메시지가 성공적으로 전송되었습니다! 빠른 시일 내에 답변 드리겠습니다.",
-    "error": "전송에 실패했습니다. 잠시 후 다시 시도해주세요."
+    "error": "전송에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    "loading": "연락 양식을 불러오는 중입니다…",
+    "unavailable": "현재 웹 문의 양식을 사용할 수 없습니다. 아래 이메일로 연락해주세요.",
+    "emailLink": "이메일로 연락하기"
   },
   "controls": {
     "aria": {

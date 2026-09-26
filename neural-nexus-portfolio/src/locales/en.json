@@ -1,8 +1,13 @@
 {
   "app": {
     "title": "Neural Nexus",
-    "subtitle": "Interactive Portfolio",
-    "loading": "Loading portfolio..."
+    "subtitle": "AI & Full-Stack Development",
+    "loading": "Preparing the 3D graph…",
+    "pageTitle": "Min Seok Choi | AI & Full-Stack Portfolio",
+    "description": "Min Seok Choi’s portfolio: software development with AI, local LLM investment automation, web applications, and a design tool in progress.",
+    "sceneUnavailable": "The 3D graph is unavailable. You can still explore the project list.",
+    "detailLoading": "Loading details…",
+    "detailUnavailable": "Could not load the details. Check your connection and refresh the page."
   },
   "sidebar": {
     "title": "Node Explorer",
@@ -11,7 +16,9 @@
     "totalNodes": "Total {{count}} nodes",
     "aria": {
       "open": "Open panel",
-      "close": "Close panel"
+      "close": "Close panel",
+      "search": "Search projects and skills",
+      "clearSearch": "Clear search"
     }
   },
   "tooltip": {
@@ -111,7 +118,9 @@
       "major": "Major",
       "contact": "Contact",
       "email": "Email"
-    }
+    },
+    "techColumn": "Technology",
+    "reasonColumn": "Reason for choosing"
   },
   "filter": {
     "show": "Show",
@@ -131,7 +140,7 @@
       "subtitle": "Feel free to leave a message if you have any questions or suggestions!"
     },
     "footer": {
-      "privacy": "Your email is securely protected"
+      "note": "Replies are sent to the email address you provide."
     },
     "form": {
       "email": "Email *",
@@ -159,7 +168,10 @@
       "messageRequired": "Please enter a message"
     },
     "success": "Message sent successfully! We'll get back to you soon.",
-    "error": "Failed to send. Please try again later."
+    "error": "Failed to send. Please try again later.",
+    "loading": "Loading the contact form…",
+    "unavailable": "The web contact form is currently unavailable. Please use the email below.",
+    "emailLink": "Contact by email"
   },
   "controls": {
     "aria": {

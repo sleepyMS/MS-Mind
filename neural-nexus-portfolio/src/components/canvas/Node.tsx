@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { memo, useMemo, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
@@ -34,25 +34,24 @@ const DEFAULT_COLORS: Record<string, string> = {
  *
  * 참고: 떠다니는 애니메이션 제거됨 - 연결선과 위치 동기화 문제 방지
  */
-export function Node({ node, position }: NodeProps) {
+export const Node = memo(function Node({ node, position }: NodeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
 
-  const {
-    activeNode,
-    hoveredNode,
-    highlightedNodes,
-    setHoveredNode,
-    setHighlightedNodes,
-    setActiveNode,
-    setModalOpen,
-    setCameraTarget,
-    theme,
-    setIsDragging,
-    updateNodePosition,
-  } = useAppStore();
-
-  const { camera, raycaster, pointer } = useThree();
+  const isActive = useAppStore((state) => state.activeNode === node.id);
+  const isHovered = useAppStore((state) => state.hoveredNode === node.id);
+  const isHighlighted = useAppStore((state) => state.highlightedNodes.includes(node.id));
+  const theme = useAppStore((state) => state.theme);
+  const setHoveredNode = useAppStore((state) => state.setHoveredNode);
+  const setHighlightedNodes = useAppStore((state) => state.setHighlightedNodes);
+  const setActiveNode = useAppStore((state) => state.setActiveNode);
+  const setModalOpen = useAppStore((state) => state.setModalOpen);
+  const setCameraTarget = useAppStore((state) => state.setCameraTarget);
+  const setIsDragging = useAppStore((state) => state.setIsDragging);
+  const updateNodePosition = useAppStore((state) => state.updateNodePosition);
+  const camera = useThree((state) => state.camera);
+  const raycaster = useThree((state) => state.raycaster);
+  const pointer = useThree((state) => state.pointer);
 
   // 드래그 상태 관리
   const dragRef = useRef({
@@ -63,9 +62,6 @@ export function Node({ node, position }: NodeProps) {
     offset: new THREE.Vector3(),
   });
 
-  const isActive = activeNode === node.id;
-  const isHovered = hoveredNode === node.id;
-  const isHighlighted = highlightedNodes.includes(node.id);
 
   const size = NODE_SIZES[node.type] || 0.5;
 
@@ -98,6 +94,13 @@ export function Node({ node, position }: NodeProps) {
     });
   }, [color, isDark]);
 
+  // These objects are supplied as mesh props, not declarative R3F children.
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(() => () => {
+    mainMaterial.dispose();
+    glowMaterial.dispose();
+  }, [mainMaterial, glowMaterial]);
+
   // 매 프레임 애니메이션 (호버/활성 효과만, 위치 이동 없음)
   useFrame((_, delta) => {
     if (!meshRef.current || !glowRef.current) return;
@@ -107,14 +110,12 @@ export function Node({ node, position }: NodeProps) {
     const targetGlowScale = isHovered || isActive ? size * 2.5 : size * 1.8;
 
     // 부드러운 크기 전환
-    meshRef.current.scale.lerp(
-      new THREE.Vector3(targetScale, targetScale, targetScale),
-      delta * 8
+    meshRef.current.scale.setScalar(
+      THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, delta * 8)
     );
 
-    glowRef.current.scale.lerp(
-      new THREE.Vector3(targetGlowScale, targetGlowScale, targetGlowScale),
-      delta * 6
+    glowRef.current.scale.setScalar(
+      THREE.MathUtils.lerp(glowRef.current.scale.x, targetGlowScale, delta * 6)
     );
 
     // 발광 강도 애니메이션
@@ -126,29 +127,29 @@ export function Node({ node, position }: NodeProps) {
         ? 0.5
         : 0.5
       : isMainNode
-      ? 0.1
-      : 0.2;
+        ? 0.1
+        : 0.2;
     const hoverIntensity = isDark
       ? isMainNode
         ? 0.4
         : 1.2
       : isMainNode
-      ? 0.2
-      : 0.4;
+        ? 0.2
+        : 0.4;
     const highlightIntensity = isDark
       ? isMainNode
         ? 0.4
         : 0.8
       : isMainNode
-      ? 0.15
-      : 0.3;
+        ? 0.15
+        : 0.3;
 
     const targetIntensity =
       isHovered || isActive
         ? hoverIntensity
         : isHighlighted
-        ? highlightIntensity
-        : baseIntensity;
+          ? highlightIntensity
+          : baseIntensity;
 
     material.emissiveIntensity = THREE.MathUtils.lerp(
       material.emissiveIntensity,
@@ -167,8 +168,8 @@ export function Node({ node, position }: NodeProps) {
       isHovered || isActive
         ? hoverOpacity
         : isHighlighted
-        ? highlightOpacity
-        : baseOpacity;
+          ? highlightOpacity
+          : baseOpacity;
 
     glowMat.opacity = THREE.MathUtils.lerp(
       glowMat.opacity,
@@ -184,15 +185,39 @@ export function Node({ node, position }: NodeProps) {
   const isMeshHovered = useRef(false);
   const isLabelHovered = useRef(false);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const modalTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragReleaseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const labelDragListeners = useRef<{ move: (event: MouseEvent) => void; up: () => void } | null>(null);
 
   // 언마운트 시 타이머 정리
   useEffect(() => {
+    const dragState = dragRef.current;
     return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
+      for (const timer of [hoverTimeoutRef.current, modalTimeoutRef.current, dragReleaseTimeoutRef.current]) {
+        if (timer !== null) clearTimeout(timer);
+      }
+      const listeners = labelDragListeners.current;
+      if (listeners) {
+        window.removeEventListener("mousemove", listeners.move);
+        window.removeEventListener("mouseup", listeners.up);
+      }
+      const state = useAppStore.getState();
+      if (dragState.dragging || dragReleaseTimeoutRef.current !== null) state.setIsDragging(false);
+      if (state.hoveredNode === node.id) {
+        state.setHoveredNode(null);
+        state.setHighlightedNodes([]);
+        document.body.style.cursor = "auto";
       }
     };
-  }, []);
+  }, [node.id]);
+
+  const releaseDragging = () => {
+    if (dragReleaseTimeoutRef.current !== null) clearTimeout(dragReleaseTimeoutRef.current);
+    dragReleaseTimeoutRef.current = setTimeout(() => {
+      dragReleaseTimeoutRef.current = null;
+      setIsDragging(false);
+    }, 50);
+  };
 
   const scheduleUnhover = () => {
     if (hoverTimeoutRef.current) {
@@ -201,7 +226,7 @@ export function Node({ node, position }: NodeProps) {
 
     hoverTimeoutRef.current = setTimeout(() => {
       // Mesh와 Label 둘 다 호버 상태가 아닐 때만 해제
-      if (!isMeshHovered.current && !isLabelHovered.current) {
+      if (!isMeshHovered.current && !isLabelHovered.current && useAppStore.getState().hoveredNode === node.id) {
         setHoveredNode(null);
         setHighlightedNodes([]);
         document.body.style.cursor = "auto";
@@ -251,14 +276,7 @@ export function Node({ node, position }: NodeProps) {
   };
 
   const handleClick = () => {
-    // 드래그 중이었다면 클릭 이벤트 무시 (드래그 종료 시 active가 false로 되지만,
-    // 여기서 거리 등을 체크할 수 있음. 하지만 간단히 드래그 직후 클릭 방지는
-    // isDragging 상태나 별도 ref로 처리 가능. 현재는 드래그와 클릭을 구분해야 함.)
-
-    // 만약 마우스가 거의 움직이지 않았다면 클릭으로 처리
-    // 하지만 지금 구조에서는 active가 false가 된 직후에 click이 발생.
-    // 일단 클릭 동작 수행. (드래그 시에도 클릭이 발생하는 부작용은 추후 개선)
-
+    // Drag release briefly keeps this flag set to suppress its synthetic click.
     if (useAppStore.getState().isDragging) return;
 
     setActiveNode(node.id);
@@ -285,8 +303,10 @@ export function Node({ node, position }: NodeProps) {
     const delay = Math.min(distance * 15, 800);
 
     // 카메라 애니메이션 후 모달 열기
-    setTimeout(() => {
-      setModalOpen(true);
+    if (modalTimeoutRef.current !== null) clearTimeout(modalTimeoutRef.current);
+    modalTimeoutRef.current = setTimeout(() => {
+      modalTimeoutRef.current = null;
+      if (useAppStore.getState().activeNode === node.id) setModalOpen(true);
     }, delay);
   };
 
@@ -296,6 +316,11 @@ export function Node({ node, position }: NodeProps) {
     if (!meshRef.current || !meshRef.current.parent?.parent) return;
 
     // 드래그 시작 정보 저장
+    if (dragReleaseTimeoutRef.current !== null) {
+      clearTimeout(dragReleaseTimeoutRef.current);
+      dragReleaseTimeoutRef.current = null;
+      setIsDragging(false);
+    }
     dragRef.current.active = true;
     dragRef.current.dragging = false;
     dragRef.current.startPointer.copy(pointer);
@@ -312,9 +337,9 @@ export function Node({ node, position }: NodeProps) {
     // 교차점 계산 (월드 좌표)
     const intersectPoint = new THREE.Vector3();
     raycaster.setFromCamera(pointer, camera);
-    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+    const intersection = raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
-    if (intersectPoint) {
+    if (intersection) {
       // 월드 교차점을 부모의 로컬 좌표로 변환
       const parent = meshRef.current.parent.parent;
       const intersectLocal = intersectPoint.clone();
@@ -325,6 +350,9 @@ export function Node({ node, position }: NodeProps) {
         new THREE.Vector3(...position),
         intersectLocal
       );
+    } else {
+      dragRef.current.active = false;
+      return;
     }
 
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -339,7 +367,7 @@ export function Node({ node, position }: NodeProps) {
       if (dragRef.current.dragging) {
         // 드래그가 발생했던 경우에만 isDragging 상태 해제 딜레이
         dragRef.current.dragging = false;
-        setTimeout(() => setIsDragging(false), 50);
+        releaseDragging();
       } else {
         // 드래그 없이 클릭만 한 경우 즉시 상태 정리 (사실 여기서 isDragging은 false 상태임)
       }
@@ -369,9 +397,9 @@ export function Node({ node, position }: NodeProps) {
     // 현재 포인터 위치에서 평면 교차점 다시 계산
     const intersectPoint = new THREE.Vector3();
     raycaster.setFromCamera(pointer, camera);
-    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+    const intersection = raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
-    if (intersectPoint) {
+    if (intersection) {
       // 월드 교차점을 부모의 로컬 좌표로 변환
       const parent = meshRef.current.parent.parent;
       const intersectLocal = intersectPoint.clone();
@@ -391,6 +419,11 @@ export function Node({ node, position }: NodeProps) {
     if (!meshRef.current || !meshRef.current.parent?.parent) return;
 
     // 드래그 시작 정보 저장
+    if (dragReleaseTimeoutRef.current !== null) {
+      clearTimeout(dragReleaseTimeoutRef.current);
+      dragReleaseTimeoutRef.current = null;
+      setIsDragging(false);
+    }
     dragRef.current.active = true;
     dragRef.current.dragging = false;
     dragRef.current.startPointer.set(
@@ -414,9 +447,9 @@ export function Node({ node, position }: NodeProps) {
     );
     const intersectPoint = new THREE.Vector3();
     raycaster.setFromCamera(currentPointer, camera);
-    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+    const intersection = raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
-    if (intersectPoint) {
+    if (intersection) {
       // 월드 교차점을 부모의 로컬 좌표로 변환
       const parent = meshRef.current.parent.parent;
       const intersectLocal = intersectPoint.clone();
@@ -427,9 +460,18 @@ export function Node({ node, position }: NodeProps) {
         new THREE.Vector3(...position),
         intersectLocal
       );
+    } else {
+      dragRef.current.active = false;
+      return;
     }
 
-    // 글로벌 이벤트 리스너 등록
+    // Keep the installed callbacks for cleanup even after this node rerenders.
+    const previousListeners = labelDragListeners.current;
+    if (previousListeners) {
+      window.removeEventListener("mousemove", previousListeners.move);
+      window.removeEventListener("mouseup", previousListeners.up);
+    }
+    labelDragListeners.current = { move: handleLabelMouseMove, up: handleLabelMouseUp };
     window.addEventListener("mousemove", handleLabelMouseMove);
     window.addEventListener("mouseup", handleLabelMouseUp);
   };
@@ -459,9 +501,9 @@ export function Node({ node, position }: NodeProps) {
     // 현재 포인터 위치에서 평면 교차점 다시 계산
     const intersectPoint = new THREE.Vector3();
     raycaster.setFromCamera(currentPointer, camera);
-    raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
+    const intersection = raycaster.ray.intersectPlane(dragRef.current.plane, intersectPoint);
 
-    if (intersectPoint) {
+    if (intersection) {
       // 월드 교차점을 부모의 로컬 좌표로 변환
       const parent = meshRef.current.parent.parent;
       const intersectLocal = intersectPoint.clone();
@@ -479,13 +521,14 @@ export function Node({ node, position }: NodeProps) {
 
       if (dragRef.current.dragging) {
         dragRef.current.dragging = false;
-        setTimeout(() => setIsDragging(false), 50);
+        releaseDragging();
       }
     }
 
     // 글로벌 이벤트 리스너 제거
     window.removeEventListener("mousemove", handleLabelMouseMove);
     window.removeEventListener("mouseup", handleLabelMouseUp);
+    labelDragListeners.current = null;
   };
 
   return (
@@ -517,18 +560,18 @@ export function Node({ node, position }: NodeProps) {
         node.type === "project" ||
         isHovered ||
         (node.type === "skill" && isHighlighted)) && (
-        <Html
-          position={[0, size + 0.5, 0]}
-          center
-          zIndexRange={[10, 0]}
-          style={{
-            userSelect: "none",
-            pointerEvents:
-              node.type === "skill" && !isHovered ? "none" : "auto",
-          }}
-        >
-          <div
-            className={`
+          <Html
+            position={[0, size + 0.5, 0]}
+            center
+            zIndexRange={[10, 0]}
+            style={{
+              userSelect: "none",
+              pointerEvents:
+                node.type === "skill" && !isHovered ? "none" : "auto",
+            }}
+          >
+            <div
+              className={`
               px-3 py-1.5 rounded-full
               bg-black/60 backdrop-blur-sm
               border
@@ -538,20 +581,20 @@ export function Node({ node, position }: NodeProps) {
               cursor-pointer
               ${isHovered ? "scale-110" : ""}
             `}
-            style={{
-              borderColor: isHovered ? color : "rgba(255,255,255,0.2)",
-              color: "#ffffff",
-              textShadow: `0 0 10px ${color}`,
-            }}
-            onMouseEnter={handleLabelMouseEnter}
-            onMouseLeave={handleLabelMouseLeave}
-            onClick={handleClick}
-            onMouseDown={handleLabelMouseDown}
-          >
-            {node.label}
-          </div>
-        </Html>
-      )}
+              style={{
+                borderColor: isHovered ? color : "rgba(255,255,255,0.2)",
+                color: "#ffffff",
+                textShadow: `0 0 10px ${color}`,
+              }}
+              onMouseEnter={handleLabelMouseEnter}
+              onMouseLeave={handleLabelMouseLeave}
+              onClick={handleClick}
+              onMouseDown={handleLabelMouseDown}
+            >
+              {node.label}
+            </div>
+          </Html>
+        )}
     </group>
   );
-}
+});

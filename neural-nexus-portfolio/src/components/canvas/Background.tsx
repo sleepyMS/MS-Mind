@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { memo, useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Stars, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -10,8 +10,8 @@ import { MoonNode } from "./MoonNode";
  * 다크 모드: 별과 파티클로 우주 분위기
  * 라이트 모드: 밝은 하늘 + 구름 + 태양빛 파티클
  */
-export function Background() {
-  const { theme } = useAppStore();
+export const Background = memo(function Background({ reducedMotion }: { reducedMotion: boolean }) {
+  const theme = useAppStore((state) => state.theme);
   const isDark = theme === "dark";
   const particlesRef = useRef<THREE.Points>(null);
   const sunRef = useRef<THREE.Mesh>(null);
@@ -20,21 +20,28 @@ export function Background() {
   // 공전 궤도용 ref
   const moonOrbitRef = useRef<THREE.Group>(null);
   const sunOrbitRef = useRef<THREE.Group>(null);
+  const particleTheme = useRef<boolean | null>(null);
 
   // 달 텍스처 로드 (로컬 이미지)
   const moonTexture = useTexture("/images/moon_texture.jpg");
 
   // 떠다니는 파티클 생성
-  const particleGeometry = useMemo(() => {
+  const particleAttributes = useMemo(() => {
     const count = 300;
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
+    // 렌더를 다시 계산해도 같은 분포를 유지하는 로컬 난수열
+    let seed = 7301;
+    const nextRandom = () => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+
     for (let i = 0; i < count; i++) {
-      // 라이트 모드에서는 더 가까이 배치
-      const radius = 20 + Math.random() * 60;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
+      const radius = 20 + nextRandom() * 60;
+      const theta = nextRandom() * Math.PI * 2;
+      const phi = Math.acos(2 * nextRandom() - 1);
 
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
@@ -46,18 +53,17 @@ export function Background() {
       colors[i * 3 + 2] = 1;
     }
 
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-
-    return geometry;
+    return { positions, colors };
   }, []);
 
   // 애니메이션
   useFrame((_, delta) => {
+    if (reducedMotion && particleTheme.current === isDark) return;
     if (particlesRef.current) {
-      particlesRef.current.rotation.y += delta * 0.01;
-      particlesRef.current.rotation.x += delta * 0.005;
+      if (!reducedMotion) {
+        particlesRef.current.rotation.y += delta * 0.01;
+        particlesRef.current.rotation.x += delta * 0.005;
+      }
 
       // 테마에 따른 색상 변경
       const colors = particlesRef.current.geometry.attributes.color;
@@ -74,7 +80,10 @@ export function Background() {
         }
       }
       colors.needsUpdate = true;
+      particleTheme.current = isDark;
     }
+
+    if (reducedMotion) return;
 
     // 태양 자전 + 공전
     if (sunRef.current) {
@@ -110,7 +119,7 @@ export function Background() {
             factor={4}
             saturation={0.5}
             fade
-            speed={0.5}
+            speed={reducedMotion ? 0 : 0.5}
           />
           {/* 달 공전 궤도 */}
           <group ref={moonOrbitRef}>
@@ -168,7 +177,17 @@ export function Background() {
       )}
 
       {/* 떠다니는 파티클 */}
-      <points ref={particlesRef} geometry={particleGeometry}>
+      <points ref={particlesRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[particleAttributes.positions, 3]}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            args={[particleAttributes.colors, 3]}
+          />
+        </bufferGeometry>
         <pointsMaterial
           size={isDark ? 0.5 : 1.2}
           vertexColors
@@ -180,4 +199,4 @@ export function Background() {
       </points>
     </>
   );
-}
+});

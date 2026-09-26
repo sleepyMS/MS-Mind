@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { memo, useRef, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -9,17 +9,15 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
  * 카메라 관리 컴포넌트
  * 부드러운 Lerp 기반 카메라 이동
  */
-export function CameraManager() {
+export const CameraManager = memo(function CameraManager({ reducedMotion }: { reducedMotion: boolean }) {
   const controlsRef = useRef<OrbitControlsImpl>(null);
-  const { camera } = useThree();
+  const camera = useThree((state) => state.camera);
 
-  const {
-    cameraTarget,
-    isAnimating,
-    setIsAnimating,
-    sceneRotation,
-    isDragging,
-  } = useAppStore();
+  const cameraTarget = useAppStore((state) => state.cameraTarget);
+  const isAnimating = useAppStore((state) => state.isAnimating);
+  const setIsAnimating = useAppStore((state) => state.setIsAnimating);
+  const sceneRotation = useAppStore((state) => state.sceneRotation);
+  const isDragging = useAppStore((state) => state.isDragging);
 
   // 애니메이션 상태를 ref로 관리 (렌더링 최적화)
   const animationRef = useRef({
@@ -51,6 +49,15 @@ export function CameraManager() {
 
     const targetCameraPosition = targetLookAt.clone().add(rotatedOffset);
 
+    if (reducedMotion) {
+      animationRef.current.isActive = false;
+      camera.position.copy(targetCameraPosition);
+      controlsRef.current.target.copy(targetLookAt);
+      controlsRef.current.update();
+      setIsAnimating(false);
+      return;
+    }
+
     // 현재 위치 저장
     animationRef.current.startPosition.copy(camera.position);
     animationRef.current.targetPosition.copy(targetCameraPosition);
@@ -67,7 +74,7 @@ export function CameraManager() {
     );
 
     setIsAnimating(true);
-  }, [cameraTarget, camera, setIsAnimating, sceneRotation]);
+  }, [cameraTarget, camera, setIsAnimating, sceneRotation, reducedMotion]);
 
   // 매 프레임 부드러운 보간
   useFrame((_, delta) => {
@@ -119,4 +126,4 @@ export function CameraManager() {
       enabled={!isAnimating && !isDragging}
     />
   );
-}
+});

@@ -18,7 +18,7 @@ const normalizedData: Record<string, NeuralData> = {
 
 // 현재 언어에 맞는 데이터 반환
 export function getNodesData(language: string): NeuralData {
-  return normalizedData[language] || normalizedData.ko;
+  return normalizedData[language.split("-")[0]] || normalizedData.ko;
 }
 
 // 기본 export (ko) - 기존 호환성 유지

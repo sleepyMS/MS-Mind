@@ -1,5 +1,5 @@
-import { useRef, useMemo, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { memo, useEffect, useRef, useMemo, useState } from "react";
+import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { useAppStore } from "../../stores/useAppStore";
@@ -10,13 +10,24 @@ import { useTranslation } from "react-i18next";
  * 달 전용 이스터에그 노드 컴포넌트
  * Background.tsx의 달 위치에 렌더링됨
  */
-export function MoonNode() {
+export const MoonNode = memo(function MoonNode() {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const modalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { setActiveNode, setModalOpen, setCameraTarget, activeNode } =
-    useAppStore();
+  useEffect(() => {
+    return () => {
+      if (modalTimerRef.current !== null) {
+        clearTimeout(modalTimerRef.current);
+      }
+    };
+  }, []);
+
+  const setActiveNode = useAppStore((state) => state.setActiveNode);
+  const setModalOpen = useAppStore((state) => state.setModalOpen);
+  const setCameraTarget = useAppStore((state) => state.setCameraTarget);
+  const isActive = useAppStore((state) => state.activeNode === "hidden-moon");
 
   const { i18n } = useTranslation();
 
@@ -26,7 +37,6 @@ export function MoonNode() {
     return data.nodes.find((n) => n.id === "hidden-moon");
   }, [i18n.language]);
 
-  const isActive = activeNode === "hidden-moon";
   const size = 1.5;
   const color = "#ffff00"; // 달과 어울리는 노란색/금색
 
@@ -37,14 +47,12 @@ export function MoonNode() {
     const targetScale = isHovered || isActive ? size * 1.5 : size;
     const targetGlowScale = isHovered || isActive ? size * 2.0 : size * 1.4;
 
-    meshRef.current.scale.lerp(
-      new THREE.Vector3(targetScale, targetScale, targetScale),
-      delta * 8
+    meshRef.current.scale.setScalar(
+      THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, delta * 8)
     );
 
-    glowRef.current.scale.lerp(
-      new THREE.Vector3(targetGlowScale, targetGlowScale, targetGlowScale),
-      delta * 6
+    glowRef.current.scale.setScalar(
+      THREE.MathUtils.lerp(glowRef.current.scale.x, targetGlowScale, delta * 6)
     );
 
     // 발광 효과
@@ -56,7 +64,7 @@ export function MoonNode() {
     );
   });
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     if (!node) return;
 
@@ -67,9 +75,13 @@ export function MoonNode() {
     setActiveNode(node.id);
     setCameraTarget([worldPos.x, worldPos.y, worldPos.z]);
 
-    // 모달 지연 오픈
-    setTimeout(() => {
-      setModalOpen(true);
+    // 재클릭과 언마운트 때 이전 지연 작업을 취소한다.
+    if (modalTimerRef.current !== null) {
+      clearTimeout(modalTimerRef.current);
+    }
+    modalTimerRef.current = setTimeout(() => {
+      modalTimerRef.current = null;
+      if (useAppStore.getState().activeNode === node.id) setModalOpen(true);
     }, 500);
   };
 
@@ -121,4 +133,4 @@ export function MoonNode() {
       )}
     </group>
   );
-}
+});

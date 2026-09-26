@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
@@ -17,9 +18,17 @@ export function MiniMap() {
     setModalOpen,
     setCameraTarget,
     theme,
-  } = useAppStore();
+  } = useAppStore(useShallow((state) => ({
+    nodePositions: state.nodePositions,
+    activeNode: state.activeNode,
+    hoveredNode: state.hoveredNode,
+    setActiveNode: state.setActiveNode,
+    setModalOpen: state.setModalOpen,
+    setCameraTarget: state.setCameraTarget,
+    theme: state.theme,
+  })));
   const isDark = theme === "dark";
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const data = getNodesData(i18n.language);
 
@@ -52,20 +61,31 @@ export function MiniMap() {
 
     return data.nodes
       .filter((node) => node.type !== "hidden")
-      .map((node) => {
+      .flatMap((node) => {
         const pos = nodePositions.get(node.id);
-        if (!pos) return null;
+        if (!pos) return [];
 
         const [x, , z] = pos;
-        return {
+        return [{
           ...node,
           x: padding + ((x - minX) / rangeX) * size,
           y: padding + ((z - minZ) / rangeZ) * size,
           position: pos,
-        };
-      })
-      .filter(Boolean);
+        }];
+      });
   }, [nodePositions, data.nodes]);
+
+  const mappedConnections = useMemo(() => {
+    const nodesById = new Map(mappedNodes.map((node) => [node.id, node]));
+    const seen = new Set<string>();
+    return mappedNodes.flatMap((source) => source.connections.flatMap((targetId) => {
+      const target = nodesById.get(targetId);
+      const id = [source.id, targetId].sort().join(":");
+      if (!target || seen.has(id)) return [];
+      seen.add(id);
+      return [{ id, source, target }];
+    }));
+  }, [mappedNodes]);
 
   const handleNodeClick = (
     nodeId: string,
@@ -93,35 +113,24 @@ export function MiniMap() {
       }}
     >
       {/* 노드들 */}
-      <svg className="w-full h-full" viewBox="0 0 100 100">
+      <svg className="w-full h-full" viewBox="0 0 100 100" role="group" aria-label={t("sidebar.title")}>
         {/* 연결선 */}
-        <g opacity="0.3">
-          {data.nodes.flatMap((node) => {
-            const fromNode = mappedNodes.find((n) => n?.id === node.id);
-            if (!fromNode) return [];
-
-            return node.connections.map((connId) => {
-              const toNode = mappedNodes.find((n) => n?.id === connId);
-              if (!toNode) return null;
-
-              return (
-                <line
-                  key={`${node.id}-${connId}`}
-                  x1={fromNode.x}
-                  y1={fromNode.y}
-                  x2={toNode.x}
-                  y2={toNode.y}
-                  stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)"}
-                  strokeWidth="0.5"
-                />
-              );
-            });
-          })}
+        <g opacity="0.3" aria-hidden="true">
+          {mappedConnections.map(({ id, source, target }) => (
+            <line
+              key={id}
+              x1={source.x}
+              y1={source.y}
+              x2={target.x}
+              y2={target.y}
+              stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)"}
+              strokeWidth="0.5"
+            />
+          ))}
         </g>
 
         {/* 노드 점들 */}
         {mappedNodes.map((node) => {
-          if (!node) return null;
           const isActive = activeNode === node.id;
           const isHovered = hoveredNode === node.id;
           const nodeColor = getThemeColor(node.color || "#00ffff", theme);
@@ -145,12 +154,22 @@ export function MiniMap() {
               )}
               {/* 노드 */}
               <circle
+                role="button"
+                tabIndex={0}
+                aria-label={node.label}
+                aria-haspopup="dialog"
                 cx={node.x}
                 cy={node.y}
                 r={size}
                 fill={nodeColor}
-                className="cursor-pointer transition-all duration-200 hover:opacity-80"
-                onClick={() => handleNodeClick(node.id, node.position!)}
+                className="cursor-pointer transition-all duration-200 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2"
+                onClick={() => handleNodeClick(node.id, node.position)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    handleNodeClick(node.id, node.position);
+                  }
+                }}
               />
             </g>
           );

@@ -1,479 +1,157 @@
-import { useState, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import emailjs from "@emailjs/browser";
+import { ContactFallback } from "./ContactFallback";
 import { MiniTooltip } from "./MiniTooltip";
 
 interface ContactFormProps {
   isDark: boolean;
   nodeColor: string;
-  isModal?: boolean;
+  isActive: boolean;
 }
 
 type FormStatus = "idle" | "sending" | "success" | "error";
+type FieldName = "email" | "title" | "message";
+type ContactValues = Record<FieldName, string>;
+type FieldErrors = Partial<Record<FieldName, string>>;
 
-export function ContactForm({ isDark, nodeColor }: ContactFormProps) {
+const emptyValues: ContactValues = { email: "", title: "", message: "" };
+const fields: { name: FieldName; label: string; requiredError: string }[] = [
+  { name: "email", label: "email", requiredError: "emailRequired" },
+  { name: "title", label: "subject", requiredError: "subjectRequired" },
+  { name: "message", label: "message", requiredError: "messageRequired" },
+];
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function ContactForm({ isDark, nodeColor, isActive }: ContactFormProps) {
   const { t } = useTranslation();
+  const formId = useId();
   const formRef = useRef<HTMLFormElement>(null);
+  const mountedRef = useRef(false);
+  const sendingRef = useRef(false);
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [formData, setFormData] = useState({
-    email: "",
-    title: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState<{
-    email?: string;
-    title?: string;
-    message?: string;
-  }>({});
+  const [formData, setFormData] = useState<ContactValues>(emptyValues);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const isConfigured = Boolean(
+    import.meta.env.VITE_EMAILJS_SERVICE_ID &&
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID &&
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+  );
 
-  // 이메일 유효성 검사
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    // 실시간 유효성 검사
-    if (name === "email") {
-      if (value && !validateEmail(value)) {
-        setErrors((prev) => ({
-          ...prev,
-          email: t("contact.validation.emailInvalid"),
-        }));
-      } else {
-        setErrors((prev) => ({ ...prev, email: undefined }));
-      }
-    } else if (name === "title" && errors.title) {
-      setErrors((prev) => ({ ...prev, title: undefined }));
-    } else if (name === "message" && errors.message) {
-      setErrors((prev) => ({ ...prev, message: undefined }));
-    }
+    const name = event.target.name as FieldName;
+    const value = event.target.value;
+    setFormData((previous) => ({ ...previous, [name]: value }));
+    setErrors((previous) => ({ ...previous, [name]: undefined }));
+    if (status !== "sending") setStatus("idle");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!isConfigured || sendingRef.current) return;
 
-    // 모든 필드 유효성 검사
-    const newErrors: { email?: string; title?: string; message?: string } = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = t("contact.validation.emailRequired");
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = t("contact.validation.emailInvalid");
+    const values = {
+      email: formData.email.trim(),
+      title: formData.title.trim(),
+      message: formData.message.trim(),
+    };
+    const nextErrors: FieldErrors = {};
+    for (const field of fields) {
+      if (!values[field.name]) nextErrors[field.name] = field.requiredError;
     }
-
-    if (!formData.title.trim()) {
-      newErrors.title = t("contact.validation.subjectRequired");
+    if (values.email && !emailPattern.test(values.email)) {
+      nextErrors.email = "emailInvalid";
     }
-
-    if (!formData.message.trim()) {
-      newErrors.message = t("contact.validation.messageRequired");
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    setErrors(nextErrors);
+    const invalidField = fields.find((field) => nextErrors[field.name]);
+    if (invalidField) {
+      formRef.current?.querySelector<HTMLElement>(`[name="${invalidField.name}"]`)?.focus();
       return;
     }
 
+    sendingRef.current = true;
     setStatus("sending");
-
     try {
+      const { default: emailjs } = await import("@emailjs/browser");
+      if (!mountedRef.current) return;
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
-          email: formData.email,
-          title: formData.title,
-          message: formData.message,
-        },
+        values,
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
-      setStatus("success");
-      setFormData({ email: "", title: "", message: "" });
-      setErrors({});
-      setTimeout(() => setStatus("idle"), 3000);
-    } catch (error) {
-      console.error("EmailJS Error:", error);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 3000);
+      if (mountedRef.current) {
+        setStatus("success");
+        setFormData(emptyValues);
+      }
+    } catch {
+      if (mountedRef.current) setStatus("error");
+    } finally {
+      sendingRef.current = false;
     }
   };
 
-  const inputStyle = {
-    background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
-    border: isDark
-      ? "1px solid rgba(255,255,255,0.1)"
-      : "1px solid rgba(0,0,0,0.1)",
-    color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.8)",
-  };
-
-  const focusStyle = {
-    borderColor: nodeColor,
-    boxShadow: `0 0 0 2px ${nodeColor}30`,
-  };
+  if (!isConfigured) return <ContactFallback />;
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* 이메일 */}
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="contact-email"
-          className="text-sm font-medium"
-          style={{
-            color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
-          }}
+    <form ref={formRef} onSubmit={handleSubmit} noValidate aria-busy={status === "sending"}>
+      <fieldset disabled={status === "sending"} className="flex flex-col gap-4 min-w-0">
+        {fields.map(({ name, label }) => {
+          const id = `${formId}-${name}`;
+          const error = errors[name];
+          const inputProps = {
+            id,
+            name,
+            value: formData[name],
+            onChange: handleChange,
+            required: true,
+            "aria-invalid": Boolean(error),
+            "aria-describedby": `${id}-help${error ? ` ${id}-error` : ""}`,
+            placeholder: t(`contact.placeholder.${label}`),
+            className: "w-full px-4 py-3 rounded-xl outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-violet-400/60 disabled:opacity-60",
+            style: {
+              background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+              border: `1px solid ${error ? "#ef4444" : isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)"}`,
+              color: isDark ? "#f1f5f9" : "#1e293b",
+            },
+          };
+          return (
+            <div key={name} className="flex flex-col gap-1.5">
+              <label htmlFor={id} className="text-sm font-medium" style={{ color: isDark ? "#cbd5e1" : "#475569" }}>
+                {t(`contact.form.${label}`)}
+              </label>
+              <span id={`${id}-help`} className="sr-only">{t(`contact.tooltip.${label}`)}</span>
+              <MiniTooltip content={t(`contact.tooltip.${label}`)} className="flex w-full" disabled={!isActive}>
+                {name === "message" ? (
+                  <textarea {...inputProps} rows={4} className={`${inputProps.className} resize-y`} />
+                ) : (
+                  <input {...inputProps} type={name === "email" ? "email" : "text"} autoComplete={name === "email" ? "email" : "off"} />
+                )}
+              </MiniTooltip>
+              {error && <p id={`${id}-error`} role="alert" className="text-xs text-red-500">{t(`contact.validation.${error}`)}</p>}
+            </div>
+          );
+        })}
+        <button
+          type="submit"
+          className="mt-2 px-6 py-3 rounded-xl font-medium text-white transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-60 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-4"
+          style={{ background: `linear-gradient(135deg, ${nodeColor}, ${nodeColor}cc)`, boxShadow: `0 4px 20px ${nodeColor}30` }}
         >
-          {t("contact.form.email")}
-        </label>
-        <MiniTooltip content={t("contact.tooltip.email")}>
-          <input
-            type="text"
-            id="contact-email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder={t("contact.placeholder.email")}
-            title=""
-            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
-            style={{
-              ...inputStyle,
-              ...(errors.email
-                ? {
-                    borderColor: "#ef4444",
-                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                  }
-                : {}),
-            }}
-            onFocus={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.email
-                  ? {
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : focusStyle
-              )
-            }
-            onBlur={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.email
-                  ? {
-                      ...inputStyle,
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : inputStyle
-              )
-            }
-          />
-        </MiniTooltip>
-        {errors.email && (
-          <p
-            className="text-xs mt-1 flex items-center gap-1"
-            style={{ color: "#ef4444" }}
-          >
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {errors.email}
-          </p>
-        )}
+          {t(status === "sending" ? "contact.form.sending" : "contact.form.send")}
+        </button>
+      </fieldset>
+      <div aria-live="polite" aria-atomic="true">
+        {status === "success" && <p className="mt-3 text-sm text-emerald-500">{t("contact.success")}</p>}
+        {status === "error" && <div className="mt-3"><ContactFallback messageKey="contact.error" /></div>}
       </div>
-
-      {/* 제목 */}
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="contact-title"
-          className="text-sm font-medium"
-          style={{
-            color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
-          }}
-        >
-          {t("contact.form.subject")}
-        </label>
-        <MiniTooltip content={t("contact.tooltip.subject")}>
-          <input
-            type="text"
-            id="contact-title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder={t("contact.placeholder.subject")}
-            title=""
-            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
-            style={{
-              ...inputStyle,
-              ...(errors.title
-                ? {
-                    borderColor: "#ef4444",
-                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                  }
-                : {}),
-            }}
-            onFocus={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.title
-                  ? {
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : focusStyle
-              )
-            }
-            onBlur={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.title
-                  ? {
-                      ...inputStyle,
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : inputStyle
-              )
-            }
-          />
-        </MiniTooltip>
-        {errors.title && (
-          <p
-            className="text-xs mt-1 flex items-center gap-1"
-            style={{ color: "#ef4444" }}
-          >
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {errors.title}
-          </p>
-        )}
-      </div>
-
-      {/* 메시지 */}
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="contact-message"
-          className="text-sm font-medium"
-          style={{
-            color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
-          }}
-        >
-          {t("contact.form.message")}
-        </label>
-        <MiniTooltip content={t("contact.tooltip.message")}>
-          <textarea
-            key={`message-${isDark}`}
-            id="contact-message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            placeholder={t("contact.placeholder.message")}
-            title=""
-            rows={4}
-            className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200 resize-none"
-            style={{
-              ...inputStyle,
-              ...(errors.message
-                ? {
-                    borderColor: "#ef4444",
-                    boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                  }
-                : {}),
-            }}
-            onFocus={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.message
-                  ? {
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : focusStyle
-              )
-            }
-            onBlur={(e) =>
-              Object.assign(
-                e.target.style,
-                errors.message
-                  ? {
-                      ...inputStyle,
-                      borderColor: "#ef4444",
-                      boxShadow: "0 0 0 2px rgba(239, 68, 68, 0.2)",
-                    }
-                  : inputStyle
-              )
-            }
-          />
-        </MiniTooltip>
-        {errors.message && (
-          <p
-            className="text-xs mt-1 flex items-center gap-1"
-            style={{ color: "#ef4444" }}
-          >
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {errors.message}
-          </p>
-        )}
-      </div>
-
-      {/* 전송 버튼 */}
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className="mt-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
-        style={{
-          background:
-            status === "success"
-              ? "linear-gradient(135deg, #10b981, #059669)"
-              : status === "error"
-              ? "linear-gradient(135deg, #ef4444, #dc2626)"
-              : `linear-gradient(135deg, ${nodeColor}, ${nodeColor}cc)`,
-          color: "white",
-          opacity: status === "sending" ? 0.7 : 1,
-          cursor: status === "sending" ? "not-allowed" : "pointer",
-          boxShadow: `0 4px 20px ${nodeColor}40`,
-        }}
-        onMouseEnter={(e) => {
-          if (status !== "sending") {
-            e.currentTarget.style.transform = "scale(1.02)";
-            e.currentTarget.style.filter = "brightness(1.1)";
-            e.currentTarget.style.boxShadow = `0 6px 25px ${nodeColor}60`;
-          }
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.filter = "brightness(1)";
-          e.currentTarget.style.boxShadow = `0 4px 20px ${nodeColor}40`;
-        }}
-      >
-        {status === "idle" && (
-          <>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            {t("contact.form.send")}
-          </>
-        )}
-        {status === "sending" && (
-          <>
-            <svg
-              className="w-5 h-5 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            {t("contact.form.sending")}
-          </>
-        )}
-        {status === "success" && (
-          <>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            {t("contact.form.success")}
-          </>
-        )}
-        {status === "error" && (
-          <>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-            {t("contact.form.error")}
-          </>
-        )}
-      </button>
-
-      {status === "success" && (
-        <p className="text-center text-sm" style={{ color: "#10b981" }}>
-          {t("contact.success")}
-        </p>
-      )}
-      {status === "error" && (
-        <p className="text-center text-sm" style={{ color: "#ef4444" }}>
-          {t("contact.error")}
-        </p>
-      )}
     </form>
   );
 }

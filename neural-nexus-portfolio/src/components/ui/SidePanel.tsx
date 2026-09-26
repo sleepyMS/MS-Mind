@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useId, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
+import { NODE_TYPE_ORDER, PROJECT_CATEGORY_ORDER, SKILL_CATEGORY_ORDER, searchNodes } from "../../data/catalog";
 import type { NodeType, ProjectCategory, SkillCategory } from "../../types";
 import { getThemeColor } from "../../utils/themeUtils";
 
@@ -97,13 +99,24 @@ export function SidePanel() {
     setActiveNode,
     setModalOpen,
     setCameraTarget,
-    nodePositions,
     setHoveredNode,
     theme,
-  } = useAppStore();
+  } = useAppStore(useShallow((state) => ({
+    isSidePanelOpen: state.isSidePanelOpen,
+    setSidePanelOpen: state.setSidePanelOpen,
+    searchQuery: state.searchQuery,
+    setSearchQuery: state.setSearchQuery,
+    setActiveNode: state.setActiveNode,
+    setModalOpen: state.setModalOpen,
+    setCameraTarget: state.setCameraTarget,
+    setHoveredNode: state.setHoveredNode,
+    theme: state.theme,
+  })));
   const isDark = theme === "dark";
   const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const panelId = useId();
 
   // 모바일에서는 사이드바 초기 접힘
   useEffect(() => {
@@ -140,39 +153,7 @@ export function SidePanel() {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const data = getNodesData(i18n.language);
 
-  const filteredNodes = data.nodes.filter(
-    (node) =>
-      node.type !== "hidden" &&
-      (node.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        node.details?.description
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        node.details?.features?.some(
-          (f) =>
-            f.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            f.items.some((i) =>
-              i.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        ) ||
-        node.details?.optimizations?.some(
-          (o) =>
-            o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            o.items.some((i) =>
-              i.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        ) ||
-        node.details?.challenges?.some(
-          (c) =>
-            c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.solution.toLowerCase().includes(searchQuery.toLowerCase())
-        ) ||
-        node.details?.learnings?.some(
-          (l) =>
-            l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            l.content.toLowerCase().includes(searchQuery.toLowerCase())
-        ))
-  );
+  const filteredNodes = searchNodes(data.nodes, searchQuery, i18n.language);
 
   const groupedNodes = filteredNodes.reduce((acc, node) => {
     const type = node.type as NodeType;
@@ -233,7 +214,7 @@ export function SidePanel() {
   };
 
   const handleNodeClick = (nodeId: string) => {
-    const position = nodePositions.get(nodeId);
+    const position = useAppStore.getState().nodePositions.get(nodeId);
     if (position) {
       setCameraTarget(position);
     }
@@ -251,7 +232,13 @@ export function SidePanel() {
       {/* 토글 버튼 */}
       <button
         ref={buttonRef}
-        onClick={() => setSidePanelOpen(!isSidePanelOpen)}
+        type="button"
+        aria-expanded={isSidePanelOpen}
+        aria-controls={panelId}
+        onClick={() => {
+          setSidePanelOpen(!isSidePanelOpen);
+          handleNodeHover(null);
+        }}
         className={`
           fixed left-4 top-1/2 -translate-y-1/2 z-40
           w-10 h-10 rounded-xl flex items-center justify-center
@@ -295,6 +282,19 @@ export function SidePanel() {
       {/* 패널 본체 */}
       <div
         ref={panelRef}
+        id={panelId}
+        role="navigation"
+        aria-label={t("sidebar.title")}
+        aria-hidden={!isSidePanelOpen}
+        inert={!isSidePanelOpen}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.stopPropagation();
+            setSidePanelOpen(false);
+            handleNodeHover(null);
+            buttonRef.current?.focus();
+          }
+        }}
         className={`
           fixed left-0 top-0 bottom-0 z-30
           w-64 md:w-72 flex flex-col
@@ -325,11 +325,13 @@ export function SidePanel() {
           {/* 검색창 */}
           <div className="relative group">
             <input
-              type="text"
+              ref={searchRef}
+              type="search"
+              aria-label={t("sidebar.aria.search")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("sidebar.searchPlaceholder")}
-              className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
+              className="w-full px-4 py-2.5 pl-10 pr-10 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2 focus:ring-cyan-400/50"
               style={{
                 background: isDark
                   ? "rgba(255,255,255,0.08)"
@@ -354,7 +356,12 @@ export function SidePanel() {
             </svg>
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery("")}
+                type="button"
+                aria-label={t("sidebar.aria.clearSearch")}
+                onClick={() => {
+                  setSearchQuery("");
+                  searchRef.current?.focus();
+                }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95"
                 style={{
                   background: isDark
@@ -383,7 +390,7 @@ export function SidePanel() {
 
         {/* 노드 목록 */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
-          {(Object.keys(typeConfig) as NodeType[]).map((type) => {
+          {NODE_TYPE_ORDER.map((type) => {
             const nodes = groupedNodes[type] || [];
             if (nodes.length === 0) return null;
 
@@ -403,6 +410,8 @@ export function SidePanel() {
               >
                 {/* 그룹 헤더 */}
                 <button
+                  type="button"
+                  aria-expanded={isExpanded}
                   onClick={() => toggleType(type)}
                   className="group w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.02] cursor-pointer active:scale-[0.98]"
                   style={{
@@ -464,14 +473,7 @@ export function SidePanel() {
                     {/* 프로젝트 타입이면 카테고리별로 서브그룹 렌더링 */}
                     {type === "project"
                       ? // 카테고리 순서 정의
-                        (
-                          [
-                            "frontend",
-                            "backend",
-                            "ai-ml",
-                            "creative",
-                          ] as ProjectCategory[]
-                        ).map((category) => {
+                        PROJECT_CATEGORY_ORDER.map((category) => {
                           const categoryNodes =
                             projectsByCategory[category] || [];
                           if (categoryNodes.length === 0) return null;
@@ -487,6 +489,8 @@ export function SidePanel() {
                             <div key={category} className="mb-2">
                               {/* 카테고리 헤더 */}
                               <button
+                                type="button"
+                                aria-expanded={isCatExpanded}
                                 onClick={() => toggleCategory(category)}
                                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                                 style={{
@@ -538,6 +542,9 @@ export function SidePanel() {
                                     return (
                                       <button
                                         key={node.id}
+                                        type="button"
+                                        onFocus={() => handleNodeHover(node.id)}
+                                        onBlur={() => handleNodeHover(null)}
                                         onClick={() => handleNodeClick(node.id)}
                                         onMouseEnter={() =>
                                           handleNodeHover(node.id)
@@ -584,15 +591,7 @@ export function SidePanel() {
                         })
                       : type === "skill"
                       ? // 스킬 카테고리별로 서브그룹 렌더링
-                        (
-                          [
-                            "language",
-                            "framework",
-                            "database",
-                            "library",
-                            "tool",
-                          ] as SkillCategory[]
-                        ).map((category) => {
+                        SKILL_CATEGORY_ORDER.map((category) => {
                           const categoryNodes =
                             skillsByCategory[category] || [];
                           if (categoryNodes.length === 0) return null;
@@ -608,6 +607,8 @@ export function SidePanel() {
                             <div key={category} className="mb-2">
                               {/* 스킬 카테고리 헤더 */}
                               <button
+                                type="button"
+                                aria-expanded={isCatExpanded}
                                 onClick={() => toggleSkillCategory(category)}
                                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                                 style={{
@@ -659,6 +660,9 @@ export function SidePanel() {
                                     return (
                                       <button
                                         key={node.id}
+                                        type="button"
+                                        onFocus={() => handleNodeHover(node.id)}
+                                        onBlur={() => handleNodeHover(null)}
                                         onClick={() => handleNodeClick(node.id)}
                                         onMouseEnter={() =>
                                           handleNodeHover(node.id)
@@ -712,6 +716,9 @@ export function SidePanel() {
                           return (
                             <button
                               key={node.id}
+                              type="button"
+                              onFocus={() => handleNodeHover(node.id)}
+                              onBlur={() => handleNodeHover(null)}
                               onClick={() => handleNodeClick(node.id)}
                               onMouseEnter={() => handleNodeHover(node.id)}
                               onMouseLeave={() => handleNodeHover(null)}

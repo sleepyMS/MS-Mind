@@ -181,41 +181,33 @@ useEffect(() => {
 
 2D 오버레이 UI 컴포넌트들입니다.
 
-### Modal.tsx
+### Modal.tsx와 modal/
 
-**역할**: 노드 상세 정보 표시
+**역할**: 노드 상세 정보 조립과 표시. 책임과 의존 방향은 [아키텍처](./ARCHITECTURE.md#책임과-의존-방향-2026-09-26)를 따릅니다.
 
-**위치**: `src/components/ui/Modal.tsx`
-
-**크기**: ~3400 lines (가장 큰 컴포넌트)
+- `Modal.tsx`: 현재 노드·언어·테마를 조회하고 선택/닫기 콜백을 연결합니다.
+- `modal/ModalDialog.tsx`: 헤더·탭·본문·푸터를 조합합니다.
+- `modal/useModalController.ts`: 선택 탭, 키보드 탐색, 포커스와 닫기 애니메이션의 수명을 관리합니다.
+- `modal/useModalSwipe.ts`: 수직 스크롤과 수평 스와이프를 구분하고 전환 작업을 정리합니다.
+- `modal/tabRegistry.tsx`: 탭 ID·번역 키·표시 조건·본문 렌더러의 정본입니다.
+- `modal/contents/`: 프로필, 프로젝트, 기능, 문제 해결, 코드, 실험 결과 등의 표현 컴포넌트입니다. 전역 스토어 대신 필요한 props를 받습니다.
 
 **탭 구조**:
-| 탭 ID | 이름 | 내용 |
-|-------|------|------|
-| `overview` | 개요 | 기본 정보, 설명 |
-| `features` | 기능 | 주요 기능, 최적화 |
-| `tech` | 기술 | 기술 스택, 선정 이유 |
-| `code` | 코드 | 코드 예시 |
-| `challenges` | 도전 | 문제 해결, 배운 점 |
 
-**특수 기능**:
+| 대상 | 탭 |
+|------|----|
+| 프로필 | `profile`, `projects`, `research` |
+| 프로젝트·기술 | `description`, `features`, `optimizations`, `trouble`, `code`, `results`, `references`, `lesson`, `skills` |
 
-- 연결 노드 드롭다운: 빠른 노드 탐색
-- 외부 링크: GitHub, Deploy, Blog, PDF
-- 키보드 네비게이션: ESC로 닫기, 화살표로 탭 이동
+실제 제공되는 데이터가 있는 탭만 표시됩니다. 기술 선정 이유는 `description`에 포함됩니다.
 
-**렌더링 조건**:
+**탐색**:
 
-```typescript
-// 탭 가용성 결정
-const tabs = [
-  { id: "overview", available: true },
-  { id: "features", available: !!details?.features },
-  { id: "tech", available: !!details?.techStackDocs },
-  { id: "code", available: !!details?.codeExamples },
-  { id: "challenges", available: !!details?.challenges },
-];
-```
+- ESC로 닫기, 좌우 방향키로 사이드바와 같은 순서의 노드를 순회합니다.
+- 탭에 포커스가 있으면 방향키와 Home/End로 탭을 선택합니다. 입력 필드의 방향키는 가로채지 않습니다.
+- 연결 노드 메뉴와 주요 프로젝트에서 해당 노드로 바로 이동합니다.
+- 모바일은 본문 가로 스와이프로 순회하고 탭 바에서는 탭 스크롤을 우선합니다.
+- 닫기·노드 변경·언마운트 시 이전 전환 타이머를 취소합니다.
 
 ---
 
@@ -227,7 +219,7 @@ const tabs = [
 
 **기능**:
 
-- 검색: 노드명으로 실시간 필터링
+- 검색: `data/catalog.ts`에서 노드명·설명·사용 기술·기능·문제 해결 경험을 검색하고 모달 순회와 같은 순서로 정렬
 - 타입별 그룹화: Main, Project, Skill, Lesson
 - 카테고리별 서브그룹: Frontend, Backend, AI-ML 등
 - 접기/펼치기: 그룹 및 서브그룹
@@ -355,3 +347,9 @@ const tabs = [
 - [README.md](../README.md) - 프로젝트 개요
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 시스템 아키텍처
 - [CUSTOMIZATION.md](./CUSTOMIZATION.md) - 커스터마이징 가이드
+
+## 초기 진입과 지연 로딩 (2026-09-26)
+
+프로필과 프로젝트는 기존 사이드바와 3D 노드에서 연다. 그래프를 가리는 상시 소개 카드는 표시하지 않는다. `SceneStatus`는 전체 화면을 가리지 않는 준비 안내이며, 3D가 실패해도 HTML 목록과 상세 화면은 사용할 수 있다. `Modal`과 `ContactForm`은 사용할 때 불러오고 `FeatureBoundary`가 실패를 해당 기능 안에 가둔다.
+
+닫힌 사이드바·연락창·조작 안내·모바일 필터는 접근성 트리와 키보드 순회에서 제외된다. 상세 화면과 로딩 대체 화면은 Escape·포커스 순환·복귀를 제공한다. 미니맵 노드는 Tab으로 선택한 뒤 Enter/Space로 열 수 있다. 문의 설정이 없을 때는 `ContactFallback`이 프로필의 이메일 링크를 표시한다. 실제 메일 전송은 유효한 입력을 제출했을 때만 실행한다.

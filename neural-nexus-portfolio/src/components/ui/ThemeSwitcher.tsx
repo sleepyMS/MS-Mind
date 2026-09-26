@@ -5,12 +5,14 @@ import { useAppStore } from "../../stores/useAppStore";
  * 테마 전환 버튼 - 태양/달 애니메이션
  */
 export function ThemeSwitcher() {
-  const { theme, toggleTheme } = useAppStore();
+  const theme = useAppStore((state) => state.theme);
+  const toggleTheme = useAppStore((state) => state.toggleTheme);
   const { t } = useTranslation();
   const isDark = theme === "dark";
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
       className="fixed top-6 right-6 z-30 group cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200"
       title={isDark ? t("theme.switchTo.light") : t("theme.switchTo.dark")}

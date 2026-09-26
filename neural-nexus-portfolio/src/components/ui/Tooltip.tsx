@@ -1,21 +1,18 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 import { getNodesData } from "../../data";
+import type { NeuralData, NeuralNode } from "../../types";
+import { getThemeColor } from "../../utils/themeUtils";
 
 /**
  * 3D 노드 호버 시 표시되는 툴팁 컴포넌트
  * 마우스 위치를 추적하며 노드 정보 표시
  */
-import { getThemeColor } from "../../utils/themeUtils";
-
 export function Tooltip() {
-  const { hoveredNode, theme } = useAppStore();
-  const { t, i18n } = useTranslation();
-  const isDark = theme === "dark";
+  const hoveredNode = useAppStore((state) => state.hoveredNode);
+  const { i18n } = useTranslation();
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
-  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const data = getNodesData(i18n.language);
   const node = hoveredNode
@@ -47,24 +44,36 @@ export function Tooltip() {
     return () => document.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // 호버 상태에 따른 표시/숨김
-  useEffect(() => {
-    if (hoveredNode) {
-      const timer = setTimeout(() => setIsVisible(true), 100);
-      return () => clearTimeout(timer);
-    } else {
-      setIsVisible(false);
-    }
-  }, [hoveredNode]);
+  return node ? (
+    <TooltipContent key={node.id} node={node} data={data} position={position} />
+  ) : null;
+}
 
-  if (!node || !isVisible) return null;
+interface TooltipContentProps {
+  node: NeuralNode;
+  data: NeuralData;
+  position: { x: number; y: number };
+}
+
+/** 노드별 호버 수명이 끝나면 대기 중인 표시 작업도 함께 정리한다. */
+function TooltipContent({ node, data, position }: TooltipContentProps) {
+  const theme = useAppStore((state) => state.theme);
+  const { t } = useTranslation();
+  const isDark = theme === "dark";
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isVisible) return null;
 
   const rawColor = node.color || "#00ffff";
   const nodeColor = getThemeColor(rawColor, theme);
 
   return (
     <div
-      ref={tooltipRef}
       className={`
         hidden md:block fixed z-50 pointer-events-none
         transition-all duration-200 ease-out

@@ -48,7 +48,9 @@ graph TB
         L[MiniMap.tsx]
     end
 
-    A --> C
+    A1 --> A3
+    A2 --> A3
+    A3 --> C
     C --> |d3-force 시뮬레이션| D
     C --> E
     B <--> H
@@ -89,7 +91,7 @@ sequenceDiagram
     JSON->>Index: 언어별 데이터 로드
     Index->>Index: 양방향 연결 정규화
     Index->>Scene: 정규화된 데이터 반환
-    Scene->>d3: 시뮬레이션 초기화
+    Scene->>d3: useForceGraph → graph/layout 계산
     d3->>d3: 물리 시뮬레이션 실행
     d3->>Scene: 계산된 위치 반환
     Scene->>Node: 노드 렌더링 (position)
@@ -118,12 +120,25 @@ sequenceDiagram
 2. useAppStore.toggleNodeType(type)
 3. visibleNodeTypes 상태 업데이트
 4. Scene.tsx → 필터링된 노드만 렌더링
-5. SidePanel.tsx → 필터링된 노드 목록 표시
+5. SidePanel.tsx → 검색어와 카테고리 접기 상태로 목록 탐색 (3D 표시 필터와 독립)
 ```
 
 ---
 
 ## 컴포넌트 구조
+
+### 책임과 의존 방향 (2026-09-26)
+
+- `data/index.ts`는 언어별 콘텐츠 로딩과 연결 정규화를 소유한다. `data/catalog.ts`는 검색·표시 순서·인접 노드 선택을 담당하는 순수 함수이며 React나 전역 상태에 의존하지 않는다. 사이드바와 모달이 같은 순서를 사용한다.
+- `graph/visibility.ts`는 타입·카테고리 필터와 숨겨진 노드를 경유하는 연결 탐색을 담당한다. 좌표와 무관하게 캐시하므로 드래그 중 연결 구조를 다시 탐색하지 않는다.
+- `graph/layout.ts`는 입력 노드의 복사본으로 3D 위치를 계산한다. `useForceGraph`는 계산 결과를 React와 위치 저장소에 연결한다. 번역만 달라질 때는 같은 그래프의 위치를 유지한다.
+- `App.tsx`는 HTML 탐색을 즉시 표시하고 `Scene`을 지연 로드한다. `FeatureBoundary`가 3D 실패를 격리하고 `SceneStatus`는 실제 씬 준비 상태만 표시한다. 프로필·프로젝트는 기존 사이드바와 노드에서 열며, 그래프 위에 상시 소개 카드를 띄우지 않는다. 전체 화면을 시간으로 차단하는 로딩 연출은 사용하지 않는다.
+- `Modal.tsx`는 사용자가 상세 화면을 열 때 지연 로드되어 데이터·번역·전역 상태를 조립한다. `modal/useModalController.ts`와 `useModalSwipe.ts`가 이벤트와 애니메이션 수명을 관리하고, 닫기·전환·언마운트 시 예약 작업을 정리한다.
+- `modal/tabRegistry.tsx`가 탭 표시 조건과 본문 컴포넌트의 정본이다. `modal/contents/`의 컴포넌트는 필요한 데이터와 탐색 콜백만 받으며 저장소를 직접 읽지 않는다. 헤더·탭·본문은 각각의 표현 책임을 가진다.
+- 연락 폼은 처음 열 때, EmailJS는 유효한 폼을 제출할 때 로드한다. 설정 누락과 폼 로드 실패는 같은 프로필 이메일 대체 UI를 사용한다. 닫힌 팝오버와 패널은 `inert`로 키보드 탐색에서 제외한다.
+- 함수형 React의 합성과 타입 계약으로 책임 분리(SRP), 탭 확장(OCP), 좁은 props(ISP), 데이터·이벤트 처리와 표현의 의존 분리(DIP)를 적용한다. 상태를 공유하기 위한 클래스 상속은 사용하지 않는다.
+
+검증은 데이터의 양 언어 연결 일치, 검색과 순회의 동일한 순서, 숨김 노드 제외, 레이아웃 입력 불변성을 자동 확인하고, 빌드·린트와 브라우저의 탭/언어/테마/키보드/모바일 확인으로 마친다.
 
 ### 디렉토리 구조
 
@@ -132,7 +147,11 @@ src/
 ├── data/                   # 데이터 레이어
 │   ├── nodes.ko.json      # 한국어 노드 데이터
 │   ├── nodes.en.json      # 영어 노드 데이터
-│   └── index.ts           # 데이터 로더 및 정규화
+│   ├── index.ts           # 데이터 로더 및 정규화
+│   └── catalog.ts         # 검색·표시 순서·인접 노드 선택
+│
+├── graph/                  # 물리 배치(layout)·표시 연결(visibility) 순수 계산
+├── hooks/useForceGraph.ts  # 위치 계산과 저장소 연결
 │
 ├── locales/                # UI 번역 레이어
 │   ├── ko.json            # 한국어 UI 텍스트
@@ -148,7 +167,10 @@ src/
 │   │   └── PostProcessing.tsx # 후처리 효과
 │   │
 │   └── ui/                 # 2D UI 컴포넌트
-│       ├── Modal.tsx          # 상세 정보 모달
+│       ├── FeatureBoundary.tsx # 선택 기능의 실패 격리
+│       ├── SceneStatus.tsx    # 3D 준비·실패 표시
+│       ├── Modal.tsx          # 상세 모달 조립
+│       ├── modal/            # 이벤트 수명·탭 등록·본문·헤더
 │       ├── SidePanel.tsx      # 노드 탐색 사이드바
 │       ├── NodeFilter.tsx     # 필터 바
 │       ├── MiniMap.tsx        # 미니맵
@@ -163,21 +185,10 @@ src/
 #### Scene.tsx
 
 - **역할**: 메인 3D 씬 컨테이너
-- **핵심 로직**:
-  - `forceSimulation()`: d3-force-3d로 노드 위치 계산
-  - `forceManyBody()`: 노드 간 반발력
-  - `forceLink()`: 연결된 노드 간 인력
-  - `forceCenter()`: 중앙 정렬
+- **위치 계산**: `useForceGraph`가 `graph/layout.ts`에 위임. 이 모듈이 연결 인력, 반발력, 충돌과 중앙 고정을 소유한다.
 - **렌더링**: Node, ConnectionLine 컴포넌트 생성
 
-```typescript
-// d3-force 시뮬레이션 핵심 로직
-const simulation = forceSimulation(nodesData)
-  .force("charge", forceManyBody().strength(-100))
-  .force("link", forceLink(linksData).distance(50))
-  .force("center", forceCenter())
-  .force("collision", forceCollide().radius(20));
-```
+배치는 그래프 구조가 바뀔 때 동기적으로 계산하고 시뮬레이션 타이머를 정지한다. 언어 전환은 같은 위치를 유지한다.
 
 #### Node.tsx
 
@@ -202,9 +213,9 @@ const simulation = forceSimulation(nodesData)
 
 ### UI 컴포넌트
 
-#### Modal.tsx (~3400 lines)
+#### Modal.tsx와 modal/
 
-- **역할**: 노드 상세 정보 표시
+- **역할**: 노드 상세 정보 조립. 표현 컴포넌트와 이벤트 수명은 앞의 책임 표를 따른다.
 - **탭 구조**:
   - Overview: 기본 정보, 설명
   - Features: 주요 기능
@@ -301,8 +312,8 @@ graph LR
 
 ```
 1. useFrame() 호출 (매 프레임)
-2. d3-force 시뮬레이션 tick
-3. 노드 위치 업데이트
+2. 노드·배경·연결선 애니메이션 업데이트
+3. 저장된 노드 위치 사용 (물리 배치는 프레임마다 재계산하지 않음)
 4. OrbitControls 업데이트
 5. 씬 렌더링
 6. 후처리 효과 적용
@@ -324,3 +335,9 @@ graph LR
 - [README.md](../README.md) - 프로젝트 개요
 - [CUSTOMIZATION.md](./CUSTOMIZATION.md) - 커스터마이징 가이드
 - [COMPONENTS.md](./COMPONENTS.md) - 컴포넌트 상세 레퍼런스
+
+### 렌더링과 자원 수명
+
+전역 상태는 컴포넌트가 사용하는 selector로만 구독한다. 노드와 연결선은 메모이제이션하고, 좌표 변경은 해당 위치를 사용하는 렌더러만 갱신한다. 노드의 프레임별 벡터는 재사용하며, 연결선의 geometry와 shader material은 서로 다른 수명을 가진다. 직접 만든 Three.js 자원과 지연 이벤트는 소유 컴포넌트가 정리한다. 미니맵은 ID 인덱스와 고유 연결 목록을 사용한다.
+
+CSS와 주요 3D 동작은 `prefers-reduced-motion`을 따른다. 시스템 설정 구독은 canvas의 `useReducedMotion`이 소유한다.

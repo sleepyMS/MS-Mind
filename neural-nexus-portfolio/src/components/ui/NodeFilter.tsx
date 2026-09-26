@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId, useSyncExternalStore } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/useAppStore";
 
@@ -71,6 +72,15 @@ const categoryOptions: CategoryOption[] = [
   },
 ];
 
+const mobileQuery = "(max-width: 767px)";
+const getMobileSnapshot = () => window.matchMedia(mobileQuery).matches;
+const getServerMobileSnapshot = () => false;
+const subscribeMobile = (notify: () => void) => {
+  const query = window.matchMedia(mobileQuery);
+  query.addEventListener("change", notify);
+  return () => query.removeEventListener("change", notify);
+};
+
 /**
  * 노드 필터 + 카테고리 드롭다운 + 언어 전환 통합 컨트롤 바
  */
@@ -83,30 +93,37 @@ export function NodeFilter() {
     toggleCategory,
     resetCategoryFilter,
     theme,
-  } = useAppStore();
+  } = useAppStore(useShallow((state) => ({
+    visibleNodeTypes: state.visibleNodeTypes,
+    toggleNodeType: state.toggleNodeType,
+    visibleCategories: state.visibleCategories,
+    toggleCategory: state.toggleCategory,
+    resetCategoryFilter: state.resetCategoryFilter,
+    theme: state.theme,
+  })));
   const isDark = theme === "dark";
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useSyncExternalStore(subscribeMobile, getMobileSnapshot, getServerMobileSnapshot);
+  const controlsId = useId();
+  const categoryId = useId();
+  const mobileButtonRef = useRef<HTMLButtonElement>(null);
+  const collapseButtonRef = useRef<HTMLButtonElement>(null);
+  const projectButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedCategoryCount = visibleCategories.length;
-  const allCategoriesSelected = selectedCategoryCount === 4;
-
-  // 모바일 감지 (768px 미만)
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const allCategoriesSelected = selectedCategoryCount === categoryOptions.length;
 
   useEffect(() => {
+    if (isMobile && isExpanded) collapseButtonRef.current?.focus();
+  }, [isMobile, isExpanded]);
+
+  useEffect(() => {
+    if (!isExpanded && !isCategoryDropdownOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -124,7 +141,13 @@ export function NodeFilter() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isExpanded, isCategoryDropdownOpen]);
+
+  const closeMobileControls = () => {
+    setIsExpanded(false);
+    setIsCategoryDropdownOpen(false);
+    mobileButtonRef.current?.focus();
+  };
 
   const getProjectButtonColor = () => {
     if (!visibleNodeTypes.includes("project")) {
@@ -152,6 +175,13 @@ export function NodeFilter() {
     >
       {/* 모바일 토글 버튼 */}
       <button
+        ref={mobileButtonRef}
+        type="button"
+        aria-label={t("filter.show")}
+        aria-expanded={isExpanded}
+        aria-controls={controlsId}
+        aria-hidden={isExpanded}
+        tabIndex={isExpanded ? -1 : 0}
         onClick={() => setIsExpanded(!isExpanded)}
         className={`
            md:hidden cursor-pointer
@@ -188,6 +218,20 @@ export function NodeFilter() {
 
       {/* 메인 컨트롤 바 */}
       <div
+        id={controlsId}
+        inert={isMobile && !isExpanded}
+        aria-hidden={isMobile && !isExpanded}
+        onKeyDown={(event) => {
+          if (event.key !== "Escape") return;
+          if (isCategoryDropdownOpen) {
+            event.stopPropagation();
+            setIsCategoryDropdownOpen(false);
+            projectButtonRef.current?.focus();
+          } else if (isMobile) {
+            event.stopPropagation();
+            closeMobileControls();
+          }
+        }}
         className={`
           flex items-center gap-1.5 rounded-2xl transition-all
           ${
@@ -208,7 +252,10 @@ export function NodeFilter() {
       >
         {/* 모바일 접기 버튼 */}
         <button
-          onClick={() => setIsExpanded(false)}
+          ref={collapseButtonRef}
+          type="button"
+          aria-label={t("filter.hide")}
+          onClick={closeMobileControls}
           className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg shrink-0 cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
           style={{
             background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
@@ -250,6 +297,12 @@ export function NodeFilter() {
               ref={isProject ? dropdownRef : undefined}
             >
               <button
+                ref={isProject ? projectButtonRef : undefined}
+                type="button"
+                aria-label={t(`nodeTypes.${option.labelKey}`)}
+                aria-pressed={isProject ? undefined : isActive}
+                aria-expanded={isProject ? isCategoryDropdownOpen : undefined}
+                aria-controls={isProject ? categoryId : undefined}
                 onClick={() => {
                   if (isProject && isActive) {
                     setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
@@ -327,6 +380,9 @@ export function NodeFilter() {
               {/* 카테고리 드롭다운 - 사이드바 스타일과 동일 */}
               {isProject && isCategoryDropdownOpen && (
                 <div
+                  id={categoryId}
+                  role="group"
+                  aria-label={t("nodeTypes.project")}
                   className={`absolute left-0 p-2 rounded-xl z-50 min-w-[180px] ${
                     isMobile ? "bottom-full mb-2" : "top-full mt-2"
                   }`}
@@ -345,6 +401,8 @@ export function NodeFilter() {
                 >
                   {/* 전체 선택 버튼 */}
                   <button
+                    type="button"
+                    aria-pressed={allCategoriesSelected}
                     onClick={(e) => {
                       e.stopPropagation();
                       resetCategoryFilter();
@@ -412,6 +470,8 @@ export function NodeFilter() {
                       return (
                         <button
                           key={catOption.category}
+                          type="button"
+                          aria-pressed={isSelected}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleCategory(catOption.category);
