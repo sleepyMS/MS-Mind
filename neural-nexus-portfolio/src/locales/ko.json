@@ -117,7 +117,8 @@
       "birthDate": "생년월일",
       "major": "전공",
       "contact": "연락처",
-      "email": "이메일"
+      "email": "이메일",
+      "resume": "이력서 PDF 내려받기"
     },
     "techColumn": "기술",
     "reasonColumn": "선정 이유"

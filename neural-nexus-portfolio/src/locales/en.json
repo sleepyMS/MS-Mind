@@ -117,7 +117,8 @@
       "birthDate": "Birth Date",
       "major": "Major",
       "contact": "Contact",
-      "email": "Email"
+      "email": "Email",
+      "resume": "Download résumé (PDF)"
     },
     "techColumn": "Technology",
     "reasonColumn": "Reason for choosing"

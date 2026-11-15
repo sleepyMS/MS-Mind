@@ -5,6 +5,7 @@
       "type": "main",
       "label": "Min Seok",
       "connections": [
+        "project-heimdall",
         "project-slow-brain-fast-hands",
         "project-design-tool",
         "skill-ai-development",
@@ -15,7 +16,7 @@
         "project-paper-tft"
       ],
       "details": {
-        "description": "Hello, I'm Min Seok Choi, a developer who uses AI to turn ideas into working software. I connect backend execution with user interfaces, using Codex and Claude Code for implementation, debugging, and verification.\n\nI use my local Qwen3.8 27B investment automation system, Slow Brain, Fast Hands, for personal investing. I am also building a design application using Jev.",
+        "description": "Hello, I'm Min Seok Choi, a developer who uses AI to turn ideas into software that actually runs. Since March 2026 I have worked on the AI Content Development Team at Hackers, where I built an in-house AI design program that takes a chat request through design to publishing. On my own, I use Slow Brain, Fast Hands, an investment automation system built on hosted LLMs, for personal investing while verifying it feature by feature. For the 2nd AX Talent War, I built and deployed Heimdall on my own, an approval system that releases acquisition funds only as far as conditions have been confirmed.",
         "personalInfo": [
           {
             "key": "name",
@@ -42,7 +43,7 @@
           "title": "Deep Dive & Wide View",
           "content": "I balance a 'Deep Dive' into individual problems with a 'Wide View' of the whole system. I define the problem and constraints first, then verify and improve what I build with AI through execution and testing."
         },
-        "extendedBio": "I am interested in connecting repetitive tasks through software and creating interfaces that help people understand and use the results. My work on an AI chatbot, a quant platform, and a 3D portfolio brings together data processing and user experience.\n\nI am currently developing Slow Brain, Fast Hands with Codex and Claude Code. I document requirements and design decisions, then test both normal behavior and failure conditions. A separate gateway checks order limits and execution conditions when connecting local LLM tool calls to trading operations.\n\nI use the system for personal investing while continuing to verify and improve its individual features. I am also extending my experience with AI development by building a design application using Jev.",
+        "extendedBio": "I am interested in connecting repetitive tasks through software and creating interfaces that help people understand and use the results. My work on an AI chatbot, a quant platform, and a 3D portfolio brings together data processing and user experience.\n\nI am developing Slow Brain, Fast Hands with Codex and Claude Code. I document requirements and design decisions, then test both normal behavior and failure conditions. Hosted LLMs only propose actions through tools, while a deterministic gateway enforces order limits, invalidation thresholds, and the kill switch from limits.yaml.\n\nAt Hackers I completed an in-house AI design program, and in Heimdall I designed AI reading and judgment results to reach the ledger and approvals only after a person confirms them.",
         "profile": {
           "education": [
             {
@@ -50,7 +51,7 @@
               "school": "Kangnam University",
               "major": "Software Application",
               "status": "Current (Senior)",
-              "gpa": "4.23 / 4.5 (97.6%) - Top of class for last 4 semesters"
+              "gpa": "4.19 / 4.5 - Top of class for last 4 semesters"
             },
             {
               "period": "Mar 2017 – Feb 2020",
@@ -59,7 +60,14 @@
               "status": "Graduated"
             }
           ],
-          "career": [],
+          "career": [
+            {
+              "period": "2026.03.02 – Present",
+              "company": "Hackers",
+              "role": "AI Content Development Team",
+              "description": "Built an in-house AI design program (completed)"
+            }
+          ],
           "skills": [
             {
               "category": "Languages",
@@ -109,8 +117,8 @@
               "items": [
                 "Codex",
                 "Claude Code",
-                "Jev",
-                "Qwen3.8 27B",
+                "Gemini API",
+                "TypeSafe Jev",
                 "LangGraph"
               ]
             },
@@ -128,23 +136,33 @@
         },
         "keyProjects": [
           {
+            "id": "project-heimdall",
+            "title": "Heimdall",
+            "desc": "Submission for the Samil PwC challenge in the 2nd AX Talent War · An approval system that releases a KRW 15 billion acquisition payment only as far as conditions are confirmed (solo build, deployed)",
+            "tech": [
+              "Python",
+              "FastAPI",
+              "PostgreSQL",
+              "React",
+              "Gemini"
+            ]
+          },
+          {
             "id": "project-slow-brain-fast-hands",
             "title": "Slow Brain, Fast Hands",
-            "desc": "Local Qwen3.8 27B investment automation, used for personal investing with ongoing feature verification and improvement",
+            "desc": "Investment automation on hosted LLMs, used for personal investing with ongoing feature verification and improvement",
             "tech": [
               "Python",
               "LangGraph",
               "Next.js",
-              "Qwen3.8 27B"
+              "Hosted LLM API"
             ]
           },
           {
             "id": "project-design-tool",
-            "title": "Design Application (In Progress)",
-            "desc": "A design application under development using Jev",
-            "tech": [
-              "Jev"
-            ]
+            "title": "AI Design Program",
+            "desc": "In-house program at Hackers (completed) · Describe a design in chat and AI orchestrates design tools and skills through to publishing",
+            "tech": []
           },
           {
             "id": "project-cortex",
@@ -186,7 +204,7 @@
           {
             "category": "AI Orchestration & Verification",
             "items": [
-              "Separating local LLM tool calls from execution authority",
+              "Separating LLM tool calls and judgments from execution authority",
               "Evaluating strategies with data available at the time and trading costs"
             ]
           },
@@ -222,9 +240,81 @@
             "issuer": "ICT Platform Society",
             "indexed": "KCI Indexed"
           }
-        ]
+        ],
+        "resumeLink": "/resume.pdf"
       },
       "color": "#00ffff"
+    },
+    {
+      "id": "project-heimdall",
+      "type": "project",
+      "category": "backend",
+      "label": "Heimdall",
+      "connections": [
+        "me",
+        "skill-python",
+        "skill-fastapi",
+        "skill-postgresql",
+        "skill-react",
+        "skill-typescript",
+        "skill-docker",
+        "skill-hosted-llm"
+      ],
+      "details": {
+        "description": "My submission for the Samil PwC challenge in the 2nd AX Talent War (Nov 2026), built solo and deployed to production. The challenge problem is that money goes out before its conditions are confirmed. Heimdall is an approval system that ties the CEO and board decision on the first Celtonic acquisition payment (KRW 15 billion) so that it is released only as far as conditions are confirmed.\n\nAI has only two roles: reading replies and judging their meaning. Calculations, verdicts, and approvals belong to the engine and people, and the ledger and verdicts do not change until the person in charge confirms. When AI fails, the system shows the reason instead of filling in the gap.",
+        "technologies": [
+          "Python",
+          "FastAPI",
+          "PostgreSQL",
+          "Alembic",
+          "React",
+          "TypeScript",
+          "Docker",
+          "Gemini",
+          "TypeSafe Jev",
+          "axhub"
+        ],
+        "deployLink": "https://samil-ax-app-w0st.axhub.app",
+        "coreFeatures": [
+          "Recalculates normalized EBITDA and the price boundary from source financial data",
+          "Updates conditions precedent, the funds ledger, tasks, and audit records after approval",
+          "Re-evaluates corrected replies and adjusts the cap and follow-up plan",
+          "Reflects impact on other departments (Masil defense funds, Corevia expansion) in fund allocation"
+        ],
+        "features": [
+          {
+            "title": "Recalculating the Price Basis",
+            "items": [
+              "Recalculates normalized EBITDA and the price boundary from source financial data",
+              "The seller's claimed 46% discount becomes 1.19% after normalization",
+              "Headroom to the price boundary is KRW 31 million"
+            ]
+          },
+          {
+            "title": "Execution and Corrections After Approval",
+            "items": [
+              "Updates conditions precedent, the funds ledger, tasks, and audit records after approval",
+              "Re-evaluates a corrected reply and lowers the cap from KRW 15.180 billion to KRW 14.805 billion"
+            ]
+          },
+          {
+            "title": "Impact on Other Departments",
+            "items": [
+              "Allocates Masil defense funds of KRW 1.532 billion first",
+              "Holds the KRW 18 billion Corevia expansion"
+            ]
+          },
+          {
+            "title": "AI Roles and Boundaries",
+            "items": [
+              "Reading replies: Google Gemini (gemini-3.5-flash-lite) reads them, verified against cited passages, numbers, and rules",
+              "Judging meaning: TypeSafe Jev classifies statements as confirmed, promised, or estimated and detects superseded documents, acting only toward holding or reconfirming",
+              "The ledger and verdicts stay unchanged until the person in charge confirms; AI failures show a reason instead of filling in"
+            ]
+          }
+        ]
+      },
+      "color": "#6366f1"
     },
     {
       "id": "project-slow-brain-fast-hands",
@@ -237,23 +327,23 @@
         "skill-nextjs",
         "skill-typescript",
         "skill-ai-development",
-        "skill-local-llm",
+        "skill-hosted-llm",
         "skill-langgraph"
       ],
       "details": {
-        "description": "A personal investment automation system connecting market data collection, strategy research and backtesting, order controls, and operational monitoring. A local Qwen3.8 27B model calls tools, while a separate gateway checks order limits and execution conditions.\n\nDeveloped with Codex and Claude Code and used for personal investing. Its outputs include data collectors, a backtesting engine, a tool gateway, and a web console, with ongoing verification and improvement of individual features.",
+        "description": "A personal investment automation system connecting market data collection, strategy research and backtesting, order controls, and operational monitoring. A hosted LLM (paid or free APIs, chosen in configuration) proposes actions through tools, while a deterministic gateway enforces order limits, invalidation thresholds, and the kill switch from limits.yaml.\n\nDeveloped with Codex and Claude Code and used for personal investing. Its outputs include data collectors, a backtesting engine, a tool gateway, and a web console, with ongoing verification and improvement of individual features.",
         "technologies": [
           "Python",
           "LangGraph",
-          "Qwen3.8 27B",
+          "Hosted LLM API",
           "Next.js",
           "TypeScript",
           "SQLite"
         ],
         "coreFeatures": [
-          "Analysis and research through local LLM tool calls",
+          "Analysis and research proposed by a hosted LLM through tool calls",
           "Backtesting with point-in-time data and trading costs",
-          "A tool gateway that checks order limits and execution conditions",
+          "A deterministic gateway enforcing order limits, invalidation thresholds, and the kill switch from limits.yaml",
           "A web console for research progress, evaluation results, and system status"
         ],
         "features": [
@@ -262,7 +352,8 @@
             "items": [
               "Point-in-time queries restrict evaluation to information available at each decision time",
               "Backtesting includes fees, slippage, and the t+1-open execution convention",
-              "Strategy candidates and evaluation results are recorded to trace the research process"
+              "Strategy candidates and evaluation results are recorded to trace the research process",
+              "A trial ledger, round-level joint multiple testing, and holdout validation correct for candidate selection"
             ]
           },
           {
@@ -270,22 +361,23 @@
             "items": [
               "Gateway checks for order limits, execution conditions, and duplicate requests",
               "Exchange key management through macOS Keychain and emergency stop controls",
-              "A web console for research and optimization progress and system status"
+              "A web console for research and optimization progress and system status",
+              "Logged inputs replay to the same verdicts to confirm reproducibility"
             ]
           },
           {
             "title": "AI Development and Current Status",
             "items": [
               "Codex and Claude Code support implementation, debugging, tests, and documentation",
-              "Local Qwen3.8 27B is connected to the system tool call flow",
-              "Used for personal investing while execution paths and automation coverage are verified and improved"
+              "A hosted LLM (paid or free APIs, chosen in configuration) is connected to the tool call flow",
+              "Binance futures and KIS are separated under the same adapter contract; used for personal investing while each feature is verified and improved"
             ]
           }
         ],
         "techStackDocs": [
           {
-            "name": "Qwen3.8 27B + LangGraph",
-            "description": "Connects local model tool calls with orchestration workflows."
+            "name": "Hosted LLM API + LangGraph",
+            "description": "Connects tool calls from the configured hosted LLM with orchestration workflows."
           },
           {
             "name": "Python + SQLite",
@@ -300,7 +392,7 @@
           {
             "title": "Connecting AI Decisions to Execution",
             "problem": "Connecting model tool calls to orders required an execution boundary for invalid requests and limit violations.",
-            "solution": "Routed order requests through a tool gateway that checks limits, execution conditions, and duplicate requests in code."
+            "solution": "Routed order requests through a tool gateway that checks the limits and execution conditions set in limits.yaml, as well as duplicate requests, in code."
           },
           {
             "title": "Preventing Future Information in Strategy Evaluation",
@@ -325,18 +417,29 @@
       "id": "project-design-tool",
       "type": "project",
       "category": "creative",
-      "label": "Design Application (In Progress)",
+      "label": "AI Design Program",
       "connections": [
         "me"
       ],
       "details": {
-        "description": "A design application I am building using Jev. This ongoing project extends my experience with AI development into design software.",
-        "technologies": [
-          "Jev"
-        ],
+        "description": "An in-house AI design program built on the AI Content Development Team at Hackers, now completed. Even people who are not comfortable with Figma can describe what they want to a chatbot, and AI orchestrates multiple design tools and skills to create the design, review and revise it, and publish the result.\n\nBecause it is an internal company program, screens and metrics are not shared.",
         "coreFeatures": [
-          "Design application under development",
-          "Development using Jev"
+          "Chat → orchestrator → tool and skill execution → review and revision → publishing",
+          "Design requests through chat alone, without Figma skills",
+          "AI orchestrates multiple design tools and skills",
+          "Review and revision through to actual publishing"
+        ],
+        "features": [
+          {
+            "title": "How It Works",
+            "items": [
+              "Chat: the user describes the desired design to a chatbot",
+              "Orchestrator: coordinates multiple design tools and skills for the request",
+              "Tool and skill execution: produces the design",
+              "Review and revision: checks and fixes the result",
+              "Publishing: publishes the finished design"
+            ]
+          }
         ]
       },
       "color": "#f59e0b"
@@ -356,15 +459,16 @@
       "color": "#06b6d4"
     },
     {
-      "id": "skill-local-llm",
+      "id": "skill-hosted-llm",
       "type": "skill",
       "skillCategory": "tool",
-      "label": "Qwen3.8 27B",
+      "label": "Hosted LLM API",
       "connections": [
-        "project-slow-brain-fast-hands"
+        "project-slow-brain-fast-hands",
+        "project-heimdall"
       ],
       "details": {
-        "description": "Connects local Qwen3.8 27B to tool calls in an investment automation system. Model requests go through gateway checks for limits and execution conditions."
+        "description": "In Slow Brain, Fast Hands a configured hosted LLM proposes actions through tools; in Heimdall, Google Gemini reads replies. In both systems, execution authority and verdicts stay with deterministic code and people."
       },
       "color": "#06b6d4"
     },
@@ -377,7 +481,7 @@
         "project-slow-brain-fast-hands"
       ],
       "details": {
-        "description": "Builds orchestration flows that connect local LLM tool calls and research tasks."
+        "description": "Builds orchestration flows that connect hosted LLM tool calls and research tasks."
       },
       "color": "#8b5cf6"
     },
@@ -1012,7 +1116,8 @@
       "label": "React 19",
       "connections": [
         "project-chatbot",
-        "project-portfolio"
+        "project-portfolio",
+        "project-heimdall"
       ],
       "details": {
         "description": "UI library developed by Meta, supporting functional components with Hooks. Provides efficient rendering via declarative UI paradigm and Virtual DOM, suitable for large-scale apps with features like Concurrent Mode and Server Components."
@@ -1026,7 +1131,8 @@
       "label": "TypeScript",
       "connections": [
         "project-chatbot",
-        "project-cortex"
+        "project-cortex",
+        "project-heimdall"
       ],
       "details": {
         "description": "Superset of JavaScript by Microsoft, catching errors at compile time via static type checking. Improves stability and maintainability of large apps with strong type systems like interfaces, generics, and unions."
@@ -1066,7 +1172,8 @@
       "label": "Python",
       "connections": [
         "project-cortex",
-        "project-paper-lstm"
+        "project-paper-lstm",
+        "project-heimdall"
       ],
       "details": {
         "description": "General-purpose programming language widely used in data analysis, machine learning, and backend development."
@@ -1079,7 +1186,8 @@
       "skillCategory": "framework",
       "label": "FastAPI",
       "connections": [
-        "project-cortex"
+        "project-cortex",
+        "project-heimdall"
       ],
       "details": {
         "description": "High-performance asynchronous web framework based on Python, providing automatic API documentation and type hint support."
@@ -1787,7 +1895,8 @@
       "skillCategory": "tool",
       "label": "Docker",
       "connections": [
-        "project-cortex"
+        "project-cortex",
+        "project-heimdall"
       ],
       "details": {
         "description": "Ensures container-based application deployment and environment consistency."
@@ -1800,7 +1909,8 @@
       "skillCategory": "database",
       "label": "PostgreSQL",
       "connections": [
-        "project-cortex"
+        "project-cortex",
+        "project-heimdall"
       ],
       "details": {
         "description": "Relational database used for storing user, strategy, and backtest data, and as a shared storage for Optuna Studies."

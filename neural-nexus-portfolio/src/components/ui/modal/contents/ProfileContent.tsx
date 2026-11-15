@@ -208,6 +208,25 @@ export function ProfileContent({ details, isDark, nodeColor }: DetailContentProp
             </table>
           </div>
         )}
+
+        {/* 이력서 PDF */}
+        {details?.resumeLink && (
+          <a
+            href={details.resumeLink}
+            download
+            className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-300 hover:scale-[1.02] active:scale-95"
+            style={{
+              color: nodeColor,
+              borderColor: `${nodeColor}66`,
+              background: `${nodeColor}14`,
+            }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v12m0 0l-4-4m4 4l4-4M5 20h14" />
+            </svg>
+            {t("modal.profile.resume")}
+          </a>
+        )}
       </div>
 
       {/* 2. 개발 철학 */}

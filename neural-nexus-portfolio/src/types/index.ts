@@ -51,6 +51,7 @@ export interface NodeDetails {
     rows?: string[][]; // 행 (선택적)
   }[]; // 성능 지표 (테이블 및 그래프)
   pdfLink?: string; // 논문 PDF 링크 (직접 열기/다운로드)
+  resumeLink?: string; // 이력서 PDF 링크 (메인 노드)
 
   // -- Extended Persona --
   personalInfo?: {
