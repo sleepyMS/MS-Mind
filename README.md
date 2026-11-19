@@ -284,4 +284,4 @@ MIT License
 - 그래프 계산·모달 탭·이벤트 수명을 분리하고 필요한 상태만 구독
 - 검증 결과와 번들 비교: [검증 기록](docs/VERIFICATION-2026-09-26.md)
 
-Railyard 연습용 한 줄
+Railyard 연습용 한 줄.
